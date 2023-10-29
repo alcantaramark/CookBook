@@ -13,8 +13,8 @@ public class SecretCodeDataContext: DbContext
     #endregion
 
     #region Entities
-    DbSet<User> Users { get; set; }
-    DbSet<Ingredient> Ingredients { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Ingredient> Ingredients { get; set; }
     #endregion
 
     #region Override Methods
