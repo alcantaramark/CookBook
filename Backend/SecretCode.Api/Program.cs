@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SecretCode.Api.Data;
 using System.Reflection;
-using SecretCode.Api.Features.User.Handlers;
+using SecretCode.Api.Features.User;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +19,7 @@ builder.Services.AddDbContext<SecretCodeDataContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("AwsDatabase")));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-builder.Services.AddAutoMapper(typeof(GetUsersHandler.MappingProfile));
-builder.Services.AddAutoMapper(typeof(CreateUserHandler.MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

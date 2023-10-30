@@ -27,6 +27,25 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("/:id")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        try
+        {
+            var user = await _mediator.Send(new GetUserByIdQuery { Id = id });
+
+            if (user is not null)
+                return Ok(user);
+            else
+                return NotFound("No user found");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(_errorMessage);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> Post([FromBody]CreateUserCommand newUser)
     {

@@ -2,7 +2,6 @@
 using MediatR;
 using SecretCode.Api.Data;
 using SecretCode.Api.Features.User.Commands;
-using SecretCode.Api.Models;
 
 namespace SecretCode.Api.Features.User.Handlers;
 
@@ -14,11 +13,6 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand>
     {
         _context = context;
         _mapper = mapper;
-    }
-
-    public class MappingProfile : Profile
-    {
-        public MappingProfile() => CreateMap<Models.User, CreateUserCommand>().ReverseMap();
     }
     public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {

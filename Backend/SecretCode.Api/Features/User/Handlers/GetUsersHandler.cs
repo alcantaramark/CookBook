@@ -13,11 +13,6 @@ public class GetUsersHandler : IRequestHandler<GetUsersQuery, List<GetUsersQuery
     private readonly SecretCodeDataContext _context;
     private readonly AutoMapper.IConfigurationProvider _config;
 
-    public class MappingProfile : Profile
-    {
-        public MappingProfile() => CreateMap<Models.User, GetUsersQuery.Response>().ReverseMap();
-    }
-
     public GetUsersHandler(SecretCodeDataContext context, AutoMapper.IConfigurationProvider config)
     {
         _config = config;
