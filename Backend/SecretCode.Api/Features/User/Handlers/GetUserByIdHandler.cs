@@ -10,12 +10,10 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, GetUserByIdQ
 {
     SecretCodeDataContext _context;
     AutoMapper.IConfigurationProvider _config;
-    IMapper _mapper;
     public GetUserByIdHandler(SecretCodeDataContext context, AutoMapper.IConfigurationProvider config, IMapper mapper)
     {
         _context = context;
         _config = config;
-        _mapper = mapper;
     }
     public async Task<GetUserByIdQuery.Response> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
@@ -26,9 +24,9 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, GetUserByIdQ
          
             return user;
         }
-        catch (Exception ex)
+        catch
         {
-            throw ex;
+            throw;
         }
         finally
         {

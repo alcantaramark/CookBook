@@ -24,10 +24,10 @@ public class CreateUserHandler : IRequestHandler<CreateUserCommand>
             await _context.SaveChangesAsync();
             await _context.Database.CommitTransactionAsync();
         }
-        catch (Exception ex)
+        catch
         {
             await _context.Database.RollbackTransactionAsync();
-            throw ex;
+            
         }
         finally
         {

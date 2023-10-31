@@ -26,9 +26,9 @@ public class GetUsersHandler : IRequestHandler<GetUsersQuery, List<GetUsersQuery
             var users = _context.Users;
             return await users.ProjectTo<GetUsersQuery.Response>(_config).ToListAsync();
         }
-        catch (Exception ex)
+        catch
         {
-            throw ex;
+            throw;
         }
         finally
         {

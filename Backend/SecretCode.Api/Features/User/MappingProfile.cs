@@ -11,5 +11,6 @@ public class MappingProfile : Profile
         	CreateMap<Models.User, GetUsersQuery.Response>().ReverseMap();
             CreateMap<Models.User, GetUserByIdQuery.Response>().ReverseMap();
 			CreateMap<Models.User, CreateUserCommand>().ReverseMap();
+            CreateMap<Models.User, EditUserCommand>().ReverseMap();
         }
 }

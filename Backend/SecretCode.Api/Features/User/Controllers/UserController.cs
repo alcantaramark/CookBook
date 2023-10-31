@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretCode.Api.Features.User.Queries;
 using MediatR;
 using SecretCode.Api.Features.User.Commands;
+using System.Net;
 
 namespace SecretCode.Api.Features.User.Controllers;
 
@@ -10,7 +11,6 @@ namespace SecretCode.Api.Features.User.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private const string _errorMessage = "Error processing your request";
     public UserController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
@@ -21,9 +21,9 @@ public class UserController : ControllerBase
             var users = await _mediator.Send(new GetUsersQuery());
             return Ok(users);
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest(_errorMessage);
+            return StatusCode(500);
         }
     }
 
@@ -40,9 +40,9 @@ public class UserController : ControllerBase
             else
                 return NotFound("No user found");
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest(_errorMessage);
+            return StatusCode(500);
         }
     }
 
@@ -54,9 +54,39 @@ public class UserController : ControllerBase
             await _mediator.Send(newUser);
             return Ok();
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest(_errorMessage);
+            return StatusCode(500);
+        }
+    }
+
+    [HttpDelete]
+    [Route("/:id")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await _mediator.Send(new DeleteUserCommand{ Id = id });
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(500);
+        }
+    }
+
+    [HttpPost]
+    [Route(":/id")]
+    public async Task<IActionResult> Edit(Guid id, [FromBody]EditUserCommand user)
+    {
+        try
+        {
+            await _mediator.Send(user);
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(500);
         }
     }
 }
