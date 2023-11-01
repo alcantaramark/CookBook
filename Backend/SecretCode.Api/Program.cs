@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using SecretCode.Api.Data;
 using System.Reflection;
 using SecretCode.Api.Features.User;
+using SecretCode.Api.Features;
+using FluentValidation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,9 +20,13 @@ builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.Environment
 builder.Services.AddDbContext<SecretCodeDataContext>(options => 
     options.UseSqlServer(configuration.GetConnectionString("AwsDatabase")));
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddMediatR(cfg => 
+{ 
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
