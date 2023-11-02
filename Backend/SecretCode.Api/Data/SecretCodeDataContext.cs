@@ -10,11 +10,12 @@ public class SecretCodeDataContext: DbContext
     {
     }
 
+    public SecretCodeDataContext(){ }
     #endregion
 
     #region Entities
-    public DbSet<User> Users { get; set; }
-    public DbSet<Ingredient> Ingredients { get; set; }
+    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Ingredient> Ingredients { get; set; }
     #endregion
 
     #region Override Methods
