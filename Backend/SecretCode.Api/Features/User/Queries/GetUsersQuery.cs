@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SecretCode.Api.Models;
 
 namespace SecretCode.Api.Features.User.Queries;
 

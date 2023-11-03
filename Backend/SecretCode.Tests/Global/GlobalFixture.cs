@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Configuration;
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using SecretCode.Api.Data;
+using SecretCode.Api.Features.User;
 using SecretCode.Api.Features.User.Commands;
 using SecretCode.Api.Features.User.Queries;
 using SecretCode.Api.Models;
@@ -15,8 +17,7 @@ namespace SecretCode.Tests.Global;
 public class GlobalFixture : IDisposable
 {
     public Mock<SecretCodeDataContext> _contextMock;
-    public Mock<IMapper> _mapperMock;
-    public Mock<AutoMapper.IConfigurationProvider> _mapperConfigMock;
+    public IMapper _mapper;
     public Mock<DatabaseFacade> _databaseFacadeMock;
     public Mock<AbstractValidator<CreateUserCommand>> _createUserCommandValidatorMock;
     
@@ -55,8 +56,15 @@ public class GlobalFixture : IDisposable
         _users = new List<User> { user1, user2, user3 };
         #endregion
 
+        #region Mapper
+        _mapper = new MapperConfiguration(cfg => 
+        {
+            cfg.AddProfile(new MappingProfile());
+        }).CreateMapper();
+        #endregion
+
         #region DB Context
-        IQueryable<User> usersData =  _users.AsQueryable();
+        var usersData =  _users.AsQueryable();
         Mock<DbSet<User>> usersMockSet = new Mock<DbSet<User>>();
         
         usersMockSet.As<IAsyncEnumerable<User>>()
@@ -67,7 +75,6 @@ public class GlobalFixture : IDisposable
             .Setup(_ => _.Provider)
             .Returns(new TestAsyncQueryProvider<User>(usersData.Provider));
 
-        //usersMockSet.As<IQueryable<User>>().Setup(_ => _.Provider).Returns(usersData.Provider);
         usersMockSet.As<IQueryable<User>>().Setup(_ => _.Expression).Returns(usersData.Expression);
         usersMockSet.As<IQueryable<User>>().Setup(_ => _.ElementType).Returns(usersData.ElementType);
         usersMockSet.As<IQueryable<User>>().Setup(_ => _.GetEnumerator()).Returns(usersData.GetEnumerator());
@@ -82,15 +89,6 @@ public class GlobalFixture : IDisposable
         _contextMock.Setup(_ => _.Database).Returns(_databaseFacadeMock.Object);
 
         #endregion
-
-        _mapperMock = new Mock<IMapper>();
-        _mapperMock.Setup(_ => _.ConfigurationProvider)
-            .Returns(() => new MapperConfiguration(
-                cfg => { cfg.CreateMap<User, GetUsersQuery.Response>().ReverseMap(); }
-            ));
-
-        _mapperConfigMock = new Mock<IConfigurationProvider>();
-
         _createUserCommandValidatorMock = new Mock<AbstractValidator<CreateUserCommand>>();
 
     }
@@ -100,7 +98,8 @@ public class GlobalFixture : IDisposable
     }
 }
 
-internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
+#region Helpers
+public class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
 {
     public TestAsyncEnumerable(IEnumerable<T> enumerable)
         : base(enumerable)
@@ -117,7 +116,7 @@ internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>,
 
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
     }
 
     IQueryProvider IQueryable.Provider
@@ -126,7 +125,7 @@ internal class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>,
     }
 }
 
-internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
     private readonly IEnumerator<T> _inner;
 
@@ -153,18 +152,19 @@ internal class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
         return Task.FromResult(_inner.MoveNext());
     }
 
-    public ValueTask<bool> MoveNextAsync()
+    public async ValueTask<bool> MoveNextAsync()
     {
-        throw new NotImplementedException();
+        return await Task.FromResult(_inner.MoveNext());
     }
 
-    public ValueTask DisposeAsync()
+    public  ValueTask DisposeAsync()
     {
-        throw new NotImplementedException();
+        _inner.Dispose();
+        return new ValueTask(Task.CompletedTask);
     }
 }
 
-internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
+public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 {
     private readonly IQueryProvider _inner;
 
@@ -175,6 +175,16 @@ internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     public IQueryable CreateQuery(Expression expression)
     {
+        switch (expression)
+        {
+            case MethodCallExpression m:
+            {
+                var resultType = m.Method.ReturnType;
+                var tElement = resultType.GetGenericArguments()[0];
+                var queryType = typeof(TestAsyncEnumerable<>).MakeGenericType(tElement);
+                return (IQueryable)Activator.CreateInstance(queryType, expression);
+            }
+        }
         return new TestAsyncEnumerable<TEntity>(expression);
     }
 
@@ -208,4 +218,4 @@ internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
         throw new NotImplementedException();
     }
 }
-
+#endregion

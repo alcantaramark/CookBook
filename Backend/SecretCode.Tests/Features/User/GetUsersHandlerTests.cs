@@ -17,7 +17,7 @@ public class GetUsersHandlerTests
     {
         //Arrange
         GetUsersQuery request = new();
-        GetUsersHandler handler = new(_globalFixture._contextMock.Object, _globalFixture._mapperMock.Object);
+        GetUsersHandler handler = new(_globalFixture._contextMock.Object, _globalFixture._mapper);
         
         //Act
         var result = await handler.Handle(request, default);

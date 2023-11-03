@@ -71,17 +71,17 @@ public class CreateUserHandlerTests
                 _fixture._users.Add(user);
             });
 
-        _fixture._mapperMock.Setup(_ => _.Map<Model.User>(It.IsAny<CreateUserCommand>()))
-                .Returns(new Model.User
-                {
-                    Email = "newEmail@testEmail.com",
-                    Name = "New Name",
-                    DateCreated = DateTime.UtcNow,
-                    DateModified = DateTime.UtcNow,
-                    Deleted = false
-                });
+        // _fixture._mapperMock.Setup(_ => _.Map<Model.User>(It.IsAny<CreateUserCommand>()))
+        //         .Returns(new Model.User
+        //         {
+        //             Email = "newEmail@testEmail.com",
+        //             Name = "New Name",
+        //             DateCreated = DateTime.UtcNow,
+        //             DateModified = DateTime.UtcNow,
+        //             Deleted = false
+        //         });
         
-        var handler = new CreateUserHandler(_fixture._contextMock.Object, _fixture._mapperMock.Object);
+        var handler = new CreateUserHandler(_fixture._contextMock.Object, _fixture._mapper);
         
         CreateUserCommand command = new CreateUserCommand
         {
