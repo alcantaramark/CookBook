@@ -4,18 +4,17 @@ using SecretCode.Api.Data;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using System.CodeDom;
 
 namespace SecretCode.Api.Features.User.Handlers;
 
 public class GetUsersHandler : IRequestHandler<GetUsersQuery, List<GetUsersQuery.Response>>
 {
     private readonly SecretCodeDataContext _context;
-    private readonly AutoMapper.IConfigurationProvider _config;
+    private readonly IMapper _mapper;
 
-    public GetUsersHandler(SecretCodeDataContext context, AutoMapper.IConfigurationProvider config)
+    public GetUsersHandler(SecretCodeDataContext context, IMapper mapper)
     {
-        _config = config;
+        _mapper = mapper;
         _context = context;
     }
 
@@ -24,7 +23,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersQuery, List<GetUsersQuery
         try
         {
             var users = _context.Users;
-            return await users.ProjectTo<GetUsersQuery.Response>(_config).ToListAsync();
+            return await users.ProjectTo<GetUsersQuery.Response>(_mapper.ConfigurationProvider).ToListAsync();
         }
         catch
         {

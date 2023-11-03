@@ -1,10 +1,11 @@
 using Xunit;
 using Moq;
-using AutoMapper;
 using SecretCode.Tests.Global;
 using Model = SecretCode.Api.Models;
 using SecretCode.Api.Features.User.Handlers;
 using SecretCode.Api.Features.User.Commands;
+using SecretCode.Api.Features.User.Validators;
+using FluentValidation.TestHelper;
 
 namespace SecretCode.Tests.Features.User;
 
@@ -12,11 +13,53 @@ namespace SecretCode.Tests.Features.User;
 public class CreateUserHandlerTests
 {
     GlobalFixture _fixture;
-    public CreateUserHandlerTests(GlobalFixture fixture)
+    public CreateUserHandlerTests(GlobalFixture fixture) => _fixture = fixture;
+
+    [Fact]
+    public void Handle_ShouldNotThrowException_ValidationPassed()
     {
-        _fixture = fixture;
-    }   
-    
+        //Arrange
+        CreateUserCommand command = new CreateUserCommand{ Name = "Test Name", Email = "TestEmail@email.com" };
+
+        var validator = new CreateUserCommandValidator();
+        
+        //Act
+        var result = validator.TestValidate(command);
+
+        //Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public void Handle_ShouldThrowException_WhenEmailIsNotProvided()
+    {
+        //Arrange
+        CreateUserCommand command = new CreateUserCommand{ Name = "Test Name" };
+
+        var validator = new CreateUserCommandValidator();
+        
+        //Act
+        var result = validator.TestValidate(command);
+
+        //Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Email).Only();
+    }
+
+    [Fact]
+    public void Handle_ShouldThrowException_WhenNameIsNotProvided()
+    {
+        //Arrange
+        CreateUserCommand command = new CreateUserCommand{ Email = "TestMail@mail.com" };
+
+        var validator = new CreateUserCommandValidator();
+        
+        //Act
+        var result = validator.TestValidate(command);
+
+        //Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Name).Only();
+    }    
+
     [Fact]
     public async Task Handle_ShouldAddUser_WhenValidationPasses()
     {
@@ -37,16 +80,19 @@ public class CreateUserHandlerTests
                     DateModified = DateTime.UtcNow,
                     Deleted = false
                 });
-        //Act
+        
         var handler = new CreateUserHandler(_fixture._contextMock.Object, _fixture._mapperMock.Object);
+        
         CreateUserCommand command = new CreateUserCommand
         {
             Email = "newEmail@testEmail.com",
             Name = "New Name"
         };
         
+        //Act
+        await handler.Handle(command, default);        
+        
         //Assert
-        await handler.Handle(command, default);
         Assert.True(_fixture._users.Count == initialCount + 1);
         Assert.NotNull(_fixture._users.SingleOrDefault(_ => _.Name == command.Name));
         Assert.Equal(_fixture._users.SingleOrDefault(_ => _.Name == command.Name)?.Name, command.Name);
