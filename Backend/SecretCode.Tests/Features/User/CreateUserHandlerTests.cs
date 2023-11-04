@@ -6,6 +6,7 @@ using SecretCode.Api.Features.User.Handlers;
 using SecretCode.Api.Features.User.Commands;
 using SecretCode.Api.Features.User.Validators;
 using FluentValidation.TestHelper;
+using FluentAssertions;
 
 namespace SecretCode.Tests.Features.User;
 
@@ -63,24 +64,8 @@ public class CreateUserHandlerTests
     [Fact]
     public async Task Handle_ShouldAddUser_WhenValidationPasses()
     {
-        var initialCount = _fixture._users.Count;
         //Arrange
-        _fixture._contextMock.Setup(_ => _.Users.AddAsync(It.IsAny<Model.User>(), It.IsAny<CancellationToken>()))
-            .Callback((Model.User user, CancellationToken token) => 
-            { 
-                _fixture._users.Add(user);
-            });
-
-        // _fixture._mapperMock.Setup(_ => _.Map<Model.User>(It.IsAny<CreateUserCommand>()))
-        //         .Returns(new Model.User
-        //         {
-        //             Email = "newEmail@testEmail.com",
-        //             Name = "New Name",
-        //             DateCreated = DateTime.UtcNow,
-        //             DateModified = DateTime.UtcNow,
-        //             Deleted = false
-        //         });
-        
+        var initialCount = _fixture._users.Count;
         var handler = new CreateUserHandler(_fixture._contextMock.Object, _fixture._mapper);
         
         CreateUserCommand command = new CreateUserCommand
@@ -93,10 +78,10 @@ public class CreateUserHandlerTests
         await handler.Handle(command, default);        
         
         //Assert
-        Assert.True(_fixture._users.Count == initialCount + 1);
-        Assert.NotNull(_fixture._users.SingleOrDefault(_ => _.Name == command.Name));
-        Assert.Equal(_fixture._users.SingleOrDefault(_ => _.Name == command.Name)?.Name, command.Name);
-        Assert.Equal(_fixture._users.SingleOrDefault(_ => _.Name == command.Name)?.Email, command.Email);
+        _fixture._users.Count.Should().Be(++initialCount);
+        _fixture._users.SingleOrDefault(_ => _.Name == command.Name).Should().NotBeNull();
+        _fixture._users.SingleOrDefault(_ => _.Name == command.Name)?.Name.Should().Be(command.Name);
+        _fixture._users.SingleOrDefault(_ => _.Name == command.Name)?.Email.Should().Be(command.Email);
         _fixture._contextMock.Verify(_ =>  _.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

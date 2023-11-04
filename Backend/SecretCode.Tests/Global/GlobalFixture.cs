@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +8,8 @@ using Moq;
 using SecretCode.Api.Data;
 using SecretCode.Api.Features.User;
 using SecretCode.Api.Features.User.Commands;
-using SecretCode.Api.Features.User.Queries;
 using SecretCode.Api.Models;
+
 
 namespace SecretCode.Tests.Global;
 
@@ -79,9 +78,14 @@ public class GlobalFixture : IDisposable
         usersMockSet.As<IQueryable<User>>().Setup(_ => _.ElementType).Returns(usersData.ElementType);
         usersMockSet.As<IQueryable<User>>().Setup(_ => _.GetEnumerator()).Returns(usersData.GetEnumerator());
 
-        _contextMock = new Mock<SecretCodeDataContext>();
-        _contextMock.Setup(_ => _.Users).Returns(usersMockSet.Object);
-        
+         _contextMock = new Mock<SecretCodeDataContext>();
+         
+         _contextMock.Setup(_ => _.Users).Returns(usersMockSet.Object);
+         _contextMock.Setup(_ => _.Remove(It.IsAny<User>()))
+            .Callback((User user) => _users.Remove(user));
+        _contextMock.Setup(_ => _.Users.AddAsync(It.IsAny<User>(), default))
+            .Callback((User user, CancellationToken token) => _users.Add(user));
+
         _databaseFacadeMock = new Mock<DatabaseFacade>(_contextMock.Object);
         _databaseFacadeMock.Setup(_ => _.BeginTransactionAsync(It.IsAny<CancellationToken>()));
         _databaseFacadeMock.Setup(_ => _.CommitTransactionAsync(It.IsAny<CancellationToken>()));
@@ -157,14 +161,14 @@ public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
         return await Task.FromResult(_inner.MoveNext());
     }
 
-    public  ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         _inner.Dispose();
         return new ValueTask(Task.CompletedTask);
     }
 }
 
-public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
+internal class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 {
     private readonly IQueryProvider _inner;
 
@@ -200,7 +204,14 @@ public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     public TResult Execute<TResult>(Expression expression)
     {
-        return _inner.Execute<TResult>(expression);
+        // var t = Expression.Lambda(expression).Compile().DynamicInvoke();
+        // return  Task.FromResult(t as dynamic);
+        Type expectedResultType = typeof(TResult).GetGenericArguments()[0];
+        object? executionResult = ((IQueryProvider) this).Execute(expression);
+
+        return (TResult) typeof(Task).GetMethod(nameof(Task.FromResult))
+            .MakeGenericMethod(expectedResultType)
+            .Invoke(null, new [] { executionResult });
     }
 
     public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
@@ -215,7 +226,7 @@ public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
 
     TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+       return Execute<TResult>(expression);
     }
 }
 #endregion

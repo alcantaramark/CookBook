@@ -3,26 +3,26 @@ using SecretCode.Api.Features.User.Queries;
 using SecretCode.Tests.Global;
 using Xunit;
 
-namespace SecretCode.Tests;
+namespace SecretCode.Tests.Features.User;
 
 [Collection("Fixture Collection")]
 public class GetUsersHandlerTests
 {
-    private readonly GlobalFixture _globalFixture;
+    private readonly GlobalFixture _fixture;
 
-    public GetUsersHandlerTests(GlobalFixture globalFixture) => _globalFixture = globalFixture;
+    public GetUsersHandlerTests(GlobalFixture fixture) => _fixture = fixture;
 
     [Fact]
-    public async Task Handle_ShouldReturnAllUsers_WhenCalled()
+    public async Task Handle_ShouldReturnAllUsers_WhenExecuted()
     {
         //Arrange
         GetUsersQuery request = new();
-        GetUsersHandler handler = new(_globalFixture._contextMock.Object, _globalFixture._mapper);
+        GetUsersHandler handler = new(_fixture._contextMock.Object, _fixture._mapper);
         
         //Act
         var result = await handler.Handle(request, default);
 
         //Assert;
-        Assert.Equal<int>(result.Count, _globalFixture._users.Count);
+        Assert.Equal<int>(result.Count, _fixture._users.Count);
     }
 }
