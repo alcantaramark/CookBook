@@ -81,8 +81,6 @@ public class GlobalFixture : IDisposable
          _contextMock = new Mock<SecretCodeDataContext>();
          
          _contextMock.Setup(_ => _.Users).Returns(usersMockSet.Object);
-         _contextMock.Setup(_ => _.Remove(It.IsAny<User>()))
-            .Callback((User user) => _users.Remove(user));
         _contextMock.Setup(_ => _.Users.AddAsync(It.IsAny<User>(), default))
             .Callback((User user, CancellationToken token) => _users.Add(user));
 
