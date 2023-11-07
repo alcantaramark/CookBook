@@ -6,7 +6,15 @@
  */
 
 import React from 'react';
+import {  Button, 
+          PaperProvider, 
+          MD3LightTheme as defaultTheme } 
+      from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunitIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -24,96 +32,61 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { runCLI } from 'jest';
+import Home from './app/components/Home/Home';
+import Search from './app/components/Search/Search';
+import Plan from './app/components/Plan/Plan';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  let x = 1;
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const Tab = createBottomTabNavigator();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-
+  
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One.">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <PaperProvider theme={ theme }>
+        <Tab.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+            <Tab.Screen name="Home" 
+              options={{  tabBarShowLabel: true,
+                          tabBarIcon: ({ color }) => ( <MaterialCommunitIcons name="food" color={color} size={26} /> )
+                        }} component={Home}
+            />
+            <Tab.Screen name="Search" 
+              options={{  tabBarShowLabel: true,
+                          tabBarIcon: ({ color }) => ( <MaterialCommunitIcons name="clipboard-text-search-outline" color={color} size={26} /> )
+                        }} component={Search}
+            />
+            <Tab.Screen name="Plan" 
+              options={{  tabBarShowLabel: true,
+                          tabBarIcon: ({ color }) => ( <MaterialCommunitIcons name="calendar-check" color={color} size={26} /> )
+                        }} component={Plan}
+            />          
+        </Tab.Navigator>
+      </PaperProvider>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  
 });
+
+const theme = {
+  ...defaultTheme,
+  colors: {
+    ...defaultTheme.colors,
+    primary: 'tomato',
+    secondary: 'yellow'
+  }
+};
 
 export default App;
