@@ -28,8 +28,7 @@ const theme = {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: theme.colors.primary,
-    opacity: 0.3
+    backgroundColor: 'transparent'
   },
   container: {
     flex: 1
