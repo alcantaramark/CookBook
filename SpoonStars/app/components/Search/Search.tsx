@@ -7,7 +7,6 @@ interface SearchProps {}
 
 const Search: FC<SearchProps> = () => (
   <Fragment>
-    <Header title='Header Search'/>
     <SafeAreaView>
       <Text>
         Search Component

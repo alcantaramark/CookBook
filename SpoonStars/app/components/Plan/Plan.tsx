@@ -8,7 +8,6 @@ interface PlanProps {}
 
 const Plan: FC<PlanProps> = () => (
   <Fragment>
-  <Header title='Header Plan'/>
   <SafeAreaView>
     <Text>
       Plan Component
