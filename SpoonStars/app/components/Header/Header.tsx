@@ -1,21 +1,21 @@
-import React, { FC, Fragment } from 'react';
-import { Text, Appbar, MD3LightTheme as defaultTheme } from 'react-native-paper';
-import App from '../../../App';
+import React, { FC, createContext, useState } from 'react';
+import { Text, Appbar, MD3LightTheme as defaultTheme, TextInput } from 'react-native-paper';
 import { StyleSheet , View} from 'react-native';
-import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 
 interface HeaderProps {
   title: string
 }
 
-const Header: FC<HeaderProps> = (props) => (
+const Header: FC<HeaderProps> = (props) => {
+
+ return(
   <View style={styles.container}>
     <Appbar.Header theme={theme} style={styles.header}>
-      <Appbar.Content title={props.title} />
+      <TextInput placeholder='Search recipe...' style={ styles.textInput } />
     </Appbar.Header>
-  </View>
-);
+  </View>)
+};
 
 const theme = {
   ...defaultTheme,
@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
+  },
+  textInput: {
+    width: '100%'
   }
 })
 
