@@ -1,0 +1,18 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  secretcodeapi:
+    image: secretcodeapi
+    build:
+      context: .
+      dockerfile: SecretCode.Api/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - 5013:5013
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
