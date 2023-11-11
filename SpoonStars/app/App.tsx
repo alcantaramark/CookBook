@@ -5,8 +5,8 @@
  * @format
  */
 
-import React, { Fragment } from 'react';
-import {  Button, 
+import React, {  } from 'react';
+import {   
           PaperProvider, 
           MD3LightTheme as defaultTheme } 
       from 'react-native-paper';
@@ -53,8 +53,9 @@ function App(): JSX.Element {
       <PaperProvider theme={ theme }>
         <Tab.Navigator initialRouteName='Home' screenOptions={
               { headerShown: true, headerStyle: {
-                backgroundColor: theme.colors.primary
-              }, headerTitle: '' }
+                backgroundColor: theme.colors.primary,
+                shadowColor: 'transparent',
+              }, headerTitle:'' }
             }>
             <Tab.Screen name="Home" 
               options={{  tabBarShowLabel: true,
