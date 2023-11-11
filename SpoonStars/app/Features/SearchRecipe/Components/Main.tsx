@@ -6,7 +6,7 @@ interface HomeMainProps {}
 
 
 
-const HomeMain: FC<HomeMainProps> = () => {
+const Main: FC<HomeMainProps> = () => {
   const { searchText } = useContext(HomeContext);
 
   return (
@@ -15,4 +15,4 @@ const HomeMain: FC<HomeMainProps> = () => {
     </Text>)
 };
 
-export default HomeMain;
+export default Main;
