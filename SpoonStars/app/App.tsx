@@ -30,7 +30,7 @@ import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
 import { runCLI } from 'jest';
-import Home from './components/Home/Home';
+import Home from './Features/SearchRecipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 
@@ -51,7 +51,11 @@ function App(): JSX.Element {
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
-        <Tab.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+        <Tab.Navigator initialRouteName='Home' screenOptions={
+              { headerShown: true, headerStyle: {
+                backgroundColor: theme.colors.primary
+              }, headerTitle: '' }
+            }>
             <Tab.Screen name="Home" 
               options={{  tabBarShowLabel: true,
                           tabBarIcon: () => ( <MaterialCommunitIcons name="food" color={theme.colors.primary} size={26} /> )
@@ -82,7 +86,7 @@ const theme = {
   colors: {
     ...defaultTheme.colors,
     primary: 'darkseagreen',
-    secondary: 'yellow'
+    secondary: 'yellow',
   }
 };
 
