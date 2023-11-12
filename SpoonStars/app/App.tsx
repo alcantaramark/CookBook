@@ -5,10 +5,11 @@
  * @format
  */
 
-import React, { Fragment } from 'react';
-import {  Button, 
+import React, {  } from 'react';
+import {   
           PaperProvider, 
-          MD3LightTheme as defaultTheme } 
+          MD3LightTheme as defaultTheme, 
+          useTheme} 
       from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -30,13 +31,29 @@ import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
 import { runCLI } from 'jest';
-import Home from './components/Home/Home';
+import Home from './Features/SearchRecipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
+
+
+const theme = {
+  ...defaultTheme,
+  colors: {
+    ...defaultTheme.colors,
+    primary: 'darkseagreen',
+    secondary: 'yellow',
+  },
+  
+};
+
+export type AppTheme = typeof theme;
+
+export const useAppTheme = () => useTheme<AppTheme>();
+
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -47,23 +64,31 @@ function App(): JSX.Element {
   };
   
   
-
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
-        <Tab.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+        <Tab.Navigator initialRouteName='Home' screenOptions={
+              { headerShown: true, headerStyle: {
+                backgroundColor: theme.colors.primary,
+                shadowColor: 'transparent',
+                height: StatusBar.currentHeight
+              }, headerTitle:'' }
+            }>
             <Tab.Screen name="Home" 
               options={{  tabBarShowLabel: true,
-                          tabBarIcon: () => ( <MaterialCommunitIcons name="food" color={theme.colors.primary} size={26} /> )
+                          tabBarActiveTintColor: theme.colors.primary,
+                          tabBarIcon: () => ( <MaterialCommunitIcons name="food" color={theme.colors.primary} size={26} /> ),
                         }} component={Home}
             />
             <Tab.Screen name="Search" 
               options={{  tabBarShowLabel: true,
+                          tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunitIcons name="clipboard-text-search-outline" color={theme.colors.primary} size={26} /> )
                         }} component={Search}
             />
             <Tab.Screen name="Plan" 
               options={{  tabBarShowLabel: true,
+                          tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunitIcons name="calendar-check" color={theme.colors.primary} size={26} /> )
                         }} component={Plan}
             />          
@@ -72,18 +97,5 @@ function App(): JSX.Element {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  
-});
-
-const theme = {
-  ...defaultTheme,
-  colors: {
-    ...defaultTheme.colors,
-    primary: 'darkseagreen',
-    secondary: 'yellow'
-  }
-};
 
 export default App;
