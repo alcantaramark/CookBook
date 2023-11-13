@@ -21,9 +21,9 @@ public class UserController : ControllerBase
             var users = await _mediator.Send(new GetUsersQuery());
             return Ok(users);
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(500);
+            return BadRequest(ex.Message);
         }
     }
 
@@ -84,9 +84,9 @@ public class UserController : ControllerBase
             await _mediator.Send(user);
             return Ok();
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(500);
+            return BadRequest(ex.Message);
         }
     }
 }
