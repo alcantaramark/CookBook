@@ -42,4 +42,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/configuration", () => new 
+    { 
+        SuggesticUserId = configuration.GetSection("Configurations:SuggesticUserId").Get<string>(),
+        SuggesticAPIKey = configuration.GetSection("Configurations:SuggesticAPIKey").Get<string>(),
+    });
+
 app.Run();
