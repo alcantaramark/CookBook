@@ -32,6 +32,7 @@ const Home: FC<HomeProps> = () => {
     }
   })
 
+  
   return (
     <View style={styles.container} >
       <Searchbar placeholder='search recipe...' 

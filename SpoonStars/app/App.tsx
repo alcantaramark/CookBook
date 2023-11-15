@@ -15,25 +15,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunitIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
-import Header from './components/Header/Header';
-
 import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
 
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import { runCLI } from 'jest';
 import Home from './Features/SearchRecipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
+import { API_URL } from '@env';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -63,6 +56,7 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   
+  console.log(API_URL);
   
   return (
     <NavigationContainer>
