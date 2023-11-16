@@ -23,7 +23,7 @@ import {
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import Home from './Features/SearchRecipe/Components/Home';
+import Home from './Features/SearchRecipes/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { API_URL } from '@env';
