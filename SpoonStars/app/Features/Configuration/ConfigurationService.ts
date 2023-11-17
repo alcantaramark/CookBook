@@ -4,17 +4,18 @@ import { ConfigState } from "./ConfigSlice";
 const requestUrl = `${ API_URL }configuration`;
 
 export const getConfig = () => {
-    return fetch(requestUrl)
-        .then(response => response.json())
-        .then(json => { 
-            {
-                const config: ConfigState = {  
-                    suggesticAPIKey: json.suggesticAPIKey,
-                    suggesticUserId: json.suggesticUserId
+    return new Promise((resolve, reject) => { fetch(requestUrl)
+        .then(response => response.json()).catch(e => reject(e))
+            .then(json => { 
+                {
+                    const config: ConfigState = {  
+                        suggesticAPIKey: json.suggesticAPIKey,
+                        suggesticUserId: json.suggesticUserId
+                    }
+                    resolve(config);
                 }
-                return config;
-            }
-        }).catch(e => console.error(e));
+            }).catch(e => reject(e))
+        });
 }
 
 

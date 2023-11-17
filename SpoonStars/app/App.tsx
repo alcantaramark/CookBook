@@ -61,11 +61,8 @@ function App(): JSX.Element {
 const dispath = useAppDispatch();
 
 useEffect(() => {
-    getConfig().then(response => {
-      
-        
-
-    });
+    getConfig().then((response: any) => dispath(fetchConfig(response)))
+                  .catch(e => console.error(e));
   }, []);
   
   return (
