@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {  } from 'react';
+import React, { useEffect } from 'react';
 import {   
           PaperProvider, 
           MD3LightTheme as defaultTheme, 
@@ -23,10 +23,13 @@ import {
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import Home from './Features/SearchRecipes/Components/Home';
+import Home from './Features/Recipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { API_URL } from '@env';
+import { useAppDispatch } from './Redux/Hooks';
+import { ConfigState, fetchConfig } from './Features/Configuration/ConfigSlice';
+import { getConfig } from "./Features/Configuration/ConfigurationService";
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -44,7 +47,6 @@ const theme = {
 };
 
 export type AppTheme = typeof theme;
-
 export const useAppTheme = () => useTheme<AppTheme>();
 
 
@@ -55,8 +57,16 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  
-  console.log(API_URL);
+
+const dispath = useAppDispatch();
+
+useEffect(() => {
+    getConfig().then(response => {
+      
+        
+
+    });
+  }, []);
   
   return (
     <NavigationContainer>

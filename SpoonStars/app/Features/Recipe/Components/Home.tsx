@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { useAppDispatch, useAppSelector } from '../../../Redux/Hooks';
-import { fetchConfig } from '../../GetConfigurations/ConfigSlice';
+import { fetchConfig } from '../../Configuration/ConfigSlice';
 
 
 
@@ -35,10 +35,7 @@ const Home: FC<HomeProps> = () => {
     }
   })
 
-   const config = useAppSelector(state => state.config.value);
-   const dispatch = useAppDispatch();
-
-   useEffect(() => { dispatch(fetchConfig()); console.log('I am here') }, []);
+  const config = useAppSelector(state => state.config);
 
   return (
     <View>
@@ -57,8 +54,8 @@ const Home: FC<HomeProps> = () => {
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
-      <Text>{ config.SuggesticUserId }</Text>
-      <Text>{ config.SuggesticAPIKey }</Text> 
+      <Text>{ config.suggesticUserId }</Text>
+      <Text>{ config.suggesticAPIKey }</Text> 
     </View>
 )};
 
