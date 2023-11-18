@@ -6,6 +6,7 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { useAppTheme } from '../../../App'
 import { useAppSelector } from '../../../Redux/Hooks';
 import { recipeAPIConfig } from '../../Configuration/ConfigSlice';
+import List from './List';
 
 
 
@@ -38,7 +39,7 @@ const Home: FC<HomeProps> = () => {
   const config = useAppSelector(recipeAPIConfig);
 
   return (
-    <View>
+    <>
       <View style={styles.container} >
         <Searchbar placeholder='search recipe...' 
           onChangeText={(text) => setSearchText(text)} value={searchText}
@@ -54,9 +55,8 @@ const Home: FC<HomeProps> = () => {
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
-      <Text>{ config.suggesticUserId }</Text>
-      <Text>{ config.suggesticAPIKey }</Text> 
-    </View>
+      <List />
+    </>
 )};
 
 export default Home;
