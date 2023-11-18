@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {  } from 'react';
+import React, { useEffect } from 'react';
 import {   
           PaperProvider, 
           MD3LightTheme as defaultTheme, 
@@ -15,25 +15,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunitIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
-import Header from './components/Header/Header';
-
 import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
 
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import { runCLI } from 'jest';
-import Home from './Features/SearchRecipe/Components/Home';
+import Home from './Features/Recipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
+import { API_URL } from '@env';
+import { useAppDispatch } from './Redux/Hooks';
+import { ConfigState, fetchConfig } from './Features/Configuration/ConfigSlice';
+import { getConfig } from "./Features/Configuration/ConfigurationService";
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -51,7 +47,6 @@ const theme = {
 };
 
 export type AppTheme = typeof theme;
-
 export const useAppTheme = () => useTheme<AppTheme>();
 
 
@@ -62,7 +57,13 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  
+
+const dispath = useAppDispatch();
+
+useEffect(() => {
+    getConfig().then((response: any) => dispath(fetchConfig(response)))
+                  .catch(e => console.error(e));
+  }, []);
   
   return (
     <NavigationContainer>
