@@ -9,8 +9,7 @@ export const getConfig = () => {
             .then(json => { 
                 {
                     const config: ConfigState = {  
-                        suggesticAPIKey: json.suggesticAPIKey,
-                        suggesticUserId: json.suggesticUserId
+                        value: { suggesticAPIKey: json.suggesticAPIKey, suggesticUserId: json.suggesticUserId }
                     }
                     resolve(config);
                 }

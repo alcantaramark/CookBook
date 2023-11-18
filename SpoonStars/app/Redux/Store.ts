@@ -4,7 +4,7 @@ import configReducer from "../Features/Configuration/ConfigSlice";
 
 export const store = configureStore({
     reducer: {
-        config: configReducer
+        recipeConfig: configReducer
     }
 });
 

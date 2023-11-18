@@ -4,8 +4,8 @@ import { Text, TextInput, Searchbar, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { useAppDispatch, useAppSelector } from '../../../Redux/Hooks';
-import { fetchConfig } from '../../Configuration/ConfigSlice';
+import { useAppSelector } from '../../../Redux/Hooks';
+import { recipeAPIConfig } from '../../Configuration/ConfigSlice';
 
 
 
@@ -35,7 +35,7 @@ const Home: FC<HomeProps> = () => {
     }
   })
 
-  const config = useAppSelector(state => state.config);
+  const config = useAppSelector(recipeAPIConfig);
 
   return (
     <View>
