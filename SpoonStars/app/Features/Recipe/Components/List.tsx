@@ -10,9 +10,11 @@ const List: FC<ListProps> = () => {
   const config = useAppSelector(selectConfig);
   const status = useAppSelector(selectStatus);
 
+  
+
   useEffect(() => {
     getPopular(config.suggesticAPIKey, config.suggesticUserId);
-  }, [])
+  }, [config])
   
   if (status == "loading") {
     return(

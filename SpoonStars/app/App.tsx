@@ -56,9 +56,16 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  dispatch(fetchConfig());
+  
+  useEffect(() => {
+    dispatch(fetchConfig());
+  }, [])
+
+  
+
+  
   
   return (
     <NavigationContainer>
