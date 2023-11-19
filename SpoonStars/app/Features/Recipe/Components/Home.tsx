@@ -1,11 +1,8 @@
 import React, { FC, Fragment, createContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, TextInput, Searchbar, Button } from 'react-native-paper';
+import { Searchbar, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { useAppSelector } from '../../../Redux/Hooks';
-import { recipeAPIConfig } from '../../Configuration/ConfigSlice';
 import List from './List';
 
 
@@ -35,8 +32,6 @@ const Home: FC<HomeProps> = () => {
       height: 50
     }
   })
-
-  const config = useAppSelector(recipeAPIConfig);
 
   return (
     <>

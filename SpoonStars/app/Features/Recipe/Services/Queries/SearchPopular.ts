@@ -2,7 +2,9 @@ import { SUGGESTIC_URL } from '@env'
 
 
 export const getPopular = (userId: string, apiKey: string) => {
-    console.log(SUGGESTIC_URL);
+     console.log('dito me');
+     console.log(userId);
+     console.log(apiKey);
     return new Promise((resolve, reject) => {
         fetch(SUGGESTIC_URL, {
             method: 'POST',

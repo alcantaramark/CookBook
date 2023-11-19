@@ -1,25 +1,34 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Text } from 'react-native-paper';
 import { getPopular } from '../Services/Queries/SearchPopular';
 import { useAppSelector } from '../../../Redux/Hooks';
-import { recipeAPIConfig } from '../../../Features/Configuration/ConfigSlice';
+import { selectConfig, selectStatus } from '../../../Features/Configuration/ConfigSlice';
 
 interface ListProps {}
 
 const List: FC<ListProps> = () => {
-  const config = useAppSelector(recipeAPIConfig);
+  const config = useAppSelector(selectConfig);
+  const status = useAppSelector(selectStatus);
 
   useEffect(() => {
-    console.log(config.suggesticUserId);
-    getPopular(config.suggesticUserId, config.suggesticAPIKey).then(response => console.log(response))
-  }, []);
+    getPopular(config.suggesticAPIKey, config.suggesticUserId);
+  }, [])
   
-  return(
-    <>
-      <Text>i am here { config.suggesticUserId }</Text>
-      <Text>i am here{ config.suggesticAPIKey }</Text> 
-    </>
-  );
+  if (status == "loading") {
+    return(
+      <>
+        <Text>fetching data...</Text>
+      </>
+    );
+  }
+  else {
+    return(
+      <>
+        <Text>{ config.suggesticUserId }</Text>
+        <Text>{ config.suggesticAPIKey }</Text> 
+      </>
+    );
+  }
 };
 
 export default List;

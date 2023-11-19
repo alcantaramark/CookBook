@@ -27,8 +27,7 @@ import Home from './Features/Recipe/Components/Home';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { useAppDispatch } from './Redux/Hooks';
-import { ConfigState, fetchConfig } from './Features/Configuration/ConfigSlice';
-import { getConfig } from "./Features/Configuration/ConfigurationService";
+import { fetchConfig } from './Features/Configuration/ConfigSlice';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,12 +56,9 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-const dispath = useAppDispatch();
+const dispatch = useAppDispatch();
 
-useEffect(() => {
-    getConfig().then((response: any) => dispath(fetchConfig(response)))
-                  .catch(e => console.error(e));
-  }, []);
+  dispatch(fetchConfig());
   
   return (
     <NavigationContainer>
