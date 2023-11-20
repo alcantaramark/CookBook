@@ -1,22 +1,29 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Text } from 'react-native-paper';
-import { getPopular } from '../Services/Queries/SearchPopular';
-import { useAppSelector } from '../../../Redux/Hooks';
-import { selectConfig, selectStatus } from '../../../Features/Configuration/ConfigSlice';
+import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
+import { selectConfig, selectConfigStatus } from '../../../Features/Configuration/ConfigSlice';
+import { fetchPopularRecipes, selectRecipesStatus } from './../RecipeSlice';
 
 interface ListProps {}
 
 const List: FC<ListProps> = () => {
   const config = useAppSelector(selectConfig);
-  const status = useAppSelector(selectStatus);
-
+  const configStatus = useAppSelector(selectConfigStatus);
+  const recipeStatus = useAppSelector(selectRecipesStatus);
+  
+  const dispatch = useAppDispatch();
   
 
   useEffect(() => {
-    getPopular(config.suggesticAPIKey, config.suggesticUserId);
+    if (configStatus === "succeeded"){
+      dispatch(fetchPopularRecipes({
+        suggesticAPIKey: config.suggesticAPIKey,
+        suggesticUserId: config.suggesticUserId
+      }));
+    }
   }, [config])
   
-  if (status == "loading") {
+  if (recipeStatus == "loading") {
     return(
       <>
         <Text>fetching data...</Text>

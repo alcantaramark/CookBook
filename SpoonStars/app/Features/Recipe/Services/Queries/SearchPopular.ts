@@ -1,12 +1,6 @@
 import { SUGGESTIC_URL } from '@env'
-
-
-export const getPopular = (userId: string, apiKey: string) => {
-     console.log('dito me');
-     console.log(userId);
-     console.log(apiKey);
-    return new Promise((resolve, reject) => {
-        fetch(SUGGESTIC_URL, {
+export const searchPopular = async (userId: string, apiKey: string) => {
+    return await fetch(SUGGESTIC_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,8 +19,5 @@ export const getPopular = (userId: string, apiKey: string) => {
                     }
                 }`
             })
-        }).then(response => response.json().then(response => resolve(response)))
-            .catch(e => reject(e));
-    });
-
+        });
 }

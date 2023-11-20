@@ -33,12 +33,11 @@ export const ConfigSlice = createSlice({
         })
         .addCase(fetchConfig.fulfilled, (state, action) => {
             state.config = action.payload;
-            state.status = "succceeded"
+            state.status = "succeeded"
         });
     }
 });
 
-//export const recipeAPIConfig = (state : RootState) => state.apiConfig.config;
 export const selectConfig = (state: RootState) => state.apiConfig.config;
-export const selectStatus = (state: RootState) => state.apiConfig.status;
+export const selectConfigStatus = (state: RootState) => state.apiConfig.status;
 export default ConfigSlice.reducer;

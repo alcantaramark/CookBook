@@ -58,15 +58,8 @@ function App(): JSX.Element {
 
   const dispatch = useAppDispatch();
 
-  
-  useEffect(() => {
-    dispatch(fetchConfig());
-  }, [])
+  dispatch(fetchConfig());
 
-  
-
-  
-  
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>

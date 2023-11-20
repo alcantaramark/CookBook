@@ -6,7 +6,6 @@ import { useAppTheme } from '../../../App'
 import List from './List';
 
 
-
 interface HomeProps {}
 
 export const HomeContext = createContext(null as any);
@@ -32,6 +31,10 @@ const Home: FC<HomeProps> = () => {
       height: 50
     }
   })
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <>
