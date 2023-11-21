@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
 import { ConfigState } from "../Configuration/ConfigSlice";
+import { store } from "./../../Redux/Store";
 
 export interface recipesState {
     recipes: recipe[],
@@ -21,8 +22,8 @@ const initialState: recipesState = {
     status: "idle"
 };
 
-export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async (keys: ConfigState["config"]) => {
-    const { suggesticUserId, suggesticAPIKey } = keys;
+export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
+    const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
     let recipes = await searchPopular(suggesticUserId, suggesticAPIKey).then(response => response.json());
     
     if (recipes.data.recipesByTag == null){

@@ -1,9 +1,11 @@
-import React, { FC, Fragment, createContext, useEffect, useState } from 'react';
+import React, { FC, createContext, useEffect, useState } from 'react';
 import { Searchbar, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import List from './List';
+import { selectConfigStatus } from './../../Configuration/ConfigSlice';
+import { useAppSelector } from './../../../Redux/Hooks';
 
 
 interface HomeProps {}
@@ -13,6 +15,7 @@ export const HomeContext = createContext(null as any);
 const Home: FC<HomeProps> = () => { 
   const [searchText, setSearchText] = useState('');
   const { colors: { primary } } = useAppTheme();
+  const configStatus = useAppSelector(selectConfigStatus);
 
   const styles = StyleSheet.create({
     recipeTag: {
@@ -53,7 +56,7 @@ const Home: FC<HomeProps> = () => {
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
-      <List />
+      { configStatus === "succeeded" &&  <List /> }
     </>
 )};
 

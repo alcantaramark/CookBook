@@ -24,6 +24,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-vector-icons": "^10.0.1",
     "react-navigation": "^5.0.0",
+    "reanimated-masonry-list": "^1.0.1",
     "save-dev": "^0.0.1-security"
   },
   "devDependencies": {
