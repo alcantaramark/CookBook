@@ -1,12 +1,11 @@
-import React, { FC, Fragment, createContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, TextInput, Searchbar, Button } from 'react-native-paper';
+import React, { FC, createContext, useEffect, useState } from 'react';
+import { Searchbar, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { useAppSelector } from '../../../Redux/Hooks';
-import { recipeAPIConfig } from '../../Configuration/ConfigSlice';
-
+import List from './List';
+import { selectConfigStatus } from './../../Configuration/ConfigSlice';
+import { useAppSelector } from './../../../Redux/Hooks';
 
 
 interface HomeProps {}
@@ -16,6 +15,7 @@ export const HomeContext = createContext(null as any);
 const Home: FC<HomeProps> = () => { 
   const [searchText, setSearchText] = useState('');
   const { colors: { primary } } = useAppTheme();
+  const configStatus = useAppSelector(selectConfigStatus);
 
   const styles = StyleSheet.create({
     recipeTag: {
@@ -35,10 +35,12 @@ const Home: FC<HomeProps> = () => {
     }
   })
 
-  const config = useAppSelector(recipeAPIConfig);
+  useEffect(() => {
+    
+  }, []);
 
   return (
-    <View>
+    <>
       <View style={styles.container} >
         <Searchbar placeholder='search recipe...' 
           onChangeText={(text) => setSearchText(text)} value={searchText}
@@ -54,9 +56,8 @@ const Home: FC<HomeProps> = () => {
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
-      <Text>{ config.suggesticUserId }</Text>
-      <Text>{ config.suggesticAPIKey }</Text> 
-    </View>
+      { configStatus === "succeeded" &&  <List /> }
+    </>
 )};
 
 export default Home;

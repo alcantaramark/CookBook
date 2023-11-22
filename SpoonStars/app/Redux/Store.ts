@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import configReducer from "../Features/Configuration/ConfigSlice";
-
+import recipeReducer from "./../Features/Recipe/RecipeSlice";
 
 export const store = configureStore({
     reducer: {
-        recipeConfig: configReducer
+        apiConfig: configReducer,
+        recipe: recipeReducer
     }
 });
 

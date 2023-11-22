@@ -1,30 +1,43 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../Redux/Store";
+import { fetchApiConfig } from "./ConfigService";
 
 export interface ConfigState {
-    value: {
+    config: {
         suggesticUserId: string,
         suggesticAPIKey: string
-    }
+    },
+    status: string
 }
 
 const initialState: ConfigState = {
-    value: { 
+    config: { 
         suggesticUserId: "",
         suggesticAPIKey: ""
-    }
+    },
+    status: "idle"
 };
 
+export const fetchConfig = createAsyncThunk('apiConfig/getApiConfig', async () => {
+    const config = await fetchApiConfig().then(response => response.json());
+    return config;
+})
+
 export const ConfigSlice = createSlice({
-    name: "recipeConfig",
+    name: "apiConfig",
     initialState,
-    reducers: {
-        fetchConfig: (state, action: PayloadAction<ConfigState>) => {
-            state.value = action.payload.value;
-        }       
+    reducers: { },
+    extraReducers: (builder) => {
+        builder.addCase(fetchConfig.pending, (state) => {
+            state.status = "loading";
+        })
+        .addCase(fetchConfig.fulfilled, (state, action) => {
+            state.config = action.payload;
+            state.status = "succeeded"
+        });
     }
 });
 
-export const { fetchConfig } = ConfigSlice.actions;
-export const recipeAPIConfig = (state : RootState) => state.recipeConfig.value;
+export const selectConfig = (state: RootState) => state.apiConfig.config;
+export const selectConfigStatus = (state: RootState) => state.apiConfig.status;
 export default ConfigSlice.reducer;
