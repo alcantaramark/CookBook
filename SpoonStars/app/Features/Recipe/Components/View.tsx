@@ -10,7 +10,7 @@ interface ViewProps {
 const View: FC<ViewProps> = ({item}) => {
     return(
         <>
-            <Text>item.name</Text>
+            <Text>i{item.name}</Text>
         </>
     );
 }

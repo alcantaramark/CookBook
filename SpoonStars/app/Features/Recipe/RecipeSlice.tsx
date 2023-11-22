@@ -30,6 +30,9 @@ export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes"
         recipes = [{
                 "id": "I came from an Api Call - ID",
                 "name": "I cam from an API Call - Name"
+            }, {
+                "id": "I came from an Api Call - ID",
+                "name": "we343534543"
             }];
     }
     return recipes;
