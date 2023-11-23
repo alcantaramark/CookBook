@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
-import { ConfigState } from "../Configuration/ConfigSlice";
-import { store } from "./../../Redux/Store";
 
 export interface recipesState {
     recipes: recipe[],
@@ -10,32 +8,29 @@ export interface recipesState {
 };
 
 export interface recipe {
-    id: string,
-    name: string
+    node: { 
+        id: string,
+        name: string,
+        mainImage: string,
+        totalTime: string
+    }
 };
 
 const initialState: recipesState = {
     recipes: [{
-        id: "",
-        name: ""
+        node: { 
+            id: "",
+            name: "",
+            mainImage: "",
+            totalTime: ""
+        }
     }],
     status: "idle"
 };
 
 export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
-    const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
-    let recipes = await searchPopular(suggesticUserId, suggesticAPIKey).then(response => response.json());
-    
-    if (recipes.data.recipesByTag == null){
-        recipes = [{
-                "id": "I came from an Api Call - ID",
-                "name": "I cam from an API Call - Name"
-            }, {
-                "id": "I came from an Api Call - ID",
-                "name": "we343534543"
-            }];
-    }
-    return recipes;
+    let recipes = await searchPopular().then(response => response.json());
+    return recipes.data.popularRecipes.edges;
 });
 
 export const RecipeSlice = createSlice({

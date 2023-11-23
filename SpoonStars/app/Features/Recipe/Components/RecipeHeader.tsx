@@ -3,19 +3,14 @@ import { Searchbar, Button } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import List from './List';
-import { selectConfigStatus } from './../../Configuration/ConfigSlice';
-import { useAppSelector } from './../../../Redux/Hooks';
 
-
-interface HomeProps {}
+interface RecipeHeaderProps {}
 
 export const HomeContext = createContext(null as any);
 
-const Home: FC<HomeProps> = () => { 
+const RecipeHeader: FC<RecipeHeaderProps> = () => { 
   const [searchText, setSearchText] = useState('');
   const { colors: { primary } } = useAppTheme();
-  const configStatus = useAppSelector(selectConfigStatus);
 
   const styles = StyleSheet.create({
     recipeTag: {
@@ -35,10 +30,6 @@ const Home: FC<HomeProps> = () => {
     }
   })
 
-  useEffect(() => {
-    
-  }, []);
-
   return (
     <>
       <View style={styles.container} >
@@ -56,8 +47,7 @@ const Home: FC<HomeProps> = () => {
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
-      { configStatus === "succeeded" &&  <List /> }
     </>
 )};
 
-export default Home;
+export default RecipeHeader;

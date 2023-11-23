@@ -3,16 +3,16 @@ import { recipe } from '../RecipeSlice';
 import { Text } from 'react-native-paper';
 
 
-interface ViewProps { 
+interface RecipeDetailProps { 
     item: recipe
 };
 
-const View: FC<ViewProps> = ({item}) => {
+const RecipeDetail: FC<RecipeDetailProps> = ({item}) => {
     return(
         <>
-            <Text>i{item.name}</Text>
+            <Text>{item.node.name}</Text>
         </>
     );
 }
 
-export default View;
+export default RecipeDetail;

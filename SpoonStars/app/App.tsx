@@ -23,7 +23,7 @@ import {
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import Home from './Features/Recipe/Components/Home';
+import RecipeMain from './Features/Recipe/Components/RecipeMain';
 import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { useAppDispatch } from './Redux/Hooks';
@@ -74,7 +74,7 @@ function App(): JSX.Element {
               options={{  tabBarShowLabel: true,
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunitIcons name="food" color={theme.colors.primary} size={26} /> ),
-                        }} component={Home}
+                        }} component={RecipeMain}
             />
             <Tab.Screen name="Search" 
               options={{  tabBarShowLabel: true,
