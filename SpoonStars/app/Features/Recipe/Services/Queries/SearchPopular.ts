@@ -18,6 +18,8 @@ export const searchPopular = async () => {
                             node {
                                 id
                                 name
+                                mainImage
+                                totalTime
                             }
                         }
                     }

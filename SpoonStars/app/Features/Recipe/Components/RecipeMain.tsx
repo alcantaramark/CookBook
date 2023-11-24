@@ -2,7 +2,7 @@ import React, { FC, useEffect, ReactElement } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
 import { selectRecipes, recipe, fetchPopularRecipes } from '../RecipeSlice';
-import RecipeDetail from './RecipeDetail';
+import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text } from 'react-native-paper';
 import RecipeHeader from './RecipeHeader';
@@ -21,7 +21,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     index?: number;
   }): ReactElement => {
     return (
-      <RecipeDetail item={item}  />
+      <RecipeItem item={item}  />
     );
   };
   

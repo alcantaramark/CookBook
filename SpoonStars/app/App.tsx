@@ -13,7 +13,7 @@ import {
       from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialCommunitIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
 import {
   StatusBar,
@@ -73,19 +73,19 @@ function App(): JSX.Element {
             <Tab.Screen name="Home" 
               options={{  tabBarShowLabel: true,
                           tabBarActiveTintColor: theme.colors.primary,
-                          tabBarIcon: () => ( <MaterialCommunitIcons name="food" color={theme.colors.primary} size={26} /> ),
+                          tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
                         }} component={RecipeMain}
             />
             <Tab.Screen name="Search" 
               options={{  tabBarShowLabel: true,
                           tabBarActiveTintColor: theme.colors.primary,
-                          tabBarIcon: () => ( <MaterialCommunitIcons name="clipboard-text-search-outline" color={theme.colors.primary} size={26} /> )
+                          tabBarIcon: () => ( <MaterialCommunityIcons name="clipboard-text-search-outline" color={theme.colors.primary} size={26} /> )
                         }} component={Search}
             />
             <Tab.Screen name="Plan" 
               options={{  tabBarShowLabel: true,
                           tabBarActiveTintColor: theme.colors.primary,
-                          tabBarIcon: () => ( <MaterialCommunitIcons name="calendar-check" color={theme.colors.primary} size={26} /> )
+                          tabBarIcon: () => ( <MaterialCommunityIcons name="calendar-check" color={theme.colors.primary} size={26} /> )
                         }} component={Plan}
             />          
         </Tab.Navigator>
