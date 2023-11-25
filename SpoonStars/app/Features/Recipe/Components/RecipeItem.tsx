@@ -12,32 +12,27 @@ interface RecipeItemProps {
 const RecipeItem: FC<RecipeItemProps> = ({item}) => {
     return(
         <Card style={ styles.card }>
-            <Card.Title titleVariant='titleMedium' title = { item.node.name } />
             <Card.Cover style={styles.cardCover} source={{ uri: item.node.mainImage }} />
-            <Card.Content>
-                <View style={ styles.contentView }>
-                    <MaterialCommunityIcons style={styles.cardIcons} name="clock-time-three-outline" size={20} />
-                    <Text variant='titleSmall'>{ item.node.totalTime }</Text>
-                </View>
-            </Card.Content>
+            <Card.Title titleVariant='titleMedium' title={ item.node.name } subtitle={ item.node.totalTime } />
         </Card>
     );
 }
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 5,
-        borderRadius: 0
+        marginBottom: 10,
+        marginHorizontal: 10,
+        elevation: 5,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
     cardCover: {
-        borderRadius: 0
-    },
-    cardIcons: {
-        marginRight: 5
+        borderRadius: 0,
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6
     },
     contentView: {
-        marginTop: 5,
-        flexDirection: 'row'
+        marginTop: 0,
     }
 })
 

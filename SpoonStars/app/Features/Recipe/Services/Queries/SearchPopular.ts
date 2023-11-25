@@ -3,6 +3,7 @@ import { store } from './../../../../Redux/Store';
 
 export const searchPopular = async () => {
     const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
+    const { endCursor } = store.getState().recipe.pageInfo;
 
     return await fetch(SUGGESTIC_URL, {
             method: 'POST',
@@ -13,7 +14,10 @@ export const searchPopular = async () => {
             },
             body: JSON.stringify({
                 query: `{
-                    popularRecipes {
+                    popularRecipes(
+                        first: 5
+                        ${endCursor !== '' ? 'after: \"' + endCursor + '\"' : ''}
+                        ) {
                         edges {
                             node {
                                 id
@@ -21,6 +25,13 @@ export const searchPopular = async () => {
                                 mainImage
                                 totalTime
                             }
+                            cursor
+                        }
+                        pageInfo {
+                            startCursor
+                            endCursor
+                            hasPreviousPage
+                            hasNextPage
                         }
                     }
                 }`

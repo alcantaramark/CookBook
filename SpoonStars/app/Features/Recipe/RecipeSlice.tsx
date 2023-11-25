@@ -4,7 +4,13 @@ import { RootState } from "./../../Redux/Store";
 
 export interface recipesState {
     recipes: recipe[],
-    status: string 
+    status: string,
+    pageInfo: {
+        startCursor: string,
+        endCursor: string,
+        hasNextPage: boolean,
+        hasPreviousPage: boolean
+    }
 };
 
 export interface recipe {
@@ -13,24 +19,24 @@ export interface recipe {
         name: string,
         mainImage: string,
         totalTime: string
-    }
+    },
+    cursor: string
 };
 
 const initialState: recipesState = {
-    recipes: [{
-        node: { 
-            id: "",
-            name: "",
-            mainImage: "",
-            totalTime: ""
-        }
-    }],
-    status: "idle"
+    recipes: [],
+    status: "idle",
+    pageInfo: {
+        startCursor: '',
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false
+    }
 };
 
 export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
     let recipes = await searchPopular().then(response => response.json());
-    return recipes.data.popularRecipes.edges;
+    return recipes.data.popularRecipes;
 });
 
 export const RecipeSlice = createSlice({
@@ -42,8 +48,10 @@ export const RecipeSlice = createSlice({
             state.status = "loading"
         })
         .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
-            state.recipes = action.payload;
+            state.recipes.push(...action.payload.edges);
+            state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
+            console.log("pageInfo", state.pageInfo);
         });
     }
 });

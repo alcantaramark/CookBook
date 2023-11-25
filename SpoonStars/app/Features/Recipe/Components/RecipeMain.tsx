@@ -4,7 +4,6 @@ import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlic
 import { selectRecipes, recipe, fetchPopularRecipes } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Text } from 'react-native-paper';
 import RecipeHeader from './RecipeHeader';
 
 
@@ -35,6 +34,10 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     }
   }, [configState])
   
+  const loadMore = async ()=> {
+    dispatch(fetchPopularRecipes());
+  }
+
   return(
     <>
       <RecipeHeader />
@@ -45,6 +48,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
               data= { recipesState }
               renderItem={renderItem}
               horizontal={false}
+              onEndReached={loadMore}
         />
       </GestureHandlerRootView>
     </>
