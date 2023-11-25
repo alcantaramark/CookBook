@@ -1,41 +1,42 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
-import { ConfigState } from "../Configuration/ConfigSlice";
-import { store } from "./../../Redux/Store";
 
 export interface recipesState {
     recipes: recipe[],
-    status: string 
+    status: string,
+    pageInfo: {
+        startCursor: string,
+        endCursor: string,
+        hasNextPage: boolean,
+        hasPreviousPage: boolean
+    }
 };
 
 export interface recipe {
-    id: string,
-    name: string
+    node: { 
+        id: string,
+        name: string,
+        mainImage: string,
+        totalTime: string
+    },
+    cursor: string
 };
 
 const initialState: recipesState = {
-    recipes: [{
-        id: "",
-        name: ""
-    }],
-    status: "idle"
+    recipes: [],
+    status: "idle",
+    pageInfo: {
+        startCursor: '',
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false
+    }
 };
 
 export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
-    const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
-    let recipes = await searchPopular(suggesticUserId, suggesticAPIKey).then(response => response.json());
-    
-    if (recipes.data.recipesByTag == null){
-        recipes = [{
-                "id": "I came from an Api Call - ID",
-                "name": "I cam from an API Call - Name"
-            }, {
-                "id": "I came from an Api Call - ID",
-                "name": "we343534543"
-            }];
-    }
-    return recipes;
+    let recipes = await searchPopular().then(response => response.json());
+    return recipes.data.popularRecipes;
 });
 
 export const RecipeSlice = createSlice({
@@ -47,8 +48,10 @@ export const RecipeSlice = createSlice({
             state.status = "loading"
         })
         .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
-            state.recipes = action.payload;
+            state.recipes.push(...action.payload.edges);
+            state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
+            console.log("pageInfo", state.pageInfo);
         });
     }
 });
