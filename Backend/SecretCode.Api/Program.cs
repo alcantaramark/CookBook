@@ -20,6 +20,8 @@ builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.Environment
 builder.Services.AddDbContext<SecretCodeDataContext>(options => 
     options.UseSqlServer(configuration.GetConnectionString("AwsDatabase")));
 
+Console.WriteLine($"Connection String: { configuration.GetConnectionString("AwsDatabase") }");
+
 builder.Services.AddMediatR(cfg => 
 { 
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
