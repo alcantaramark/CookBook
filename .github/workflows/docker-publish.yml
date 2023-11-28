@@ -101,6 +101,6 @@ jobs:
       - name: Build and deploy Container App
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy: ghcr.io/alcantaramark/secretcode:${{ steps.meta.outputs.tags }}
+          imageToDeploy: ghcr.io/alcantaramark/secretcode:${{ steps.meta.outputs.labels }}
           containerAppName: spoonstars-test-api
           resourceGroup: spoonstars-test          
