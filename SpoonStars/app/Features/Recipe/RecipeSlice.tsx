@@ -48,10 +48,15 @@ export const RecipeSlice = createSlice({
             state.status = "loading"
         })
         .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
-            state.recipes.push(...action.payload.edges);
+            action.payload.edges.map((item: recipe) => {
+                if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
+                    state.recipes.push(item);
+                }
+            })
+
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
-            console.log("pageInfo", state.pageInfo);
+            console.log("pageInfo", state.pageInfo.hasNextPage);
         });
     }
 });
