@@ -18,9 +18,9 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
 builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
 //Register Services
 builder.Services.AddDbContext<SecretCodeDataContext>(options => 
-    options.UseSqlServer(configuration.GetConnectionString("AwsDatabase")));
+    options.UseSqlServer(configuration.GetConnectionString("SqlDatabase")));
 
-Console.WriteLine($"Connection String: { configuration.GetConnectionString("AwsDatabase") }");
+Console.WriteLine($"Connection String: { configuration.GetConnectionString("SqlDatabase") }");
 
 builder.Services.AddMediatR(cfg => 
 { 
