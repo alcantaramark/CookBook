@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
 
+
 export interface recipesState {
     recipes: recipe[],
     status: string,
@@ -53,10 +54,8 @@ export const RecipeSlice = createSlice({
                     state.recipes.push(item);
                 }
             })
-
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
-            console.log("pageInfo", state.pageInfo.hasNextPage);
         });
     }
 });
