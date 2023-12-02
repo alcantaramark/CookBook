@@ -43,12 +43,18 @@ export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes"
 export const RecipeSlice = createSlice({
     name: "recipe",
     initialState,
-    reducers: { },
+    reducers: { 
+        clearPaging: state => { state.pageInfo.endCursor = ''; }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchPopularRecipes.pending, state => {
             state.status = "loading"
         })
         .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
+            if (!action.payload.pageInfo.hasPreviousPage) {
+                state.recipes = [];
+            }
+
             action.payload.edges.map((item: recipe) => {
                 if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
                     state.recipes.push(item);
@@ -62,4 +68,6 @@ export const RecipeSlice = createSlice({
 
 export const selectRecipes = (state: RootState) => state.recipe.recipes;
 export const selectRecipesStatus = (state: RootState) => state.recipe.status;
+export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
+export const { clearPaging } = RecipeSlice.actions;
 export default RecipeSlice.reducer;

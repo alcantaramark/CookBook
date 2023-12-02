@@ -3,7 +3,7 @@ import { store } from './../../../../Redux/Store';
 
 export const searchPopular = async () => {
     const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
-    const { endCursor, hasNextPage } = store.getState().recipe.pageInfo;
+    const { endCursor } = store.getState().recipe.pageInfo;
 
     return await fetch(SUGGESTIC_URL, {
             method: 'POST',
