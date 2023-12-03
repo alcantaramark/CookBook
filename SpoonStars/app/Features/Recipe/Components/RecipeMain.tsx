@@ -7,7 +7,8 @@ import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-g
 import RecipeHeader from './RecipeHeader';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { ActivityIndicator, StyleSheet } from 'react-native';
-
+import ContentLoader from 'react-content-loader/native';
+import { Rect } from 'react-native-svg';
 
 interface RecipeMainProps {}
 
@@ -15,6 +16,24 @@ interface RecipeMainProps {}
 const RecipeMain: FC<RecipeMainProps> = () => {
   const recipesState: recipe[] = useAppSelector(selectRecipes);
   const [refreshing, setRefreshing] = useState(false);
+
+  const recipeLoader = () => (
+    <ContentLoader
+      width={500}
+      height={600}
+      viewBox="0 0 600 800"
+      backgroundColor="#d6d6d6"
+      foregroundColor="#aaaaaa"
+    >
+    <Rect x="0" y="560" rx="3" ry="3" width="330" height="6" />
+    <Rect x="0" y="580" rx="4" ry="4" width="250" height="9" />
+    <Rect x="0" y="330" rx="10" ry="10" width="450" height="217" />
+    <Rect x="0" y="270" rx="4" ry="4" width="250" height="9" />
+    <Rect x="0" y="250" rx="3" ry="3" width="330" height="6" />
+    <Rect x="0" y="20" rx="10" ry="10" width="450" height="217" />
+  </ContentLoader>
+  )
+  
 
   const renderItem = ({item}:{
     item: recipe;
@@ -38,7 +57,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   }, [configState])
   
   const loadMore = async ()=> {
-    if (recipeStatusState === 'succeeded') {
+    if (recipeStatusState === 'succeeded' || recipeStatusState === 'idle') {
       await dispatch(fetchPopularRecipes());
     }
   }
@@ -60,22 +79,27 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     <>
       <RecipeHeader />
       <GestureHandlerRootView>
-        <FlatList
-              keyExtractor = {(item: recipe): string => item.node.id}
-              numColumns = {1}
-              data= { recipesState }
-              renderItem={renderItem}
-              horizontal={false}
-              onEndReached={loadMore}
-              ListFooterComponent={footer}
-              style={styles.flatListStyle}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
-                style={{backgroundColor: 'transparent'}}
-                title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
-                />
-              }
-        />
+        
+        {
+          (recipeStatusState === 'loading' 
+            || configStatusState === 'loading') && recipesState.length == 0 ? recipeLoader() :
+          <FlatList
+                keyExtractor = {(item: recipe): string => item.node.id}
+                numColumns = {1}
+                data= { recipesState }
+                renderItem={renderItem}
+                horizontal={false}
+                onEndReached={loadMore}
+                ListFooterComponent={footer}
+                style={styles.flatListStyle}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
+                  style={{backgroundColor: 'transparent'}}
+                  title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
+                  />
+                }
+          />
+        }
       </GestureHandlerRootView>
     </>
   );
@@ -84,6 +108,9 @@ const RecipeMain: FC<RecipeMainProps> = () => {
 const styles = StyleSheet.create({
   flatListStyle: {
     marginTop: 20
+  },
+  skeleton: {
+    margin: 10  
   }
 })
 
