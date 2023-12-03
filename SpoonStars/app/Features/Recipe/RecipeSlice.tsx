@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
 
+
 export interface recipesState {
     recipes: recipe[],
     status: string,
@@ -42,25 +43,31 @@ export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes"
 export const RecipeSlice = createSlice({
     name: "recipe",
     initialState,
-    reducers: { },
+    reducers: { 
+        clearPaging: state => { state.pageInfo.endCursor = ''; }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchPopularRecipes.pending, state => {
             state.status = "loading"
         })
         .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
+            if (!action.payload.pageInfo.hasPreviousPage) {
+                state.recipes = [];
+            }
+
             action.payload.edges.map((item: recipe) => {
                 if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
                     state.recipes.push(item);
                 }
             })
-
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
-            console.log("pageInfo", state.pageInfo.hasNextPage);
         });
     }
 });
 
 export const selectRecipes = (state: RootState) => state.recipe.recipes;
 export const selectRecipesStatus = (state: RootState) => state.recipe.status;
+export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
+export const { clearPaging } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
