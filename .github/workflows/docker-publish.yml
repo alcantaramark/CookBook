@@ -42,7 +42,7 @@ jobs:
             (github.ref == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' || github.ref == 'refs/heads/main')
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{ env.GITHUB_WORKSPACE }}/Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
+          files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
       
