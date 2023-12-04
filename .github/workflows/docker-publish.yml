@@ -17,7 +17,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   CONFIG_FILE: ${{ github.ref  == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' && 'Appsettings.Development.json' || 'Apsettings.Production.json' }}
-  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' && ${{ secrets.SPOONSTARS_TEST_CONNECTIONSTRING }} || ${{ secrets.SPOONSTARS_CONNECTIONSTRING }} }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
 
 jobs:
   build:
