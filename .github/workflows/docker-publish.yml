@@ -37,15 +37,15 @@ jobs:
       - run: echo ${{ env.CONNECTION_STRING }}
 
       #modify connection string in appsettings
-      - name: Update Connect String
-        if: | 
-            github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' || github.ref == 'refs/heads/main')
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.GITHUB_WORKSPACE }}/Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
-        env:
-          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+      # - name: Update Connect String
+      #   if: | 
+      #       github.event_name != 'pull_request' &&
+      #       (github.ref == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' || github.ref == 'refs/heads/main')
+      #   uses: microsoft/variable-substitution@v1
+      #   with:
+      #     files: ${{ env.GITHUB_WORKSPACE }}/Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
+      #   env:
+      #     ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
