@@ -16,7 +16,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  CONFIG_FILE: ${{ github.ref  == 'refs/heads/dev' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
 
 jobs:
   build:
@@ -33,6 +34,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      #modify connection string in appsettings
+      - name: Update Connection String
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
+        env:
+          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+      
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -124,6 +136,6 @@ jobs:
             (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy: ghcr.io/alcantaramark/secretcode:dev
+          imageToDeploy: ghcr.io/alcantaramark/secretcode:${{ github.ref_name }}
           containerAppName: spoonstars-test-api
           resourceGroup: spoonstars-test          
