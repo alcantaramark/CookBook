@@ -16,8 +16,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  CONFIG_FILE: ${{ github.ref  == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
-  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
+  CONFIG_FILE: ${{ github.ref  == 'refs/heads/dev' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
 
 jobs:
   build:
@@ -36,10 +36,10 @@ jobs:
       - run: echo ${{ env.CONFIG_FILE }}
 
       #modify connection string in appsettings
-      - name: Update Connect String
+      - name: Update Connection String
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/39-change-appsettings-sensitive-info-during-run-of-action' || github.ref == 'refs/heads/main')
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
         uses: microsoft/variable-substitution@v1
         with:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
