@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - run: echo ${{ env.CONFIG_FILE }} ${{ env.CONNECTION_STRING }}
+      - run: echo ${{ env.CONFIG_FILE }}
 
       #modify connection string in appsettings
       # - name: Update Connect String
