@@ -7,7 +7,8 @@ name: Docker
 
 on:
   push:
-    branches: [ "dev" ]
+    branches:
+      - '*'
     # Publish semver tags as releases.
 
 env:
@@ -15,7 +16,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-
+  CONFIG_FILE: ${{ github.ref  == 'refs/heads/dev' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
 
 jobs:
   build:
@@ -32,10 +34,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      #modify connection string in appsettings
+      - name: Update Connection String
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
+        env:
+          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+      
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
-        if: github.event_name != 'pull_request'
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+        
         uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
         with:
           cosign-release: 'v2.1.1'
@@ -44,12 +60,17 @@ jobs:
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')        
         uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')        
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -59,6 +80,9 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
@@ -67,6 +91,9 @@ jobs:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
@@ -84,7 +111,9 @@ jobs:
       # transparency data even for private images, pass --force to cosign below.
       # https://github.com/sigstore/cosign
       - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
         env:
           # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
           TAGS: ${{ steps.meta.outputs.tags }}
@@ -94,13 +123,19 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
           
       - name: Log in to Azure
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Build and deploy Container App
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy: ghcr.io/alcantaramark/secretcode:dev
+          imageToDeploy: ghcr.io/alcantaramark/secretcode:${{ github.ref_name }}
           containerAppName: spoonstars-test-api
           resourceGroup: spoonstars-test          
