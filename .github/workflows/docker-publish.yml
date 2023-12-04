@@ -43,7 +43,7 @@ jobs:
         with:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
         env:
-          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_TEST_STRING }}
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
