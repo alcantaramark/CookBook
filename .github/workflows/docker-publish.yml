@@ -44,7 +44,7 @@ jobs:
       #   run: dotnet restore SecretCode.sln
 
       - name: Restore Dependencies
-        run: nuget restore .Backend/SecretCode.sln
+        run: nuget restore ./Backend/SecretCode.sln
         
       - name: Build
         run: dotnet build ./Backend/SecretCode.sln --no-restore
