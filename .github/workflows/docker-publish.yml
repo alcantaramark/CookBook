@@ -49,7 +49,7 @@ jobs:
 
       - name: Tests
         working-directory: ./Backend
-        run: dotnet test        
+        run: dotnet test --no-restore
 
       #modify connection string in appsettings
       - name: Update Connection String
