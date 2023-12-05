@@ -33,6 +33,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+      
+      - name: Install Dependencies
+        working-directory: ./Backend
+        run: dotnet restore
+
+      - name: Build
+        working-directory: ./Backend
+        run: dotnet build
+
+      - name: Tests
+        working-directory: ./Backend
+        run: dotnet test        
 
       #modify connection string in appsettings
       - name: Update Connection String
