@@ -23,6 +23,6 @@ public class GetUsersHandlerTests
         var result = await handler.Handle(request, default);
 
         //Assert;
-        Assert.Equal<int>(200, _fixture._users.Count);
+        Assert.Equal<int>(result.Count, _fixture._users.Count);
     }
 }
