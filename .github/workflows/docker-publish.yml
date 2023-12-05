@@ -46,7 +46,7 @@ jobs:
         run: dotnet build ./Backend/SecretCode.sln --no-restore
 
       - name: Tests
-        run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;versbosity=detailed"
+        run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
       #modify connection string in appsettings
       - name: Update Connection String
