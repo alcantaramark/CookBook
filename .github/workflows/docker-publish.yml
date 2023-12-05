@@ -45,11 +45,11 @@ jobs:
 
       - name: Build
         working-directory: ./Backend
-        run: dotnet build
+        run: dotnet build --no-restore
 
       - name: Tests
         working-directory: ./Backend
-        run: dotnet test ./Backend/SecretCode.Tests/SecretCode.Tests.csproj --no-build --no-restore
+        run: dotnet test /SecretCode.Tests/SecretCode.Tests.csproj --no-build --no-restore
 
       #modify connection string in appsettings
       - name: Update Connection String
