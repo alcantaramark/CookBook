@@ -41,15 +41,15 @@ jobs:
       
       - name: Install Dependencies
         working-directory: ./Backend
-        run: dotnet restore
+        run: dotnet restore SecretCode.sln -v q
 
       - name: Build
         working-directory: ./Backend
-        run: dotnet build --no-restore
+        run: dotnet build SecretCode.sln --no-restore -c Release -v q
 
       - name: Tests
         working-directory: ./Backend
-        run: dotnet test /SecretCode.Tests/SecretCode.Tests.csproj --no-build --no-restore
+        run: dotnet test SecretCode.sln --no-build --no-restore -c Release -v q
 
       #modify connection string in appsettings
       - name: Update Connection String
