@@ -40,8 +40,8 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      # - name: Restore Dependencies
-      #   run: nuget restore ./Backend/SecretCode.sln
+      - name: Restore Dependencies
+        run: nuget restore ./Backend/SecretCode.sln
         
       # - name: Build
       #   run: dotnet build ./Backend/SecretCode.sln --no-restore
