@@ -17,7 +17,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   CONFIG_FILE: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
-  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
   BUILD_ARG: ${{ github.ref  == 'refs/heads/dev' && 'env_instance=Development'  ||  'env_instance=Production' }}
   APP_ENVIRONMENT: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && 'Development'  ||  'Production' }}
 jobs:
@@ -161,7 +161,7 @@ jobs:
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')        
         uses: azure/sql-action@v2.2
         with:
-          connection-string: ${{ secrets.SPOONSTARS_TEST_CONNECTIONSTRING }}
+          connection-string: ${{ env.CONNECTION_STRING }}
           path: './script.sql'
 
       - name: Build and deploy Container App
