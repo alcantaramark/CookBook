@@ -68,7 +68,7 @@ jobs:
         run: |
               dotnet tool install --global dotnet-ef
               dotnet ef migrations script -o ./script.sql -p ./Backend/SecretCode.Api/SecretCode.Api.csproj
-
+              cat ./script.sql
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
