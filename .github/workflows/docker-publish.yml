@@ -161,7 +161,7 @@ jobs:
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')        
         uses: azure/sql-action@v2.2
         with:
-          connection-string: '${{ env.CONNECTION_STRING }}'
+          connection-string: ${{ secrets.SPOONSTARS_TEST_CONNECTIONSTRING }}
           path: './script.sql'
 
       - name: Build and deploy Container App
