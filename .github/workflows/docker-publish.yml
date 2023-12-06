@@ -19,6 +19,7 @@ env:
   CONFIG_FILE: ${{ github.ref  == 'refs/heads/dev' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
   CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
   BUILD_ARG: ${{ github.ref  == 'refs/heads/dev' && 'env_instance=Development'  ||  'env_instance=Production' }}
+  APP_ENVIRONMENT: ${{ github.ref  == 'refs/heads/dev' && 'Development'  ||  github.ref  == 'refs/heads/main' && 'Production' || 'feature_branch' }}
 jobs:
   build:
 
@@ -33,6 +34,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - run: echo ${{ env.APP_ENVIRONMENT }}
       
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v3
@@ -52,19 +54,28 @@ jobs:
       - name: Update Connection String
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: microsoft/variable-substitution@v1
         with:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
       
+      #Run ef core generate database script
+      - name: Ef Core Generate SQL Script
+        if: |
+            github.event_name != 'pull_request' &&
+            env.APP_ENVIRONMENT != 'feature_branch'
+        run: |
+              dotnet tool install --global dotnet-ef
+              dotnet ef migrations script -o ./script.sql -p ./Backend/SecretCode.Api/SecretCode.Api.csproj --idempotent
+              cat ./script.sql
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+            env.APP_ENVIRONMENT != 'feature_branch'
         
         uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
         with:
@@ -76,7 +87,7 @@ jobs:
       - name: Set up Docker Buildx
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')        
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
 
       # Login against a Docker registry except on PR
@@ -84,7 +95,7 @@ jobs:
       - name: Log into registry ${{ env.REGISTRY }}
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')        
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -96,7 +107,7 @@ jobs:
       - name: Extract Docker metadata
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
+            env.APP_ENVIRONMENT != 'feature_branch'
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
@@ -107,7 +118,7 @@ jobs:
       - name: Build and push Docker image
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
+            env.APP_ENVIRONMENT != 'feature_branch'
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
@@ -127,7 +138,7 @@ jobs:
       - name: Sign the published Docker image
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+            env.APP_ENVIRONMENT != 'feature_branch'
         env:
           # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
           TAGS: ${{ steps.meta.outputs.tags }}
@@ -139,15 +150,25 @@ jobs:
       - name: Log in to Azure
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      #Run script in Azure Db
+      - name: Run SQL in Azure
+        if: |
+            github.event_name != 'pull_request' &&
+            env.APP_ENVIRONMENT != 'feature_branch'
+        uses: azure/sql-action@v2.2
+        with:
+          connection-string: ${{ env.CONNECTION_STRING }}
+          path: './script.sql'
+
       - name: Build and deploy Container App
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')      
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: azure/container-apps-deploy-action@v1
         with:
           imageToDeploy: ghcr.io/alcantaramark/secretcode:${{ github.ref_name }}
