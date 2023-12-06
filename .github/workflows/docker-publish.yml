@@ -66,6 +66,7 @@ jobs:
             github.event_name != 'pull_request' &&
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
+              cat ./Backend/SecretCode.Api/appsettings.Development.json
               dotnet tool install --global dotnet-ef
               export ASPNETCORE_ENVIRONMENT="${{ env.APP_ENVIRONMENT }}"
               dotnet ef database update --no-build --project ./Backend/SecretCode.Api/SecretCode.Api.csproj
