@@ -43,8 +43,8 @@ jobs:
       - name: Restore Dependencies
         run: nuget restore ./Backend/SecretCode.sln
         
-      # - name: Build
-      #   run: dotnet build ./Backend/SecretCode.sln --no-restore
+      - name: Build
+        run: dotnet build ./Backend/SecretCode.sln --no-restore
 
       # - name: Tests
       #   run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
