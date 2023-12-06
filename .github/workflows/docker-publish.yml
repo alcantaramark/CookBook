@@ -68,7 +68,7 @@ jobs:
         run: |
               export ASPNETCORE_ENVIRONMENT=${{ env.APP_ENVIRONMENT }}
               dotnet tool install --global dotnet-ef
-              dotnet ef database update --project ./Backend/SecretCode.Api/SecretCode.Api.csproj --no-build
+              dotnet ef database update --project ./Backend/SecretCode.Api/SecretCode.Api.csproj --no-build -Args '--environment Development'
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
