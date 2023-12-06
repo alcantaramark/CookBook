@@ -67,6 +67,7 @@ jobs:
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
               dotnet tool install --global dotnet-ef
+              dotnet tool restore
               dotnet ef database update -c SecretCodeDataContext -s SecretCode.sln -project ./Backend/SecretCode.Api/SecretCode.Api.csproj
         env:
             ASPNETCORE_ENVIRONMENT: Development
