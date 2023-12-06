@@ -68,7 +68,7 @@ jobs:
         run: |
               dotnet tool install --global dotnet-ef
               dotnet tool restore
-              dotnet ef database update -c SecretCodeDataContext -s SecretCode.sln -project ./Backend/SecretCode.Api/SecretCode.Api.csproj
+              dotnet ef database update -c SecretCodeDataContext -s ./Backend -project /SecretCode.Api/SecretCode.Api.csproj
         env:
             ASPNETCORE_ENVIRONMENT: Development
       
