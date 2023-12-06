@@ -34,6 +34,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - run: echo ${{ env.APP_ENVIRONMENT }}
       
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v3
