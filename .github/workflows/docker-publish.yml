@@ -19,6 +19,7 @@ env:
   CONFIG_FILE: ${{ github.ref  == 'refs/heads/dev' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
   CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
   BUILD_ARG: ${{ github.ref  == 'refs/heads/dev' && 'env_instance=Development'  ||  'env_instance=Production' }}
+  APP_ENVIRONMENT: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && 'Development'  ||  'Production' }}
 jobs:
   build:
 
@@ -52,12 +53,21 @@ jobs:
       - name: Update Connection String
         if: | 
             github.event_name != 'pull_request' &&
-            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')
+            (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         uses: microsoft/variable-substitution@v1
         with:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+      
+      #Run ef core database update
+      - name: Ef Core Database Update
+        if: |  
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
+        run: |
+              dotnet tool install --global dotnet-ef
+              dotnet ef database-update --environment ${{ env.APP_ENVIRONMENT }} --project ./Backend/SecretCode.Api/SecretCode.Api.csproj
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
