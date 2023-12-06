@@ -17,7 +17,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   CONFIG_FILE: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && 'appsettings.Development.json' || 'apsettings.Production.json' }}
-  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/dev' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
+  CONNECTION_STRING: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && secrets.SPOONSTARS_TEST_CONNECTIONSTRING  ||  secrets.SPOONSTARS_CONNECTIONSTRING }}
   BUILD_ARG: ${{ github.ref  == 'refs/heads/dev' && 'env_instance=Development'  ||  'env_instance=Production' }}
   APP_ENVIRONMENT: ${{ github.ref  == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' && 'Development'  ||  'Production' }}
 jobs:
@@ -67,9 +67,9 @@ jobs:
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
               dotnet tool install --global dotnet-ef
-              dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj
-        env:
-            ASPNETCORE_ENVIRONMENT: ${{ env.APP_ENVIRONMENT }}
+              dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj -connection ${{ env.CONNECTION_STRING }}
+        # env:
+        #     ASPNETCORE_ENVIRONMENT: ${{ env.APP_ENVIRONMENT }}
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
