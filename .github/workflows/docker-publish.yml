@@ -66,11 +66,9 @@ jobs:
             github.event_name != 'pull_request' &&
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
-              cat ./Backend/SecretCode.Api/appsettings.Development.json
               dotnet tool install --global dotnet-ef
-              dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj --configuration Development
-        # env:
-        #     ASPNETCORE_ENVIRONMENT: ${{ env.APP_ENVIRONMENT }}
+              dotnet ef migrations script -o ./script.sql
+              cat ./script.sql
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
