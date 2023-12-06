@@ -62,7 +62,8 @@ jobs:
       
       #Run ef core database update
       - name: Ef Core Database Update
-        if: |  
+        if: |
+            cat ./Backen/SecretCode.Api/appsettings.Development.json
             github.event_name != 'pull_request' &&
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
