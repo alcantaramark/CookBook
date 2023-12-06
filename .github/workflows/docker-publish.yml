@@ -69,7 +69,7 @@ jobs:
               dotnet new tool-manifest
               dotnet tool install --global dotnet-ef
               dotnet tool restore
-              dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj
+              dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj -connection Server=tcp:spoonstars-test.database.windows.net,1433;Initial Catalog=spoonstars-test-db;Persist Security Info=False;User ID=spoonstars;Password=NataliePearl_01;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
         env:
             ASPNETCORE_ENVIRONMENT: Development
       
