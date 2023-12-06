@@ -60,16 +60,15 @@ jobs:
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
       
-      #Run ef core database update
-      - name: Ef Core Database Update
+      #Run ef core generate database script
+      - name: Ef Core Generate SQL Script
         if: |
             github.event_name != 'pull_request' &&
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
               dotnet tool install --global dotnet-ef
               dotnet ef migrations script -o ./script.sql -p ./Backend/SecretCode.Api/SecretCode.Api.csproj
-              cat ./script.sql
-      
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -154,6 +153,16 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      #Run script in Azure Db
+      - name: Run SQL in Azure
+        if: |
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')        
+        uses: azure/sql-action@v2.2
+        with:
+          connection-string: ${{ env.CONNECTION_STRING }}
+          path: './script.sql'
 
       - name: Build and deploy Container App
         if: | 
