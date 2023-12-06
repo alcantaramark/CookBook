@@ -54,7 +54,7 @@ jobs:
       - name: Update Connection String
         if: | 
             github.event_name != 'pull_request' &&
-            ${{ env.APP_ENVIRONMENT != 'feature_branch' }}
+            env.APP_ENVIRONMENT != 'feature_branch'
         uses: microsoft/variable-substitution@v1
         with:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
