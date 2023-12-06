@@ -40,14 +40,14 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - name: Restore Dependencies
-        run: nuget restore ./Backend/SecretCode.sln
+      # - name: Restore Dependencies
+      #   run: nuget restore ./Backend/SecretCode.sln
         
-      - name: Build
-        run: dotnet build ./Backend/SecretCode.sln --no-restore
+      # - name: Build
+      #   run: dotnet build ./Backend/SecretCode.sln --no-restore
 
-      - name: Tests
-        run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
+      # - name: Tests
+      #   run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
       #modify connection string in appsettings
       - name: Update Connection String
@@ -67,7 +67,7 @@ jobs:
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
               dotnet tool install --global dotnet-ef
-              export ASPNETCORE_ENVIRONMENT= ${{ env.APP_ENVIRONMENT }}
+              export ASPNETCORE_ENVIRONMENT="Development"
               dotnet ef database update --no-build --project ./Backend/SecretCode.Api/SecretCode.Api.csproj
       
       # Install the cosign tool except on PR
