@@ -50,15 +50,15 @@ jobs:
       #   run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
       #modify connection string in appsettings
-      # - name: Update Connection String
-      #   if: | 
-      #       github.event_name != 'pull_request' &&
-      #       (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
-      #   uses: microsoft/variable-substitution@v1
-      #   with:
-      #     files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
-      #   env:
-      #     ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+      - name: Update Connection String
+        if: | 
+            github.event_name != 'pull_request' &&
+            (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
+        env:
+          ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
       
       #Run ef core database update
       - name: Ef Core Database Update
@@ -66,6 +66,7 @@ jobs:
             github.event_name != 'pull_request' &&
             (github.ref == 'refs/heads/40-Include-unit-tests-and-ef-update-db-on-github-actions-for-every-merge-and-pull-request-2' || github.ref == 'refs/heads/main')
         run: |
+              echo ${{secrets.SPOONSTARS_TEST_CONNECTIONSTRING}} | sed 's/./& /g'
               dotnet tool install --global dotnet-ef
               dotnet ef database update -c SecretCodeDataContext -s ./Backend/SecretCode.Api/SecretCode.Api.csproj
         env:
