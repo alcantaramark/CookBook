@@ -25,6 +25,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
       backgroundColor="#d6d6d6"
       foregroundColor="#aaaaaa"
     >
+    <Rect x="0" y="630" rx="10" ry="10" width="450" height="217" />
     <Rect x="0" y="560" rx="3" ry="3" width="330" height="6" />
     <Rect x="0" y="580" rx="4" ry="4" width="250" height="9" />
     <Rect x="0" y="330" rx="10" ry="10" width="450" height="217" />
@@ -79,7 +80,6 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     <>
       <RecipeHeader />
       <GestureHandlerRootView>
-        
         {
           (recipeStatusState === 'loading' 
             || configStatusState === 'loading') && recipesState.length == 0 ? recipeLoader() :
