@@ -28,6 +28,7 @@ import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
+import { loadRecipePreferences } from './Features/Recipe/RecipeSlice';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -59,6 +60,7 @@ function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
   dispatch(fetchConfig());
+  dispatch(loadRecipePreferences());
 
   return (
     <NavigationContainer>

@@ -1,11 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
+import recipePreference from './Data/RecipePreference.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export interface recipesState {
     recipes: recipe[],
     status: string,
+    tags: recipeTag[],
+    preferenceStatus: string,
     pageInfo: {
         startCursor: string,
         endCursor: string,
@@ -13,6 +17,11 @@ export interface recipesState {
         hasPreviousPage: boolean
     }
 };
+
+export interface recipeTag {
+    name: string,
+    preferred: boolean
+}
 
 export interface recipe {
     node: { 
@@ -27,6 +36,8 @@ export interface recipe {
 const initialState: recipesState = {
     recipes: [],
     status: "idle",
+    preferenceStatus: "idle",
+    tags: [],
     pageInfo: {
         startCursor: '',
         endCursor: '',
@@ -38,6 +49,17 @@ const initialState: recipesState = {
 export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
     let recipes = await searchPopular().then(response => response.json());
     return recipes.data.popularRecipes;
+});
+
+
+export const loadRecipePreferences = createAsyncThunk("recipe/loadRecipeTags", async () => {
+    const tags = await AsyncStorage.getItem('recipe-tags');
+
+    if (tags == null) {
+        await AsyncStorage.setItem('recipe-tags', JSON.stringify(recipePreference.Tags));
+    }
+
+    return tags == null ? recipePreference.Tags : JSON.parse(tags);
 });
 
 export const RecipeSlice = createSlice({
@@ -62,6 +84,13 @@ export const RecipeSlice = createSlice({
             })
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
+        })
+        .addCase(loadRecipePreferences.pending, state => {
+            state.preferenceStatus = "loading";
+        })
+        .addCase(loadRecipePreferences.fulfilled, (state, action) => {
+            state.tags = action.payload;
+            //state.preferenceStatus = "succeeded";
         });
     }
 });
@@ -69,5 +98,7 @@ export const RecipeSlice = createSlice({
 export const selectRecipes = (state: RootState) => state.recipe.recipes;
 export const selectRecipesStatus = (state: RootState) => state.recipe.status;
 export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
+export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
+export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const { clearPaging } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
