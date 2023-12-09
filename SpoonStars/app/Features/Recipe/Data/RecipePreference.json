@@ -10,7 +10,7 @@
             "preferred": false
         }, {
             "name": "Dessert",
-            "preferred": "Peanut-Free"
+            "preferred": "false"
         }
     ]
 }

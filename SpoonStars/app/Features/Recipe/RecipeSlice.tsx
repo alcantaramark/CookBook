@@ -52,7 +52,7 @@ export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes"
 });
 
 
-export const loadRecipePreferences = createAsyncThunk("recipe/loadRecipeTags", async () => {
+export const loadRecipePreference = createAsyncThunk("recipe/loadRecipeTags", async () => {
     const tags = await AsyncStorage.getItem('recipe-tags');
 
     if (tags == null) {
@@ -62,11 +62,27 @@ export const loadRecipePreferences = createAsyncThunk("recipe/loadRecipeTags", a
     return tags == null ? recipePreference.Tags : JSON.parse(tags);
 });
 
+export const setRecipePreference = createAsyncThunk("recipe/setRecipePreference", async (data: recipeTag[]) => {
+    await AsyncStorage.setItem('recipe-tags', JSON.stringify(data));
+    console.log('data', data);
+});
+
 export const RecipeSlice = createSlice({
     name: "recipe",
     initialState,
     reducers: { 
-        clearPaging: state => { state.pageInfo.endCursor = ''; }
+        clearPaging: state => { state.pageInfo.endCursor = ''; },
+        updateRecipePreference: (state, action) => {
+            state.tags.map((item, index) => { 
+                if (index == action.payload) {
+                    item.preferred = true;
+                }
+                else {
+                    item.preferred = false;
+                }
+                return item;
+            })
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchPopularRecipes.pending, state => {
@@ -85,12 +101,12 @@ export const RecipeSlice = createSlice({
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
         })
-        .addCase(loadRecipePreferences.pending, state => {
+        .addCase(loadRecipePreference.pending, state => {
             state.preferenceStatus = "loading";
         })
-        .addCase(loadRecipePreferences.fulfilled, (state, action) => {
+        .addCase(loadRecipePreference.fulfilled, (state, action) => {
             state.tags = action.payload;
-            //state.preferenceStatus = "succeeded";
+            state.preferenceStatus = "succeeded";
         });
     }
 });
@@ -100,5 +116,5 @@ export const selectRecipesStatus = (state: RootState) => state.recipe.status;
 export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
 export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
-export const { clearPaging } = RecipeSlice.actions;
+export const { clearPaging, updateRecipePreference } = RecipeSlice.actions;
 export default RecipeSlice.reducer;

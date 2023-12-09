@@ -50,7 +50,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const recipeStatusState = useAppSelector(selectRecipesStatus);
   
   const dispatch = useAppDispatch();
-
+  
   useEffect(() => {
     if (configStatusState === 'succeeded'){
       dispatch(fetchPopularRecipes());
@@ -78,7 +78,6 @@ const RecipeMain: FC<RecipeMainProps> = () => {
 
   return(
     <>
-      <RecipeHeader />
       <GestureHandlerRootView>
         {
           (recipeStatusState === 'loading' 

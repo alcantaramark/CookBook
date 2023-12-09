@@ -28,7 +28,8 @@ import Search from './components/Search/Search';
 import Plan from './components/Plan/Plan';
 import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
-import { loadRecipePreferences } from './Features/Recipe/RecipeSlice';
+import { loadRecipePreference } from './Features/Recipe/RecipeSlice';
+import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -60,7 +61,7 @@ function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
   dispatch(fetchConfig());
-  dispatch(loadRecipePreferences());
+  dispatch(loadRecipePreference());
 
   return (
     <NavigationContainer>
@@ -76,7 +77,7 @@ function App(): JSX.Element {
               options={{  tabBarShowLabel: true,
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
-                        }} component={RecipeMain}
+                        }} component={RecipeHeader}
             />
             <Tab.Screen name="Search" 
               options={{  tabBarShowLabel: true,
