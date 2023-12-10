@@ -1,5 +1,5 @@
 import { Action, createAsyncThunk, createSlice, ThunkAction } from "@reduxjs/toolkit";
-import { searchPopular } from "./Services/Queries/SearchPopular";
+import { searchByTag, searchPopular } from "./Services/Queries/SearchRecipes";
 import { RootState } from "./../../Redux/Store";
 import recipePreference from './Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,7 +15,8 @@ export interface recipesState {
         endCursor: string,
         hasNextPage: boolean,
         hasPreviousPage: boolean
-    }
+    },
+    errors: []
 };
 
 export interface recipeTag {
@@ -43,18 +44,24 @@ const initialState: recipesState = {
         endCursor: '',
         hasNextPage: false,
         hasPreviousPage: false
-    }
+    },
+    errors:[]
 };
 
-export const fetchPopularRecipes = createAsyncThunk("recipe/fetchPopularRecipes", async () => {
-    let recipes = await searchPopular().then(response => response.json());
-    return recipes.data.popularRecipes;
+export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { getState }) => {
+    const state = getState() as RootState;
+    const preferred = state.recipe.tags.find(tag => tag.preferred == true);
+
+    const recipes = preferred == undefined ? await searchPopular().then(response => response.json()) :
+        await searchByTag(preferred.name).then(response => response.json());
+    
+    return preferred == undefined ? recipes.data.popularRecipes : recipes.data.recipesByTag;
 });
 
 
 export const loadRecipePreference = createAsyncThunk("recipe/loadRecipeTags", async () => {
     const tags = await AsyncStorage.getItem('recipe-tags');
-
+    
     if (tags == null) {
         await AsyncStorage.setItem('recipe-tags', JSON.stringify(recipePreference.Tags));
     }
@@ -64,7 +71,6 @@ export const loadRecipePreference = createAsyncThunk("recipe/loadRecipeTags", as
 
 export const saveRecipePreference = createAsyncThunk("recipe/setRecipePreference", async (_, { getState }) => {
     const state = getState() as RootState;
-    console.log('data', state.recipe.tags);
     await AsyncStorage.setItem('recipe-tags', JSON.stringify(state.recipe.tags));
 });
 
@@ -88,10 +94,10 @@ export const RecipeSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchPopularRecipes.pending, state => {
+        builder.addCase(fetchRecipes.pending, state => {
             state.status = "loading"
         })
-        .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
+        .addCase(fetchRecipes.fulfilled, (state, action) => {
             if (!action.payload.pageInfo.hasPreviousPage) {
                 state.recipes = [];
             }
@@ -103,6 +109,9 @@ export const RecipeSlice = createSlice({
             })
             state.pageInfo = action.payload.pageInfo;
             state.status = "succeeded";
+        })
+        .addCase(fetchRecipes.rejected, state => {
+            
         })
         .addCase(loadRecipePreference.pending, state => {
             state.preferenceStatus = "loading";

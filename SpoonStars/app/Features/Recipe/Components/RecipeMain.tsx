@@ -1,7 +1,7 @@
 import React, { FC, useEffect, ReactElement, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
-import { selectRecipes, recipe, fetchPopularRecipes, selectRecipesStatus, clearPaging } from '../RecipeSlice';
+import { selectRecipes, recipe, fetchRecipes, selectRecipesStatus, clearPaging } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import RecipeHeader from './RecipeHeader';
@@ -53,13 +53,17 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   
   useEffect(() => {
     if (configStatusState === 'succeeded'){
-      dispatch(fetchPopularRecipes());
+      dispatch(fetchRecipes());
     }
   }, [configState])
   
+  useEffect(() => {
+    console.log('i am here');
+  }, [recipesState])
+
   const loadMore = async ()=> {
     if (recipeStatusState === 'succeeded' || recipeStatusState === 'idle') {
-      await dispatch(fetchPopularRecipes());
+      await dispatch(fetchRecipes());
     }
   }
 
@@ -72,7 +76,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     dispatch(clearPaging());
-    await dispatch(fetchPopularRecipes());
+    await dispatch(fetchRecipes());
     setRefreshing(false);
   }
 

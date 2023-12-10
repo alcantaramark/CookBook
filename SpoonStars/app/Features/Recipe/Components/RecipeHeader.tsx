@@ -3,7 +3,7 @@ import { Searchbar, Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference } from '../RecipeSlice';
+import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference, fetchRecipes } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RecipeMain from './RecipeMain';
@@ -51,11 +51,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     const nextStyles = tagStyles.map((item, i) => {
       if (index == i) {
         item = 'white';
-        recipeTags[index].preferred = true;
       }
       else {
         item = 'black';
-        recipeTags[index].preferred = false;
       }
       return item;
     });
@@ -63,11 +61,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
+    dispatch(fetchRecipes());
   };
 
   useEffect(() => {
     if (preferenceStatus === 'succeeded') {
-      const modes = recipeTags.map(item => item.preferred ? 'white' : 'black'); 
+      const modes = recipeTags.map(item => item.preferred == true ? 'white' : 'black'); 
       setTagStyles(modes);
     }
   }, [preferenceStatus])
@@ -99,7 +98,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               showsHorizontalScrollIndicator={false} 
               style={styles.scroll}
             >
-              {createButtons() }
+            { createButtons() }
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 
