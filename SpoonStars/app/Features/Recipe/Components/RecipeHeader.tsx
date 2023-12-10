@@ -3,7 +3,7 @@ import { Searchbar, Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { selectRecipeTags, selectRecipePreferencesStatus, setRecipePreference, recipeTag, updateRecipePreference } from '../RecipeSlice';
+import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RecipeMain from './RecipeMain';
@@ -62,6 +62,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
+    dispatch(saveRecipePreference());
   };
 
   useEffect(() => {
@@ -70,12 +71,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       setTagStyles(modes);
     }
   }, [preferenceStatus])
-
-  useEffect(() => {
-    if (recipeTags.length > 0){
-      dispatch(setRecipePreference(recipeTags));
-    }
-  }, [recipeTags]);
 
   const createButtons = () => {
     return ( 
@@ -105,11 +100,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               style={styles.scroll}
             >
               {createButtons() }
-              <Button
-                compact={true} 
-                textColor='black' 
-                icon={() => (<MaterialCommunityIcons name="star" size={20} />)}>customize
-              </Button>
             </ScrollView>
         </GestureHandlerRootView> 
       </View> 

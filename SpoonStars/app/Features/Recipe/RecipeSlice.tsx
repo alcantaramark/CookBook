@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Action, createAsyncThunk, createSlice, ThunkAction } from "@reduxjs/toolkit";
 import { searchPopular } from "./Services/Queries/SearchPopular";
 import { RootState } from "./../../Redux/Store";
 import recipePreference from './Data/RecipePreference.json';
@@ -62,10 +62,12 @@ export const loadRecipePreference = createAsyncThunk("recipe/loadRecipeTags", as
     return tags == null ? recipePreference.Tags : JSON.parse(tags);
 });
 
-export const setRecipePreference = createAsyncThunk("recipe/setRecipePreference", async (data: recipeTag[]) => {
-    await AsyncStorage.setItem('recipe-tags', JSON.stringify(data));
-    console.log('data', data);
+export const saveRecipePreference = createAsyncThunk("recipe/setRecipePreference", async (_, { getState }) => {
+    const state = getState() as RootState;
+    console.log('data', state.recipe.tags);
+    await AsyncStorage.setItem('recipe-tags', JSON.stringify(state.recipe.tags));
 });
+
 
 export const RecipeSlice = createSlice({
     name: "recipe",
@@ -73,8 +75,8 @@ export const RecipeSlice = createSlice({
     reducers: { 
         clearPaging: state => { state.pageInfo.endCursor = ''; },
         updateRecipePreference: (state, action) => {
-            state.tags.map((item, index) => { 
-                if (index == action.payload) {
+            const nextState = state.tags.map((item, i) => {
+                if (action.payload == i) {
                     item.preferred = true;
                 }
                 else {
@@ -82,6 +84,7 @@ export const RecipeSlice = createSlice({
                 }
                 return item;
             })
+            state.tags = nextState;
         }
     },
     extraReducers: (builder) => {
