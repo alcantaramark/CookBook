@@ -1,12 +1,11 @@
 import React, { FC, useEffect, ReactElement, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
-import { selectRecipes, recipe, fetchPopularRecipes, selectRecipesStatus, clearPaging } from '../RecipeSlice';
+import { selectRecipes, recipe, fetchRecipes, selectRecipesStatus, clearPaging, selectRecipesPageInfo } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
-import RecipeHeader from './RecipeHeader';
 import { UIActivityIndicator } from 'react-native-indicators';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ContentLoader from 'react-content-loader/native';
 import { Rect } from 'react-native-svg';
 
@@ -25,6 +24,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
       backgroundColor="#d6d6d6"
       foregroundColor="#aaaaaa"
     >
+    <Rect x="0" y="630" rx="10" ry="10" width="450" height="217" />
     <Rect x="0" y="560" rx="3" ry="3" width="330" height="6" />
     <Rect x="0" y="580" rx="4" ry="4" width="250" height="9" />
     <Rect x="0" y="330" rx="10" ry="10" width="450" height="217" />
@@ -47,18 +47,23 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const configState = useAppSelector(selectConfig);
   const configStatusState = useAppSelector(selectConfigStatus);
   const recipeStatusState = useAppSelector(selectRecipesStatus);
+  const recipePageInfo = useAppSelector(selectRecipesPageInfo);
   
   const dispatch = useAppDispatch();
-
+  
   useEffect(() => {
     if (configStatusState === 'succeeded'){
-      dispatch(fetchPopularRecipes());
+      dispatch(fetchRecipes());
     }
   }, [configState])
   
+  useEffect(() => {
+    
+  }, [recipesState])
+
   const loadMore = async ()=> {
-    if (recipeStatusState === 'succeeded' || recipeStatusState === 'idle') {
-      await dispatch(fetchPopularRecipes());
+    if ((recipeStatusState === 'succeeded' || recipeStatusState === 'idle') && recipePageInfo.hasNextPage) {
+      await dispatch(fetchRecipes());
     }
   }
 
@@ -71,15 +76,13 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     dispatch(clearPaging());
-    await dispatch(fetchPopularRecipes());
+    await dispatch(fetchRecipes());
     setRefreshing(false);
   }
 
   return(
     <>
-      <RecipeHeader />
       <GestureHandlerRootView>
-        
         {
           (recipeStatusState === 'loading' 
             || configStatusState === 'loading') && recipesState.length == 0 ? recipeLoader() :
@@ -92,6 +95,8 @@ const RecipeMain: FC<RecipeMainProps> = () => {
                 onEndReached={loadMore}
                 ListFooterComponent={footer}
                 style={styles.flatListStyle}
+                initialNumToRender={4}
+                removeClippedSubviews={true}
                 refreshControl={
                   <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
                   style={{backgroundColor: 'transparent'}}

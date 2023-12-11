@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
 import configReducer from "../Features/Configuration/ConfigSlice";
 import recipeReducer from "./../Features/Recipe/RecipeSlice";
 

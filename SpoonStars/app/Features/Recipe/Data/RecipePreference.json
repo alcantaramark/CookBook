@@ -1,0 +1,16 @@
+{
+    "Tags": [{
+            "name": "Appetizer",
+            "preferred": false
+        }, {
+            "name": "Breakfast",
+            "preferred": false
+        }, {
+            "name": "Beverage",
+            "preferred": false
+        }, {
+            "name": "Dessert",
+            "preferred": "false"
+        }
+    ]
+}
