@@ -1,12 +1,11 @@
 import React, { FC, useEffect, ReactElement, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
-import { selectRecipes, recipe, fetchRecipes, selectRecipesStatus, clearPaging } from '../RecipeSlice';
+import { selectRecipes, recipe, fetchRecipes, selectRecipesStatus, clearPaging, selectRecipesPageInfo } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
-import RecipeHeader from './RecipeHeader';
 import { UIActivityIndicator } from 'react-native-indicators';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ContentLoader from 'react-content-loader/native';
 import { Rect } from 'react-native-svg';
 
@@ -48,6 +47,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const configState = useAppSelector(selectConfig);
   const configStatusState = useAppSelector(selectConfigStatus);
   const recipeStatusState = useAppSelector(selectRecipesStatus);
+  const recipePageInfo = useAppSelector(selectRecipesPageInfo);
   
   const dispatch = useAppDispatch();
   
@@ -58,11 +58,11 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   }, [configState])
   
   useEffect(() => {
-    console.log('i am here');
+    
   }, [recipesState])
 
   const loadMore = async ()=> {
-    if (recipeStatusState === 'succeeded' || recipeStatusState === 'idle') {
+    if ((recipeStatusState === 'succeeded' || recipeStatusState === 'idle') && recipePageInfo.hasNextPage) {
       await dispatch(fetchRecipes());
     }
   }
@@ -95,6 +95,8 @@ const RecipeMain: FC<RecipeMainProps> = () => {
                 onEndReached={loadMore}
                 ListFooterComponent={footer}
                 style={styles.flatListStyle}
+                initialNumToRender={4}
+                removeClippedSubviews={true}
                 refreshControl={
                   <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
                   style={{backgroundColor: 'transparent'}}

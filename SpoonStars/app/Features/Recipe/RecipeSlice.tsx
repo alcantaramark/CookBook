@@ -83,7 +83,7 @@ export const RecipeSlice = createSlice({
         updateRecipePreference: (state, action) => {
             const nextState = state.tags.map((item, i) => {
                 if (action.payload == i) {
-                    item.preferred = true;
+                    item.preferred = !item.preferred;
                 }
                 else {
                     item.preferred = false;

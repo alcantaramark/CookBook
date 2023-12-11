@@ -3,7 +3,7 @@ import { Searchbar, Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference, fetchRecipes } from '../RecipeSlice';
+import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference, fetchRecipes, clearPaging } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RecipeMain from './RecipeMain';
@@ -47,10 +47,10 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     }
   })
 
-  const handleChipPress = (index: number) => {
+  const handlePreferencePress = (index: number) => {
     const nextStyles = tagStyles.map((item, i) => {
       if (index == i) {
-        item = 'white';
+        item = item === 'white' ? 'black' : 'white';
       }
       else {
         item = 'black';
@@ -61,6 +61,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
+    dispatch(clearPaging());
     dispatch(fetchRecipes());
   };
 
@@ -79,7 +80,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
             compact={true} 
             textColor={tagStyles[index]}
             mode='text'
-            onPress={() => handleChipPress(index)} 
+            onPress={() => handlePreferencePress(index)} 
             key={index}>{item.name}
           </Button>
         )
