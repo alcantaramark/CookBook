@@ -25,17 +25,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-#target 'SpoonStars' do
-abstract_target 'SpoonStarsCommonPods' do
-  target 'SpoonStars Dev' do
-  end
-
-  target 'SpoonStars Test' do
-  end
-  
-  target 'SpoonStars' do
-  end
-  
+target 'SpoonStars' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
