@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --scheme SpoonStars",
+    "ios dev": "react-native run-ios --scheme \"SpoonStars Dev\"",
+    "ios test": "react-native run-ios --scheme SpoonStarsTest",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
@@ -18,6 +20,7 @@
     "react": "18.2.0",
     "react-content-loader": "^6.2.1",
     "react-native": "0.72.6",
+    "react-native-config": "^1.5.1",
     "react-native-dotenv": "^3.4.9",
     "react-native-gesture-handler": "^2.13.4",
     "react-native-paper": "^5.11.1",

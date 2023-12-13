@@ -4,7 +4,7 @@ import { store } from '../../../../Redux/Store';
 export const searchByTag = async (tag: string) => {
     const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
     const { endCursor } = store.getState().recipe.pageInfo;
-
+    console.log('suggestic url', SUGGESTIC_URL);
     return await fetch(SUGGESTIC_URL, {
             method: 'POST',
             headers: {
