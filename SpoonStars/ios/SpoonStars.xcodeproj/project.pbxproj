@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		32B20B5EABDB2C2117E3572F /* libPods-SpoonStars.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C24419CCD1BD1F0662B0C06 /* libPods-SpoonStars.a */; };
 		3C7285282B29419300D58353 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		3C7285292B29419300D58353 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3C72852D2B29419300D58353 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -19,11 +20,10 @@
 		3C72853C2B2943C300D58353 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3C7285402B2943C300D58353 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		3C7285412B2943C300D58353 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		47A422FCD2281CD60F98685C /* libPods-SpoonStars-SpoonStars Dev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D08AB2F46894AD5EE60B4ED /* libPods-SpoonStars-SpoonStars Dev.a */; };
-		7B36F5F63825F1440F67A2F9 /* libPods-SpoonStars.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87EA781C01584B5F37640375 /* libPods-SpoonStars.a */; };
+		61838E14BEBA8495E1B89641 /* libPods-SpoonStarsTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB469431CD4EB26845E98CFE /* libPods-SpoonStarsTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A2988CD40F68C7F76A0D3109 /* libPods-SpoonStars-SpoonStarsTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2D98B6CEA1EA53B5043A2C /* libPods-SpoonStars-SpoonStarsTests.a */; };
-		A8AC04291AF9F98CF202A8EC /* libPods-SpoonStars-SpoonStars Test.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09500D91772AF95B717E64D4 /* libPods-SpoonStars-SpoonStars Test.a */; };
+		B1D81A4B0E495E280E2A8AA6 /* libPods-SpoonStars Test.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 777E834D1481A3553A86BE76 /* libPods-SpoonStars Test.a */; };
+		ED0227E381C36CA8B56F339F /* libPods-SpoonStars Dev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24CA705D3846BBCB9CD9EC27 /* libPods-SpoonStars Dev.a */; };
 		F7A2226C94413073C4586C2C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
@@ -41,7 +41,7 @@
 		00E356EE1AD99517003FC87E /* SpoonStarsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpoonStarsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* SpoonStarsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpoonStarsTests.m; sourceTree = "<group>"; };
-		09500D91772AF95B717E64D4 /* libPods-SpoonStars-SpoonStars Test.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars-SpoonStars Test.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05E2402157FB966F8729E363 /* Pods-SpoonStars Dev-SpoonStarsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev-SpoonStarsTests.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev-SpoonStarsTests/Pods-SpoonStars Dev-SpoonStarsTests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SpoonStars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpoonStars.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SpoonStars/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = SpoonStars/AppDelegate.mm; sourceTree = "<group>"; };
@@ -51,26 +51,38 @@
 		173BA9149B26DF3CECE72935 /* Pods-SpoonStars-SpoonStarsDev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsDev.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsDev/Pods-SpoonStars-SpoonStarsDev.debug.xcconfig"; sourceTree = "<group>"; };
 		1C50AF50A494873E41302FD5 /* Pods-SpoonStars-SpoonStars Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStars Dev.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev.release.xcconfig"; sourceTree = "<group>"; };
 		2267566170540DD3F6BF1954 /* Pods-SpoonStars-SpoonStarsTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsTest.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsTest/Pods-SpoonStars-SpoonStarsTest.debug.xcconfig"; sourceTree = "<group>"; };
-		2E2D98B6CEA1EA53B5043A2C /* libPods-SpoonStars-SpoonStarsTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars-SpoonStarsTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2F89EC43AD2B3718BDA062ED /* Pods-SpoonStars.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars/Pods-SpoonStars.debug.xcconfig"; sourceTree = "<group>"; };
+		239D312ECB413F06C5FA2C50 /* Pods-SpoonStars Test-SpoonStarsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Test-SpoonStarsTests.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars Test-SpoonStarsTests/Pods-SpoonStars Test-SpoonStarsTests.debug.xcconfig"; sourceTree = "<group>"; };
+		24CA705D3846BBCB9CD9EC27 /* libPods-SpoonStars Dev.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars Dev.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		35A53846B8CD90503B05A82F /* Pods-SpoonStars Dev-SpoonStars Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev-SpoonStars Test.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev-SpoonStars Test/Pods-SpoonStars Dev-SpoonStars Test.release.xcconfig"; sourceTree = "<group>"; };
 		3C0A50AD2B1C08CA000D8BD6 /* hermes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = hermes.xcframework; path = "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework"; sourceTree = "<group>"; };
 		3C7285232B29418F00D58353 /* SpoonStars-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SpoonStars-Info.plist"; path = "/Users/MarkAlcantara/Projects/SecretCode/SpoonStars/ios/SpoonStars-Info.plist"; sourceTree = "<absolute>"; };
 		3C7285352B29419300D58353 /* SpoonStars Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpoonStars Test.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C7285362B29419300D58353 /* SpoonStarsDev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SpoonStarsDev-Info.plist"; path = "/Users/MarkAlcantara/Projects/SecretCode/SpoonStars/ios/SpoonStarsDev-Info.plist"; sourceTree = "<absolute>"; };
 		3C7285482B2943C300D58353 /* SpoonStars Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpoonStars Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C7285492B2943C300D58353 /* SpoonStarsTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "SpoonStarsTest-Info.plist"; path = "/Users/MarkAlcantara/Projects/SecretCode/SpoonStars/ios/SpoonStarsTest-Info.plist"; sourceTree = "<absolute>"; };
+		49C5069EC9DE839E3B984EF5 /* Pods-SpoonStars Dev-SpoonStars Test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev-SpoonStars Test.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev-SpoonStars Test/Pods-SpoonStars Dev-SpoonStars Test.debug.xcconfig"; sourceTree = "<group>"; };
+		4DB340A8EFFE87A4A553006E /* Pods-SpoonStars Test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Test.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test.debug.xcconfig"; sourceTree = "<group>"; };
+		515C938316D9E656EE5DB671 /* Pods-SpoonStars Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		56EED4D392AFDE426339DF4B /* Pods-SpoonStars-SpoonStars Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStars Dev.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev.debug.xcconfig"; sourceTree = "<group>"; };
 		56F27840F2AEA450995A742E /* Pods-SpoonStars-SpoonStarsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsTests.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5D08AB2F46894AD5EE60B4ED /* libPods-SpoonStars-SpoonStars Dev.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars-SpoonStars Dev.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5714F33824D43B16DF966444 /* Pods-SpoonStars.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars/Pods-SpoonStars.debug.xcconfig"; sourceTree = "<group>"; };
+		777E834D1481A3553A86BE76 /* libPods-SpoonStars Test.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars Test.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SpoonStars/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		87EA781C01584B5F37640375 /* libPods-SpoonStars.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AC6C73B05928E9A49EDEA8B /* Pods-SpoonStars Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Test.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test.release.xcconfig"; sourceTree = "<group>"; };
+		8C24419CCD1BD1F0662B0C06 /* libPods-SpoonStars.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStars.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C542F4341667C2B68FDD137 /* Pods-SpoonStars Test-SpoonStarsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Test-SpoonStarsTests.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars Test-SpoonStarsTests/Pods-SpoonStars Test-SpoonStarsTests.release.xcconfig"; sourceTree = "<group>"; };
 		9F6EFF5DD12C6ED841F49F75 /* Pods-SpoonStars-SpoonStarsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsTests.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests.release.xcconfig"; sourceTree = "<group>"; };
+		A68A07AD9B1EAD4C389C693F /* Pods-SpoonStarsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStarsTests.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AC9D5BD99909382A22352044 /* Pods-SpoonStars-SpoonStars Test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStars Test.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test.debug.xcconfig"; sourceTree = "<group>"; };
+		AE614F57DEF92B77804152CC /* Pods-SpoonStarsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStarsTests.release.xcconfig"; path = "Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests.release.xcconfig"; sourceTree = "<group>"; };
 		AE6B0F69ADD83F037304C4E3 /* Pods-SpoonStars-SpoonStarsTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsTest.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsTest/Pods-SpoonStars-SpoonStarsTest.release.xcconfig"; sourceTree = "<group>"; };
 		C9472C0D3EEAABDDE704319E /* Pods-SpoonStars-SpoonStars Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStars Test.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test.release.xcconfig"; sourceTree = "<group>"; };
 		C9C1DA12CBC665748679D215 /* Pods-SpoonStars-SpoonStarsDev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars-SpoonStarsDev.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars-SpoonStarsDev/Pods-SpoonStars-SpoonStarsDev.release.xcconfig"; sourceTree = "<group>"; };
-		E624AAD579EB25CE9D5CF019 /* Pods-SpoonStars.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars/Pods-SpoonStars.release.xcconfig"; sourceTree = "<group>"; };
+		EB469431CD4EB26845E98CFE /* libPods-SpoonStarsTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SpoonStarsTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F0312EC7984588AAFCADCB6B /* Pods-SpoonStars Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev.release.xcconfig"; sourceTree = "<group>"; };
+		F6A4E52E3D60B30D12121F18 /* Pods-SpoonStars.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars.release.xcconfig"; path = "Target Support Files/Pods-SpoonStars/Pods-SpoonStars.release.xcconfig"; sourceTree = "<group>"; };
+		FDB0AA0EDC4555351B9F7BCC /* Pods-SpoonStars Dev-SpoonStarsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpoonStars Dev-SpoonStarsTests.debug.xcconfig"; path = "Target Support Files/Pods-SpoonStars Dev-SpoonStarsTests/Pods-SpoonStars Dev-SpoonStarsTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2988CD40F68C7F76A0D3109 /* libPods-SpoonStars-SpoonStarsTests.a in Frameworks */,
+				61838E14BEBA8495E1B89641 /* libPods-SpoonStarsTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +99,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7A2226C94413073C4586C2C /* BuildFile in Frameworks */,
-				7B36F5F63825F1440F67A2F9 /* libPods-SpoonStars.a in Frameworks */,
+				32B20B5EABDB2C2117E3572F /* libPods-SpoonStars.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8AC04291AF9F98CF202A8EC /* libPods-SpoonStars-SpoonStars Test.a in Frameworks */,
+				B1D81A4B0E495E280E2A8AA6 /* libPods-SpoonStars Test.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,7 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47A422FCD2281CD60F98685C /* libPods-SpoonStars-SpoonStars Dev.a in Frameworks */,
+				ED0227E381C36CA8B56F339F /* libPods-SpoonStars Dev.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,10 +157,10 @@
 			children = (
 				3C0A50AD2B1C08CA000D8BD6 /* hermes.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2E2D98B6CEA1EA53B5043A2C /* libPods-SpoonStars-SpoonStarsTests.a */,
-				87EA781C01584B5F37640375 /* libPods-SpoonStars.a */,
-				5D08AB2F46894AD5EE60B4ED /* libPods-SpoonStars-SpoonStars Dev.a */,
-				09500D91772AF95B717E64D4 /* libPods-SpoonStars-SpoonStars Test.a */,
+				777E834D1481A3553A86BE76 /* libPods-SpoonStars Test.a */,
+				8C24419CCD1BD1F0662B0C06 /* libPods-SpoonStars.a */,
+				EB469431CD4EB26845E98CFE /* libPods-SpoonStarsTests.a */,
+				24CA705D3846BBCB9CD9EC27 /* libPods-SpoonStars Dev.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -192,8 +204,6 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				2F89EC43AD2B3718BDA062ED /* Pods-SpoonStars.debug.xcconfig */,
-				E624AAD579EB25CE9D5CF019 /* Pods-SpoonStars.release.xcconfig */,
 				56F27840F2AEA450995A742E /* Pods-SpoonStars-SpoonStarsTests.debug.xcconfig */,
 				9F6EFF5DD12C6ED841F49F75 /* Pods-SpoonStars-SpoonStarsTests.release.xcconfig */,
 				173BA9149B26DF3CECE72935 /* Pods-SpoonStars-SpoonStarsDev.debug.xcconfig */,
@@ -204,6 +214,20 @@
 				1C50AF50A494873E41302FD5 /* Pods-SpoonStars-SpoonStars Dev.release.xcconfig */,
 				AC9D5BD99909382A22352044 /* Pods-SpoonStars-SpoonStars Test.debug.xcconfig */,
 				C9472C0D3EEAABDDE704319E /* Pods-SpoonStars-SpoonStars Test.release.xcconfig */,
+				49C5069EC9DE839E3B984EF5 /* Pods-SpoonStars Dev-SpoonStars Test.debug.xcconfig */,
+				35A53846B8CD90503B05A82F /* Pods-SpoonStars Dev-SpoonStars Test.release.xcconfig */,
+				FDB0AA0EDC4555351B9F7BCC /* Pods-SpoonStars Dev-SpoonStarsTests.debug.xcconfig */,
+				05E2402157FB966F8729E363 /* Pods-SpoonStars Dev-SpoonStarsTests.release.xcconfig */,
+				4DB340A8EFFE87A4A553006E /* Pods-SpoonStars Test.debug.xcconfig */,
+				8AC6C73B05928E9A49EDEA8B /* Pods-SpoonStars Test.release.xcconfig */,
+				239D312ECB413F06C5FA2C50 /* Pods-SpoonStars Test-SpoonStarsTests.debug.xcconfig */,
+				9C542F4341667C2B68FDD137 /* Pods-SpoonStars Test-SpoonStarsTests.release.xcconfig */,
+				A68A07AD9B1EAD4C389C693F /* Pods-SpoonStarsTests.debug.xcconfig */,
+				AE614F57DEF92B77804152CC /* Pods-SpoonStarsTests.release.xcconfig */,
+				5714F33824D43B16DF966444 /* Pods-SpoonStars.debug.xcconfig */,
+				F6A4E52E3D60B30D12121F18 /* Pods-SpoonStars.release.xcconfig */,
+				515C938316D9E656EE5DB671 /* Pods-SpoonStars Dev.debug.xcconfig */,
+				F0312EC7984588AAFCADCB6B /* Pods-SpoonStars Dev.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -236,14 +260,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SpoonStars" */;
 			buildPhases = (
-				961ABB86A31BC2FEF3E0FD8E /* [CP] Check Pods Manifest.lock */,
+				AFD9A2BC93965F6D3286E412 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				13E5BFE5CC1037F03C2C37AE /* [CP] Embed Pods Frameworks */,
-				CED0E4CB23859E79421E6008 /* [CP] Copy Pods Resources */,
+				5BE878A42F12BC4566803D06 /* [CP] Embed Pods Frameworks */,
+				3180E0226EB7043832424B42 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -280,14 +304,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3C7285452B2943C300D58353 /* Build configuration list for PBXNativeTarget "SpoonStars Dev" */;
 			buildPhases = (
-				3C7285382B2943C300D58353 /* [CP] Check Pods Manifest.lock */,
+				48BC2EDCAA9C80BCB2DAC269 /* [CP] Check Pods Manifest.lock */,
 				3C7285392B2943C300D58353 /* Start Packager */,
 				3C72853A2B2943C300D58353 /* Sources */,
 				3C72853D2B2943C300D58353 /* Frameworks */,
 				3C72853F2B2943C300D58353 /* Resources */,
 				3C7285422B2943C300D58353 /* Bundle React Native code and images */,
-				3C7285432B2943C300D58353 /* [CP] Embed Pods Frameworks */,
-				3C7285442B2943C300D58353 /* [CP] Copy Pods Resources */,
+				A0F812A6CB67DA138191849D /* [CP] Embed Pods Frameworks */,
+				3974790E4460A2BCCC5AFA9B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -390,21 +414,38 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		13E5BFE5CC1037F03C2C37AE /* [CP] Embed Pods Frameworks */ = {
+		3180E0226EB7043832424B42 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3974790E4460A2BCCC5AFA9B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3C7285252B29419300D58353 /* [CP] Check Pods Manifest.lock */ = {
@@ -422,7 +463,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SpoonStars-SpoonStars Test-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-SpoonStars Test-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -470,15 +511,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3C7285312B29419300D58353 /* [CP] Copy Pods Resources */ = {
@@ -487,37 +528,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Test/Pods-SpoonStars-SpoonStars Test-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3C7285382B2943C300D58353 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SpoonStars-SpoonStars Dev-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Test/Pods-SpoonStars Test-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3C7285392B2943C300D58353 /* Start Packager */ = {
@@ -555,38 +574,26 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		3C7285432B2943C300D58353 /* [CP] Embed Pods Frameworks */ = {
+		48BC2EDCAA9C80BCB2DAC269 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SpoonStars Dev-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3C7285442B2943C300D58353 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStars Dev/Pods-SpoonStars-SpoonStars Dev-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5A6A6862C88D2E1B3438CCB0 /* [CP] Embed Pods Frameworks */ = {
@@ -595,15 +602,32 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5BE878A42F12BC4566803D06 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5E176037A5498AFEE7547511 /* [CP] Copy Pods Resources */ = {
@@ -612,18 +636,35 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars-SpoonStarsTests/Pods-SpoonStars-SpoonStarsTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStarsTests/Pods-SpoonStarsTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		961ABB86A31BC2FEF3E0FD8E /* [CP] Check Pods Manifest.lock */ = {
+		A0F812A6CB67DA138191849D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars Dev/Pods-SpoonStars Dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AFD9A2BC93965F6D3286E412 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -660,28 +701,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SpoonStars-SpoonStarsTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-SpoonStarsTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CED0E4CB23859E79421E6008 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpoonStars/Pods-SpoonStars-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -754,7 +778,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 56F27840F2AEA450995A742E /* Pods-SpoonStars-SpoonStarsTests.debug.xcconfig */;
+			baseConfigurationReference = A68A07AD9B1EAD4C389C693F /* Pods-SpoonStarsTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -781,7 +805,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9F6EFF5DD12C6ED841F49F75 /* Pods-SpoonStars-SpoonStarsTests.release.xcconfig */;
+			baseConfigurationReference = AE614F57DEF92B77804152CC /* Pods-SpoonStarsTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -805,7 +829,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F89EC43AD2B3718BDA062ED /* Pods-SpoonStars.debug.xcconfig */;
+			baseConfigurationReference = 5714F33824D43B16DF966444 /* Pods-SpoonStars.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -837,7 +861,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E624AAD579EB25CE9D5CF019 /* Pods-SpoonStars.release.xcconfig */;
+			baseConfigurationReference = F6A4E52E3D60B30D12121F18 /* Pods-SpoonStars.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -867,7 +891,7 @@
 		};
 		3C7285332B29419300D58353 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC9D5BD99909382A22352044 /* Pods-SpoonStars-SpoonStars Test.debug.xcconfig */;
+			baseConfigurationReference = 4DB340A8EFFE87A4A553006E /* Pods-SpoonStars Test.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -899,7 +923,7 @@
 		};
 		3C7285342B29419300D58353 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C9472C0D3EEAABDDE704319E /* Pods-SpoonStars-SpoonStars Test.release.xcconfig */;
+			baseConfigurationReference = 8AC6C73B05928E9A49EDEA8B /* Pods-SpoonStars Test.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -929,7 +953,7 @@
 		};
 		3C7285462B2943C300D58353 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 56EED4D392AFDE426339DF4B /* Pods-SpoonStars-SpoonStars Dev.debug.xcconfig */;
+			baseConfigurationReference = 515C938316D9E656EE5DB671 /* Pods-SpoonStars Dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -961,7 +985,7 @@
 		};
 		3C7285472B2943C300D58353 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C50AF50A494873E41302FD5 /* Pods-SpoonStars-SpoonStars Dev.release.xcconfig */;
+			baseConfigurationReference = F0312EC7984588AAFCADCB6B /* Pods-SpoonStars Dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
