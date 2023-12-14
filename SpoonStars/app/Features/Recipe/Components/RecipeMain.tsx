@@ -8,6 +8,7 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import { StyleSheet } from 'react-native';
 import ContentLoader from 'react-content-loader/native';
 import { Rect } from 'react-native-svg';
+import Config from 'react-native-config';
 
 interface RecipeMainProps {}
 
@@ -79,6 +80,8 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     await dispatch(fetchRecipes());
     setRefreshing(false);
   }
+
+  console.log('config', Config.API_URL);
 
   return(
     <>
