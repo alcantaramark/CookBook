@@ -1,4 +1,4 @@
-name: Docker
+name: SpoonStars Backend Deploy
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -51,7 +51,7 @@ jobs:
         run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
       #modify connection string in appsettings
-      - name: Update Connection String
+      - name: Update Connection String and API Keys
         if: | 
             github.event_name != 'pull_request' &&
             env.APP_ENVIRONMENT != 'feature_branch'
@@ -60,6 +60,8 @@ jobs:
           files: ${{ env.GITHUB_WORKSPACE }}./Backend/SecretCode.Api/${{ env.CONFIG_FILE }}
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
+          Configurations.SuggesticUserId: ${{ secrets.SUGGESTICUSERID }}
+          Configurations.SuggesticUserAPIKey: ${{ secrets.SUGGESTICAPIKEY }}
       
       #Run ef core generate database script
       - name: Ef Core Generate SQL Script
