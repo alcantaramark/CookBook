@@ -61,7 +61,7 @@ jobs:
         env:
           ConnectionStrings.SqlDatabase: ${{ env.CONNECTION_STRING }}
           Configurations.SuggesticUserId: ${{ secrets.SUGGESTICUSERID }}
-          Configurations.SuggesticUserAPIKey: ${{ secrets.SUGGESTICAPIKEY }}
+          Configurations.SuggesticAPIKey: ${{ secrets.SUGGESTICAPIKEY }}
       
       #Run ef core generate database script
       - name: Ef Core Generate SQL Script
