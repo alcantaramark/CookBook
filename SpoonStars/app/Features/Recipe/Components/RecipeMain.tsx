@@ -81,14 +81,12 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     setRefreshing(false);
   }
 
-  console.log('config', Config.API_URL);
-
   return(
     <>
       <GestureHandlerRootView>
         {
           (recipeStatusState === 'loading' 
-            || configStatusState === 'loading') && recipesState.length == 0 ? recipeLoader() :
+            || configStatusState === 'loading') && recipesState.length == 0 ? <></> :
           <FlatList
                 keyExtractor = {(item: recipe): string => item.node.id}
                 numColumns = {1}

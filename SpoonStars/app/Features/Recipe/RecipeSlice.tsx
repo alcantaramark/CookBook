@@ -16,7 +16,7 @@ export interface recipesState {
         hasNextPage: boolean,
         hasPreviousPage: boolean
     },
-    errors: []
+    errors: unknown
 };
 
 export interface recipeTag {
@@ -48,14 +48,20 @@ const initialState: recipesState = {
     errors:[]
 };
 
-export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { getState }) => {
-    const state = getState() as RootState;
-    const preferred = state.recipe.tags.find(tag => tag.preferred == true);
+export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { getState, rejectWithValue, fulfillWithValue }) => {
+    try{
+        const state = getState() as RootState;
+        const preferred = state.recipe.tags.find(tag => tag.preferred == true);
 
-    const recipes = preferred == undefined ? await searchPopular().then(response => response.json()) :
-        await searchByTag(preferred.name).then(response => response.json());
-    
-    return preferred == undefined ? recipes.data.popularRecipes : recipes.data.recipesByTag;
+        const recipes = preferred == undefined ? await searchPopular().then(response => response.json()) :
+            await searchByTag(preferred.name).then(response => response.json());
+
+        const filteredRecipes = preferred == undefined ? recipes.data.popularRecipes : recipes.data.recipesByTag;
+        return fulfillWithValue(filteredRecipes);
+    }
+    catch(e: any){
+        return rejectWithValue(e);
+    }
 });
 
 
@@ -96,22 +102,32 @@ export const RecipeSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchRecipes.pending, state => {
             state.status = "loading"
+            state.errors = '';
         })
         .addCase(fetchRecipes.fulfilled, (state, action) => {
-            if (!action.payload.pageInfo.hasPreviousPage) {
-                state.recipes = [];
-            }
-
-            action.payload.edges.map((item: recipe) => {
-                if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
-                    state.recipes.push(item);
+            if(action.payload != null){
+                if (!action.payload.pageInfo.hasPreviousPage) {
+                    state.recipes = [];
                 }
-            })
-            state.pageInfo = action.payload.pageInfo;
+
+                action.payload.edges.map((item: recipe) => {
+                    if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
+                        state.recipes.push(item);
+                    }
+                })
+                state.pageInfo = action.payload.pageInfo;
+                state.errors = '';
+            }
+            else{
+                state.errors = 'No recipe found';
+            }
             state.status = "succeeded";
         })
-        .addCase(fetchRecipes.rejected, state => {
-            
+        .addCase(fetchRecipes.rejected, (state, action) => {
+            if (state.status === 'loading') {
+                state.status = 'idle';
+                state.errors = action.payload;
+            }
         })
         .addCase(loadRecipePreference.pending, state => {
             state.preferenceStatus = "loading";
