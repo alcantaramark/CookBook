@@ -1,6 +1,6 @@
-import { API_URL } from "@env";
+import Config from "react-native-config";
 
-const requestUrl = `${ API_URL }configuration`;
+const requestUrl = `${ Config.API_URL }configuration`;
 
 export const fetchApiConfig = async () => {
     return await fetch(requestUrl);

@@ -16,7 +16,7 @@ export interface recipesState {
         hasNextPage: boolean,
         hasPreviousPage: boolean
     },
-    errors: unknown
+    errors: string
 };
 
 export interface recipeTag {
@@ -45,7 +45,7 @@ const initialState: recipesState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    errors:[]
+    errors:''
 };
 
 export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { getState, rejectWithValue, fulfillWithValue }) => {
@@ -59,8 +59,8 @@ export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { 
         const filteredRecipes = preferred == undefined ? recipes.data.popularRecipes : recipes.data.recipesByTag;
         return fulfillWithValue(filteredRecipes);
     }
-    catch(e: any){
-        return rejectWithValue(e);
+    catch(e){
+        return rejectWithValue("Error loading recipes");
     }
 });
 
@@ -119,14 +119,14 @@ export const RecipeSlice = createSlice({
                 state.errors = '';
             }
             else{
-                state.errors = 'No recipe found';
+                state.errors = 'No recipes found';
             }
             state.status = "succeeded";
         })
         .addCase(fetchRecipes.rejected, (state, action) => {
             if (state.status === 'loading') {
                 state.status = 'idle';
-                state.errors = action.payload;
+                state.errors = action.payload as string;
             }
         })
         .addCase(loadRecipePreference.pending, state => {
@@ -144,5 +144,6 @@ export const selectRecipesStatus = (state: RootState) => state.recipe.status;
 export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
 export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
+export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
 export const { clearPaging, updateRecipePreference } = RecipeSlice.actions;
 export default RecipeSlice.reducer;

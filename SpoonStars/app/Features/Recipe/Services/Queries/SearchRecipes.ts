@@ -1,10 +1,10 @@
-import { SUGGESTIC_URL } from '@env'
+import Config from 'react-native-config';
 import { store } from '../../../../Redux/Store';
 
 export const searchByTag = async (tag: string) => {
     const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
     const { endCursor } = store.getState().recipe.pageInfo;
-    return await fetch(SUGGESTIC_URL.slice(0, 5), {
+    return await fetch(Config.SUGGESTIC_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const searchPopular = async () => {
     const { suggesticUserId, suggesticAPIKey } = store.getState().apiConfig.config;
     const { endCursor } = store.getState().recipe.pageInfo;
 
-    return await fetch(SUGGESTIC_URL, {
+    return await fetch(Config.SUGGESTIC_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
