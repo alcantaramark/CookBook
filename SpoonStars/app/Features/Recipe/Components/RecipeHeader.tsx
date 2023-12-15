@@ -5,7 +5,6 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference, fetchRecipes, clearPaging } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RecipeMain from './RecipeMain';
 
 
