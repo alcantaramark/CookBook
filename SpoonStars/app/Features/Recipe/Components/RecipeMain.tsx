@@ -64,7 +64,6 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   }, [recipesState])
 
   const loadMore = async ()=> {
-    console.log('loading more recipes');
     if ((recipeStatusState === 'succeeded' || recipeStatusState === 'idle') && recipePageInfo.hasNextPage) {
       await dispatch(fetchRecipes());
     }

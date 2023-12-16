@@ -9,7 +9,8 @@
       "request": "launch",
       "type": "reactnativedirect",
       "cwd": "${workspaceFolder}",
-      "platform": "ios"
+      "platform": "ios",
+      "runArguments": ["--scheme", "SpoonStars Dev"]
     },
     {
       "name": "Attach to packager",
