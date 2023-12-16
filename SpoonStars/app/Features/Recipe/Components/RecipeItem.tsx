@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
-import { recipe } from '../RecipeSlice';
+import { recipePayload } from '../RecipeSlice';
 import { Avatar, Card, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 interface RecipeItemProps { 
-    item: recipe
+    item: recipePayload
 };
 
 const RecipeItem: FC<RecipeItemProps> = ({item}) => {

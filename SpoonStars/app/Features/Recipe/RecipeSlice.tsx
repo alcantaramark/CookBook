@@ -1,36 +1,22 @@
-import { Action, createAsyncThunk, createSlice, ThunkAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { searchByTag, searchPopular } from "./Services/Queries/SearchRecipes";
 import { RootState } from "./../../Redux/Store";
 import recipePreference from './Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { recipe, recipeTag, pageInfo } from '../../../types/App_Types';
 
 
 export interface recipesState {
-    recipes: recipe[],
+    recipes: recipePayload[],
     status: string,
     tags: recipeTag[],
     preferenceStatus: string,
-    pageInfo: {
-        startCursor: string,
-        endCursor: string,
-        hasNextPage: boolean,
-        hasPreviousPage: boolean
-    },
+    pagination: pageInfo,
     errors: string
 };
 
-export interface recipeTag {
-    name: string,
-    preferred: boolean
-}
-
-export interface recipe {
-    node: { 
-        id: string,
-        name: string,
-        mainImage: string,
-        totalTime: string
-    },
+export interface recipePayload {
+    node: recipe,
     cursor: string
 };
 
@@ -39,7 +25,7 @@ const initialState: recipesState = {
     status: "idle",
     preferenceStatus: "idle",
     tags: [],
-    pageInfo: {
+    pagination: {
         startCursor: '',
         endCursor: '',
         hasNextPage: false,
@@ -55,11 +41,12 @@ export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { 
 
         const recipes = preferred == undefined ? await searchPopular().then(response => response.json()) :
             await searchByTag(preferred.name).then(response => response.json());
-
+        
         const filteredRecipes = preferred == undefined ? recipes.data.popularRecipes : recipes.data.recipesByTag;
         return fulfillWithValue(filteredRecipes);
     }
     catch(e){
+        console.log("error", e);
         return rejectWithValue("Error loading recipes");
     }
 });
@@ -85,7 +72,7 @@ export const RecipeSlice = createSlice({
     name: "recipe",
     initialState,
     reducers: { 
-        clearPaging: state => { state.pageInfo.endCursor = ''; },
+        clearPaging: state => { state.pagination.endCursor = ''; },
         updateRecipePreference: (state, action) => {
             const nextState = state.tags.map((item, i) => {
                 if (action.payload == i) {
@@ -110,12 +97,12 @@ export const RecipeSlice = createSlice({
                     state.recipes = [];
                 }
 
-                action.payload.edges.map((item: recipe) => {
+                action.payload.edges.map((item: recipePayload) => {
                     if (state.recipes.findIndex(recipe => recipe.node.id === item.node.id) < 0)  {
                         state.recipes.push(item);
                     }
                 })
-                state.pageInfo = action.payload.pageInfo;
+                state.pagination = action.payload.pageInfo;
                 state.errors = '';
             }
             else{
@@ -141,7 +128,7 @@ export const RecipeSlice = createSlice({
 
 export const selectRecipes = (state: RootState) => state.recipe.recipes;
 export const selectRecipesStatus = (state: RootState) => state.recipe.status;
-export const selectRecipesPageInfo = (state: RootState) => state.recipe.pageInfo;
+export const selectRecipesPageInfo = (state: RootState) => state.recipe.pagination;
 export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
