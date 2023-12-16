@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
-    saveRecipePreference, fetchRecipes, selectRecipes, recipePayload, clearRecipes, clearPaging } from '../RecipeSlice';
+    saveRecipePreference, fetchRecipes, selectRecipes, recipePayload, clearRecipes } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 
