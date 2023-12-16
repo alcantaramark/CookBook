@@ -1,7 +1,7 @@
 import React, { FC, useEffect, ReactElement, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
-import { selectRecipes, recipe, fetchRecipes, selectRecipesStatus, clearPaging, selectRecipesPageInfo, selectRecipeErrors } from '../RecipeSlice';
+import { selectRecipes, recipePayload, fetchRecipes, selectRecipesStatus, clearPaging, selectRecipesPageInfo, selectRecipeErrors } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
@@ -14,7 +14,7 @@ interface RecipeMainProps {}
 
 
 const RecipeMain: FC<RecipeMainProps> = () => {
-  const recipesState: recipe[] = useAppSelector(selectRecipes);
+  const recipesState: recipePayload[] = useAppSelector(selectRecipes);
   const [refreshing, setRefreshing] = useState(false);
 
   const recipeLoader = () => (
@@ -37,7 +37,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   
 
   const renderItem = ({item}:{
-    item: recipe;
+    item: recipePayload;
     index?: number;
   }): ReactElement => {
     return (
@@ -64,6 +64,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   }, [recipesState])
 
   const loadMore = async ()=> {
+    console.log('loading more recipes');
     if ((recipeStatusState === 'succeeded' || recipeStatusState === 'idle') && recipePageInfo.hasNextPage) {
       await dispatch(fetchRecipes());
     }
@@ -90,7 +91,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
           (recipeStatusState === 'loading'  || configStatusState === 'loading') && recipesState.length == 0 
               ? recipeLoader() : recipeStateErrors !== '' ? <ErrorMain message={recipeStateErrors}/> :
                 <FlatList
-                      keyExtractor = {(item: recipe): string => item.node.id}
+                      keyExtractor = {(item: recipePayload): string => item.node.id}
                       numColumns = {1}
                       data= { recipesState }
                       renderItem={renderItem}
