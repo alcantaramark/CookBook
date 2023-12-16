@@ -72,6 +72,7 @@ export const RecipeSlice = createSlice({
     name: "recipe",
     initialState,
     reducers: { 
+        clearRecipes: state => { state.recipes = [] },
         clearPaging: state => { state.pagination.endCursor = ''; },
         updateRecipePreference: (state, action) => {
             const nextState = state.tags.map((item, i) => {
@@ -132,5 +133,5 @@ export const selectRecipesPageInfo = (state: RootState) => state.recipe.paginati
 export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
-export const { clearPaging, updateRecipePreference } = RecipeSlice.actions;
+export const { clearRecipes, clearPaging, updateRecipePreference } = RecipeSlice.actions;
 export default RecipeSlice.reducer;

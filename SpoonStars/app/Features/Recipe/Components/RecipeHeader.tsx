@@ -3,7 +3,8 @@ import { Searchbar, Button, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
-import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, saveRecipePreference, fetchRecipes, clearPaging } from '../RecipeSlice';
+import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
+    saveRecipePreference, fetchRecipes, selectRecipes, recipePayload, clearRecipes, clearPaging } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 
@@ -17,6 +18,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
+  const recipesState: recipePayload[] = useAppSelector(selectRecipes);
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -57,10 +59,10 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       return item;
     });
 
+    dispatch(clearRecipes());
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
-    dispatch(clearPaging());
     dispatch(fetchRecipes());
   };
 
@@ -88,7 +90,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   return (
-    <>
+    <View>
       <View style={styles.container} >
         <Searchbar placeholder='search recipe...' 
           onChangeText={(text) => setSearchText(text)} value={searchText}
@@ -103,7 +105,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
         </GestureHandlerRootView> 
       </View> 
       <RecipeMain />
-    </>
+    </View>
 )};
 
 
