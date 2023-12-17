@@ -7,6 +7,7 @@ import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference
     saveRecipePreference, fetchRecipes, selectRecipes, recipePayload, clearRecipes } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 interface RecipeHeaderProps {}
@@ -18,7 +19,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
-  const recipesState: recipePayload[] = useAppSelector(selectRecipes);
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -37,16 +37,21 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       backgroundColor: 'transparent'
     },
     searchInput: {
-      backgroundColor: 'white',
+      // backgroundColor: 'white',
       marginHorizontal: 10,
       marginVertical: 10,
-      height: 50
+      height: 40
     },
     scroll: {
       marginTop: 5,
       marginBottom: 10,
     }
   })
+
+  const handleSearchTextChanged = (text: string) => {
+    setSearchText(text);
+    console.log(searchText);
+  }
 
   const handlePreferencePress = (index: number) => {
     const nextStyles = tagStyles.map((item, i) => {
@@ -92,9 +97,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   return (
     <View>
       <View style={styles.container} >
-        <Searchbar placeholder='search recipe...' 
-          onChangeText={(text) => setSearchText(text)} value={searchText}
-          style={styles.searchInput} mode='bar'  />
+        <Searchbar placeholder='search recipe...'
+          onChangeText={(text) => handleSearchTextChanged(text)}
+          value={searchText}
+          style={styles.searchInput} mode='bar'
+          inputStyle={{ minHeight: 40 }}
+        />
         <GestureHandlerRootView>
             <ScrollView horizontal={true} 
               showsHorizontalScrollIndicator={false} 

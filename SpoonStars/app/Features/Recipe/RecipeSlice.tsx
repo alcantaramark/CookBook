@@ -46,7 +46,6 @@ export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { 
         return fulfillWithValue(filteredRecipes);
     }
     catch(e){
-        console.log("error", e);
         return rejectWithValue("Error loading recipes");
     }
 });

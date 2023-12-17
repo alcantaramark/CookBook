@@ -7,7 +7,8 @@ export interface ConfigState {
         suggesticUserId: string,
         suggesticAPIKey: string
     },
-    status: string
+    status: string,
+    errors: string
 }
 
 const initialState: ConfigState = {
@@ -15,12 +16,18 @@ const initialState: ConfigState = {
         suggesticUserId: "",
         suggesticAPIKey: ""
     },
-    status: "idle"
+    status: "idle",
+    errors: ""
 };
 
-export const fetchConfig = createAsyncThunk('apiConfig/getApiConfig', async () => {
-    const config = await fetchApiConfig().then(response => response.json());
-    return config;
+export const fetchConfig = createAsyncThunk('apiConfig/getApiConfig', async (_, { rejectWithValue, fulfillWithValue }) => {
+    try{
+        const config = await fetchApiConfig().then(response => response.json());
+        return fulfillWithValue(config);
+    }
+    catch(e){
+        return rejectWithValue('Error fetching config');
+    }
 })
 
 export const ConfigSlice = createSlice({
@@ -34,10 +41,17 @@ export const ConfigSlice = createSlice({
         .addCase(fetchConfig.fulfilled, (state, action) => {
             state.config = action.payload;
             state.status = "succeeded"
+        })
+        .addCase(fetchConfig.rejected, (state, action) => {
+          if (state.status === 'loading'){
+            state.status = 'idle'
+            state.errors = action.payload as string
+          }
         });
     }
 });
 
 export const selectConfig = (state: RootState) => state.apiConfig.config;
 export const selectConfigStatus = (state: RootState) => state.apiConfig.status;
+export const selectConfigError = (state: RootState) => state.apiConfig.errors;
 export default ConfigSlice.reducer;
