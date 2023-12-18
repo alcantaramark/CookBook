@@ -1,5 +1,5 @@
 import React, { FC, createContext, useEffect, useRef, useState } from 'react';
-import { Button, TextInput, Icon } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
@@ -45,30 +45,15 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       flexDirection: 'row'
     },
     searchInputField: {
-      width: Dimensions.get('screen').width - 40,
+      width: Dimensions.get('screen').width - 20,
       borderRadius: 1,
-      height: 40
+      height: 40,
+      marginStart: 10
     },
     searchIcon: {
       color: 'gray',
       fontSize: 25,
-      alignSelf: 'flex-start',
       zIndex: 2,
-      left: 30,
-      top: 5
-    },
-    searchBack: {
-      color: 'black',
-      fontSize: 40,
-      top: 5,
-    },
-    searchBox: {
-      flexDirection: 'row',
-      borderColor: 'red',
-    },
-    suggestionsList: {
-      marginHorizontal: 10,
-      marginVertical: 10,
     },
     scroll: {
       marginTop: 5,
@@ -133,48 +118,42 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     console.log(possibleValues);
     setSuggestions(possibleValues);
   }
-
-  const handleFocus = () => {
-    setIsSearching(!isSearching);
-    if (!isSearching) {
-      autocompleteField.current?.blur();
-    }
-  }
   
+  useEffect(() => {
+    if (!isSearching) {
+      autocompleteField.current.blur();
+    }
+  }, [isSearching])
+
   return (
     <View>
       <View style={styles.container}>
-        <View style={styles.searchBox}>
-          { isSearching &&
-            <Icon
-              source={() => <MaterialCommunityIcons name='arrow-left-thin' style={ styles.searchBack } onPress={handleFocus}/>} 
-              size={10}
-            />
-          }
-          <View style={styles.searchInput}>
-            { !isSearching &&
-                <Icon 
-                source={() => <MaterialCommunityIcons name='magnify' style={ styles.searchIcon } />} 
-                size={10}
-                />
+        <View style={styles.searchInput}>
+          <AutocompleteInput
+            data={suggestions}
+            flatListProps={{
+            }}
+            renderTextInput={() => 
+              <TextInput
+                theme={{ roundness: 10 }}
+                placeholder='search recipes...'
+                value={searchText}
+                style={ styles.searchInputField }
+                onChangeText={(text: string) => handleSearchTextChanged(text)}
+                onFocus={() => setIsSearching(!isSearching)}
+                mode='outlined'
+                ref={autocompleteField}
+                left={ isSearching ? 
+                    <TextInput.Icon icon={() => 
+                        <MaterialCommunityIcons 
+                            name='arrow-left-circle-outline' style={styles.searchIcon} 
+                            onPress={() => setIsSearching(!isSearching)}
+                    />} /> 
+                  : <TextInput.Icon icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIcon} /> } />
+                }
+              />
             }
-            <AutocompleteInput
-              data={suggestions}
-              flatListProps={{
-              }}
-              renderTextInput={() => 
-                <TextInput
-                  placeholder='       search recipes...'
-                  value={searchText}
-                  style={ styles.searchInputField }
-                  onChangeText={(text: string) => handleSearchTextChanged(text)}
-                  onFocus={handleFocus}
-                  mode='outlined'
-                  ref={autocompleteField}
-                />
-              }
-            />
-          </View>
+          />
         </View>
         <GestureHandlerRootView>
           <ScrollView horizontal={true} 
