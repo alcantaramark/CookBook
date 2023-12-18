@@ -3,13 +3,14 @@ import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
 import { selectRecipes, recipePayload, fetchRecipes, selectRecipesStatus, selectRecipesPageInfo, selectRecipeErrors, clearRecipes } from '../RecipeSlice';
 import RecipeItem from './RecipeItem';
-import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import ContentLoader from 'react-content-loader/native';
 import { Rect } from 'react-native-svg';
 import { ErrorMain } from '../../Error/ErrorMain';
 import { FlashList } from '@shopify/flash-list';
+import { selectConfigError } from '../../Configuration/ConfigSlice';
 
 interface RecipeMainProps {}
 
@@ -52,6 +53,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const recipeStatusState = useAppSelector(selectRecipesStatus);
   const recipePageInfo = useAppSelector(selectRecipesPageInfo);
   const recipeStateErrors = useAppSelector(selectRecipeErrors);
+  const configStateErrors: string = useAppSelector(selectConfigError);
   
   const dispatch = useAppDispatch();
   
@@ -88,28 +90,29 @@ const RecipeMain: FC<RecipeMainProps> = () => {
     <View>
       <GestureHandlerRootView>
         {
-          (recipeStatusState === 'loading'  || configStatusState === 'loading' || recipesState.length == 0) && recipesState.length == 0 
-              ? recipeLoader() : recipeStateErrors !== '' ? <ErrorMain message={recipeStateErrors}/> :
-                <View style={styles.flashListStyle}>
-                  <FlashList
-                        ref={flashList}
-                        keyExtractor = {(item: recipePayload): string => item.node.id}
-                        numColumns = {1}
-                        data= { recipesState }
-                        renderItem={renderItem}
-                        horizontal={false}
-                        onEndReached={loadMore}
-                        ListFooterComponent={footer}
-                        estimatedItemSize={200}
-                        estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-                        refreshControl={
-                          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
-                          style={{backgroundColor: 'transparent'}}
-                          title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
-                          />
-                        }
-                  />
-                </View>
+          (recipeStatusState === 'loading'  || configStatusState === 'loading') && recipesState.length == 0 
+              ? recipeLoader() : configStateErrors !== '' ? <ErrorMain message={configStateErrors}/> :
+              recipeStateErrors !== '' ? <ErrorMain message={recipeStateErrors}/> :
+                  <View style={styles.flashListStyle}>
+                    <FlashList
+                          ref={flashList}
+                          keyExtractor = {(item: recipePayload): string => item.node.id}
+                          numColumns = {1}
+                          data= { recipesState }
+                          renderItem={renderItem}
+                          horizontal={false}
+                          onEndReached={loadMore}
+                          ListFooterComponent={footer}
+                          estimatedItemSize={200}
+                          estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+                          refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
+                            style={{backgroundColor: 'transparent'}}
+                            title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
+                            />
+                          }
+                    />
+                  </View>
         }
       </GestureHandlerRootView>
     </View>
