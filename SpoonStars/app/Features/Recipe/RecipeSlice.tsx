@@ -5,7 +5,6 @@ import recipePreference from './Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { recipe, recipeTag, pageInfo } from '../../../types/App_Types';
 
-
 export interface recipesState {
     recipes: recipePayload[],
     status: string,

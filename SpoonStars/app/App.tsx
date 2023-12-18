@@ -23,13 +23,11 @@ import {
 import {
   Colors
 } from 'react-native/Libraries/NewAppScreen';
-import RecipeMain from './Features/Recipe/Components/RecipeMain';
-import Search from './components/Search/Search';
-import Plan from './components/Plan/Plan';
 import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
+import { fetchSearchHistory } from './Features/Search/SearchSlice';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -62,6 +60,7 @@ function App(): JSX.Element {
 
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
+  dispatch(fetchSearchHistory());
 
   return (
     <NavigationContainer>
@@ -78,19 +77,7 @@ function App(): JSX.Element {
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
                         }} component={RecipeHeader}
-            />
-            <Tab.Screen name="Search" 
-              options={{  tabBarShowLabel: true,
-                          tabBarActiveTintColor: theme.colors.primary,
-                          tabBarIcon: () => ( <MaterialCommunityIcons name="clipboard-text-search-outline" color={theme.colors.primary} size={26} /> )
-                        }} component={Search}
-            />
-            <Tab.Screen name="Plan" 
-              options={{  tabBarShowLabel: true,
-                          tabBarActiveTintColor: theme.colors.primary,
-                          tabBarIcon: () => ( <MaterialCommunityIcons name="calendar-check" color={theme.colors.primary} size={26} /> )
-                        }} component={Plan}
-            />          
+            />    
         </Tab.Navigator>
       </PaperProvider>
     </NavigationContainer>
