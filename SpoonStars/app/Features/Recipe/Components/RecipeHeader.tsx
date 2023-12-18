@@ -9,6 +9,7 @@ import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 import AutocompleteInput from 'react-native-autocomplete-input';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { selectSearchHistory, selectHistorySearchStatus } from './../../Search/SearchSlice';
 
 
 interface RecipeHeaderProps {}
@@ -24,6 +25,8 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
+  const searchHistory = useAppSelector(selectSearchHistory);
+  const searchHistoryStatus = useAppSelector(selectHistorySearchStatus);
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -95,6 +98,11 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       setTagStyles(modes);
     }
   }, [preferenceStatus])
+
+  useEffect(() => {
+    if (searchHistoryStatus === 'succeeded')
+      console.log('search history', searchHistory) ;
+  }, [searchHistoryStatus])
 
   const createButtons = () => {
     return ( 

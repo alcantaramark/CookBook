@@ -8,6 +8,7 @@ export interface searchState {
     searchHistory: string[],
     keywords: string,
     status: string,
+    historyStatus: string,
     errors: string,
     pagination: pageInfo
 }
@@ -17,6 +18,7 @@ const initialState: searchState = {
     searchHistory: new Array<string>,
     keywords: '',
     status: 'idle',
+    historyStatus: 'idle',
     errors: '',
     pagination: {
         startCursor: '',
@@ -49,7 +51,12 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
 export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', async(_, { fulfillWithValue, rejectWithValue }) => {
     try {
         const searchHistory = await AsyncStorage.getItem('search-history');
-        return fulfillWithValue(searchHistory);
+        if (searchHistory === null){
+            fulfillWithValue(searchHistory);
+        }
+        else {
+            return fulfillWithValue(searchHistory.split(' '));
+        }
     }
     catch(e){
         return rejectWithValue('error getting search history');
@@ -62,38 +69,38 @@ export const searchSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {
-            state.status = 'loading';
+            state.historyStatus = 'loading';
             state.errors = ''
         }).addCase(saveSearchHistory.rejected, (state, action) => {
-            if (state.status === 'loading') {
-                state.status = 'idle';
+            if (state.historyStatus === 'loading') {
+                state.historyStatus = 'idle';
                 state.errors = action.payload as string;
             }
         }).addCase(saveSearchHistory.fulfilled, (state, action) => {
-            state.status = 'succeeded';
+            state.historyStatus = 'succeeded';
         }).addCase(fetchSearchHistory.pending, state => {
-            state.status = 'loading';
+            state.historyStatus = 'loading';
             state.errors = ''
         }).addCase(fetchSearchHistory.rejected, (state, action) => {
-            if (state.status === 'loading') {
-                state.status = 'idle';
+            if (state.historyStatus === 'loading') {
+                state.historyStatus = 'idle';
                 state.errors = action.payload as string;
             }            
-        }).addCase(saveSearchHistory.fulfilled, (state, action) => {
-            state.status = 'succeeded';
-
+        }).addCase(fetchSearchHistory.fulfilled, (state, action) => {
+            state.historyStatus = 'succeeded';
             if (action.payload !== undefined) {
-                state.searchHistory = JSON.parse(action.payload as string);
+                state.searchHistory = action.payload;
             }
         });
     }
 });
 
 export const selectKeyWords = (state: RootState) => state.search.keywords;
-export const selectSearchStatus = (state: RootState) => state.search.status;
+export const selectHistorySearchStatus = (state: RootState) => state.search.historyStatus;
 export const selectSearchErrors = (state: RootState) => state.search.errors;
 export const selectSearchPageInfo = (state: RootState) => state.search.pagination;
 export const selectSearchHistory = (state: RootState) => state.search.searchHistory;
+export const selectSearchStatus = (state: RootState) => state.search.status;
 export default searchSlice.reducer;
 
 
