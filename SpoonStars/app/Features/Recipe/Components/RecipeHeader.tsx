@@ -46,14 +46,23 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     },
     searchInputField: {
       width: Dimensions.get('screen').width - 20,
-      borderRadius: 1,
       height: 40,
       marginStart: 10
     },
-    searchIcon: {
+    searchInputFieldActive: {
+      width: Dimensions.get('screen').width - 70,
+      height: 40,
+      marginStart: 5
+    },
+    searchIconBack: {
+      color: 'black',
+      fontSize: 30,
+      top: 8,
+      marginStart: 10
+    },
+    searchIconMagnify: {
       color: 'gray',
       fontSize: 25,
-      zIndex: 2,
     },
     scroll: {
       marginTop: 5,
@@ -129,6 +138,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     <View>
       <View style={styles.container}>
         <View style={styles.searchInput}>
+          {isSearching &&
+            <MaterialCommunityIcons 
+                              name='arrow-left-circle-outline' style={styles.searchIconBack} 
+                              onPress={() => setIsSearching(!isSearching)}
+            />
+          }
           <AutocompleteInput
             data={suggestions}
             flatListProps={{
@@ -138,18 +153,13 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
                 theme={{ roundness: 10 }}
                 placeholder='search recipes...'
                 value={searchText}
-                style={ styles.searchInputField }
+                style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
                 onChangeText={(text: string) => handleSearchTextChanged(text)}
                 onFocus={() => setIsSearching(!isSearching)}
                 mode='outlined'
                 ref={autocompleteField}
-                left={ isSearching ? 
-                    <TextInput.Icon icon={() => 
-                        <MaterialCommunityIcons 
-                            name='arrow-left-circle-outline' style={styles.searchIcon} 
-                            onPress={() => setIsSearching(!isSearching)}
-                    />} /> 
-                  : <TextInput.Icon icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIcon} /> } />
+                left={ !isSearching &&
+                    <TextInput.Icon icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> } />
                 }
               />
             }
