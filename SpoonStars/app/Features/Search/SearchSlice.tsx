@@ -31,17 +31,17 @@ const initialState: searchState = {
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
     const searchHistory = await AsyncStorage.getItem('search-history');
     let keywords: string[] = new Array();
-
+    
     try{
         if (searchHistory !== null){
-            keywords = JSON.parse(searchHistory);
+            keywords = searchHistory.split(' ');
             keywords.push(keyword);
         }
         else {
             keywords.push(keyword);
         }
 
-        await AsyncStorage.setItem('search-history', JSON.stringify(keywords));
+        await AsyncStorage.setItem('search-history', keywords.join(' '));
     }
     catch(e){
         return rejectWithValue('error saving search history');
@@ -52,7 +52,7 @@ export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', 
     try {
         const searchHistory = await AsyncStorage.getItem('search-history');
         if (searchHistory === null){
-            fulfillWithValue(searchHistory);
+            return fulfillWithValue(searchHistory);
         }
         else {
             return fulfillWithValue(searchHistory.split(' '));
@@ -87,16 +87,16 @@ export const searchSlice = createSlice({
                 state.errors = action.payload as string;
             }            
         }).addCase(fetchSearchHistory.fulfilled, (state, action) => {
-            state.historyStatus = 'succeeded';
             if (action.payload !== undefined) {
-                state.searchHistory = action.payload;
+                state.historyStatus = 'succeeded';
+                state.searchHistory = action.payload!;
             }
         });
     }
 });
 
 export const selectKeyWords = (state: RootState) => state.search.keywords;
-export const selectHistorySearchStatus = (state: RootState) => state.search.historyStatus;
+export const selectSearchHistoryStatus = (state: RootState) => state.search.historyStatus;
 export const selectSearchErrors = (state: RootState) => state.search.errors;
 export const selectSearchPageInfo = (state: RootState) => state.search.pagination;
 export const selectSearchHistory = (state: RootState) => state.search.searchHistory;

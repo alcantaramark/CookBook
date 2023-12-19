@@ -9,7 +9,7 @@ import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 import AutocompleteInput from 'react-native-autocomplete-input';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { selectSearchHistory, selectHistorySearchStatus } from './../../Search/SearchSlice';
+import { selectSearchHistory, selectSearchHistoryStatus, saveSearchHistory, fetchSearchHistory } from './../../Search/SearchSlice';
 
 
 interface RecipeHeaderProps {}
@@ -26,7 +26,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
   const searchHistory = useAppSelector(selectSearchHistory);
-  const searchHistoryStatus = useAppSelector(selectHistorySearchStatus);
+  const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -100,8 +100,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }, [preferenceStatus])
 
   useEffect(() => {
-    if (searchHistoryStatus === 'succeeded')
-      console.log('search history', searchHistory) ;
+    if (searchHistoryStatus === 'succeeded'){
+      setSuggestions(searchHistory);
+    }
   }, [searchHistoryStatus])
 
   const createButtons = () => {
@@ -120,27 +121,34 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     )
   }
 
-  const options = [
-    'Mark Alcantara', 'April Alcantara', 'Natalie Alcantara'
-  ]
-
   const handleSearchTextChanged = (text: string) => {
     setSearchText(text);
     if (text === ''){
-      setSuggestions([]);
+      setSuggestions(searchHistory);
       return;
     }
 
-    const possibleValues = options.filter((option: string) => option.startsWith(text));
-    console.log(possibleValues);
+    const possibleValues = suggestions.filter((option: string) => option.startsWith(text));
     setSuggestions(possibleValues);
   }
   
-  useEffect(() => {
-    if (!isSearching) {
-      autocompleteField.current.blur();
-    }
-  }, [isSearching])
+  
+  const handleEnterPress = async () => {
+      await dispatch(saveSearchHistory(searchText));
+      handleSearchIconPress();
+      //redirect to search result list component
+  }
+
+  const handleSearchIconPress = async () => {
+    setIsSearching(!isSearching);
+    autocompleteField.current.blur();
+    setSuggestions([]);
+  }
+
+  const handleSearchOnFocus = async () => {
+    setIsSearching(!isSearching);
+    await dispatch(fetchSearchHistory());
+  }
 
   return (
     <View>
@@ -148,8 +156,8 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
         <View style={styles.searchInput}>
           {isSearching &&
             <MaterialCommunityIcons 
-                              name='arrow-left-circle-outline' style={styles.searchIconBack} 
-                              onPress={() => setIsSearching(!isSearching)}
+              name='arrow-left-circle-outline' style={styles.searchIconBack} 
+              onPress={handleSearchIconPress}
             />
           }
           <AutocompleteInput
@@ -163,12 +171,15 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
                 value={searchText}
                 style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
                 onChangeText={(text: string) => handleSearchTextChanged(text)}
-                onFocus={() => setIsSearching(!isSearching)}
+                onFocus={handleSearchOnFocus}
                 mode='outlined'
                 ref={autocompleteField}
                 left={ !isSearching &&
-                    <TextInput.Icon icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> } />
+                    <TextInput.Icon 
+                      icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
+                    />
                 }
+                onSubmitEditing={handleEnterPress}
               />
             }
           />

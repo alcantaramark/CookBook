@@ -60,8 +60,7 @@ function App(): JSX.Element {
 
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
-  dispatch(fetchSearchHistory());
-
+  
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
