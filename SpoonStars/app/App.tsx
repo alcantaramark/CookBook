@@ -40,6 +40,7 @@ const theme = {
     ...defaultTheme.colors,
     primary: 'darkseagreen',
     secondary: 'yellow',
+    secondaryContainer: 'white'
   },
   
 };

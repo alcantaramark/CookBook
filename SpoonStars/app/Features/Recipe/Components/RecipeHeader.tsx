@@ -1,6 +1,6 @@
 import React, { FC, createContext, useEffect, useRef, useState } from 'react';
-import { Button, TextInput } from 'react-native-paper';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
@@ -19,10 +19,11 @@ export const HomeContext = createContext(null as any);
 const RecipeHeader: FC<RecipeHeaderProps> = () => { 
   const [searchText, setSearchText] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [searchBy, setSearchBy] = useState('name');
   const [isSearching, setIsSearching] = useState(false);
   const autocompleteField = useRef<any>(null);
 
-  const { colors: { primary } } = useAppTheme();
+  const { colors: { primary, secondary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
   const searchHistory = useAppSelector(selectSearchHistory);
@@ -45,17 +46,17 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       backgroundColor: 'transparent'
     },
     searchInput: {
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     searchInputField: {
       width: Dimensions.get('screen').width - 20,
       height: 40,
-      marginStart: 10
+      marginStart: 10,
     },
     searchInputFieldActive: {
       width: Dimensions.get('screen').width - 70,
       height: 40,
-      marginStart: 5
+      marginStart: 5,
     },
     searchIconBack: {
       color: 'black',
@@ -70,6 +71,11 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     scroll: {
       marginTop: 5,
       marginBottom: 10,
+    },
+    searchBy: {
+      height: 28,
+      margin: 10,
+      borderRadius: 10,
     }
   })
 
@@ -164,6 +170,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
             data={suggestions}
             flatListProps={{
             }}
+            inputContainerStyle={{borderWidth: 0}}
             renderTextInput={() => 
               <TextInput
                 theme={{ roundness: 10 }}
@@ -184,6 +191,19 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
             }
           />
         </View>
+        {isSearching &&
+          <SegmentedButtons 
+            value={searchBy}
+            style={styles.searchBy}
+            buttons={[
+              { value: 'name', label: 'Name', checkedColor: primary },
+              { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
+            ]}
+            onValueChange={(val) => setSearchBy(val)}
+            density='high'
+            theme={useAppTheme}
+          />
+        }
         <GestureHandlerRootView>
           <ScrollView horizontal={true} 
             showsHorizontalScrollIndicator={false} 
