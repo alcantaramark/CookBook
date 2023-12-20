@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
     flashListStyle: {
       marginTop: 20,
       flexDirection: 'row',
-      marginStart: 10
+      marginStart: 10,
+      marginEnd: 10
     }
 });
   

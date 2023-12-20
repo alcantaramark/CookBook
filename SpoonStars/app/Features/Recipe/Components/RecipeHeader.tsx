@@ -166,6 +166,11 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     setSearchText('');
   }
 
+  const handleSearchByValueChange = (val: string) => {
+    setSearchBy(val);
+    setSearchText('');
+    dispatch(clearSuggestions());
+  }
   
   return (
     <View>
@@ -202,7 +207,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               { value: 'name', label: 'Name', checkedColor: primary },
               { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
             ]}
-            onValueChange={(val) => setSearchBy(val)}
+            onValueChange={(val) => handleSearchByValueChange(val) }
             density='high'
             theme={useAppTheme}
           />

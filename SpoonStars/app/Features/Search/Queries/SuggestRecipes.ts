@@ -9,7 +9,6 @@ export const searchByName = async (name: string, searchAll?:boolean) => {
 }
 
 export const searchByIngredients = async (ingredients: string[], searchAll?:boolean) => {
-    console.log('i am here in search by ingredients');
     if (searchAll !== undefined && !searchAll){
         return await searchByIngredientsPartial(ingredients);
     }
