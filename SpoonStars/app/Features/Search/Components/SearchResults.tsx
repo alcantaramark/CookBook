@@ -1,9 +1,10 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, ReactElement, useEffect } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { FlashList } from '@shopify/flash-list';
 import { selectSearchHistory, selectSearchSuggestions, suggestionsPayload } from '../SearchSlice';
 import { useAppSelector } from './../../../Redux/Hooks';
+import HistoryResults from './HistoryResults';
 
 
 interface SearchResultProps {}
@@ -12,32 +13,19 @@ const SearchResults: FC<SearchResultProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
 
-    useEffect(() => {
-        console.log('search History', searchHistory);
-    }, [searchSuggestions, searchHistory])
 
-    const showHistory = () => {
-        return(
-            <FlashList
-                data={searchHistory}
-                keyExtractor={(item: string):string => item}
-                renderItem={({item, index}) => { return (<Text>{item}</Text>)}}
-                estimatedItemSize={200}
-                estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-            />
-            
-        )
+    const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
+        return (<Text>{item.node.name}</Text>)
     }
 
     return(
     <View style={styles.flashListStyle}>
-    <FlashList
-        ListEmptyComponent={showHistory}
-        data={searchSuggestions}
-        keyExtractor={(item: suggestionsPayload):string => item.node.name}
-        renderItem={(item) => {  return (<Text>{item.item.node.name}</Text>) }}
-        estimatedItemSize={200}
-        estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+        <FlashList
+            ListEmptyComponent={<HistoryResults />}
+            data={searchSuggestions}
+            keyExtractor={(item: suggestionsPayload):string => item.node.id}
+            renderItem={renderItem}
+            estimatedItemSize={200}
         />
     </View>);
 }
@@ -45,7 +33,8 @@ const SearchResults: FC<SearchResultProps> = () => {
 const styles = StyleSheet.create({
     flashListStyle: {
       marginTop: 20,
-      flexDirection: 'row'
+      flexDirection: 'row',
+      marginStart: 10
     }
 });
   

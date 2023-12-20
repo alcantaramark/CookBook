@@ -114,7 +114,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   useEffect(() => { 
     if (searchSuggestions.length === 0) {
       fetchHistory();
-      console.log('history', searchHistory);
     }
     
   }, [searchSuggestions]);
@@ -159,14 +158,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const handleEnterPress = async () => {
       await dispatch(saveSearchHistory(searchText));
       setIsSearching(false);
-      //redirect to search result list component;
   }
 
   const handleSearchIconPress = () => {
     setIsSearching(!isSearching);
     dispatch(clearSuggestions());
     setSearchText('');
-    autocompleteField.current.blur();
   }
 
   

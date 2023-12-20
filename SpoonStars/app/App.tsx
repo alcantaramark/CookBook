@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import {   
           PaperProvider, 
           MD3LightTheme as defaultTheme, 
@@ -27,7 +27,6 @@ import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
-import { fetchSearchHistory } from './Features/Search/SearchSlice';
 
 type SectionProps = PropsWithChildren<{
   title: string;
