@@ -4,8 +4,9 @@ import { pageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { searchByIngredients, searchByName } from "./Queries/SuggestRecipes";
 
+
 export interface searchState {
-    suggestions: recipePayload[],
+    suggestions: suggestionsPayload[],
     searchHistory: string[],
     keywords: string,
     status: string,
@@ -14,7 +15,7 @@ export interface searchState {
     pagination: pageInfo
 }
 
-export interface recipePayload {
+export interface suggestionsPayload {
     node: recipe,
     cursor: string
 }
@@ -30,7 +31,7 @@ interface searchQueriesIngredients{
 }
 
 const initialState: searchState = {
-    suggestions: new Array<recipePayload>,
+    suggestions: new Array<suggestionsPayload>,
     searchHistory: new Array<string>,
     keywords: '',
     status: 'idle',
@@ -83,8 +84,11 @@ export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
         const { name, searchAll } = queries
+
         try{
-            return  fulfillWithValue(await searchByName(name, searchAll));
+            const suggestions = await searchByName(name, searchAll).then(response => response.json());
+            
+            return  fulfillWithValue(suggestions.data.recipeSearch);
         }
         catch(e) {
             return rejectWithValue('error fetching suggestions by name');
@@ -94,10 +98,13 @@ export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName'
 export const suggestRecipesByIngredients = createAsyncThunk('search/fetchRecipesByIngredients', async (queries: searchQueriesIngredients
     , {rejectWithValue, fulfillWithValue}) => {
         const { ingredients, searchAll } = queries;
+
         try {
-            return fulfillWithValue(await searchByIngredients(ingredients, searchAll));
+            const suggestions = await searchByIngredients(ingredients, searchAll).then(response => response.json());
+            return fulfillWithValue(suggestions.data.searchRecipesByIngredients);
         }
         catch (e){
+            console.log('error', e);
             return rejectWithValue('error fetching suggestions by ingredients');
         }
     }
@@ -106,7 +113,20 @@ export const suggestRecipesByIngredients = createAsyncThunk('search/fetchRecipes
 export const searchSlice = createSlice({
     name: 'search',
     initialState,
-    reducers: {},
+    reducers: {
+        clearSuggestions: state => {
+            state.historyStatus = '';
+            state.errors = '';
+            state.pagination = {
+                startCursor: '',
+                endCursor: '',
+                hasNextPage: false,
+                hasPreviousPage: false
+            };
+            state.status = '';
+            state.suggestions = []
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {
             state.historyStatus = 'loading';
@@ -117,6 +137,7 @@ export const searchSlice = createSlice({
                 state.errors = action.payload as string;
             }
         }).addCase(saveSearchHistory.fulfilled, (state, action) => {
+            console.log('hurray');
             state.historyStatus = 'succeeded';
         }).addCase(fetchSearchHistory.pending, state => {
             state.historyStatus = 'loading';
@@ -127,7 +148,7 @@ export const searchSlice = createSlice({
                 state.errors = action.payload as string;
             }            
         }).addCase(fetchSearchHistory.fulfilled, (state, action) => {
-            if (action.payload !== undefined) {
+            if (action.payload !== null) {
                 state.historyStatus = 'succeeded';
                 state.searchHistory = action.payload!;
             }
@@ -140,23 +161,33 @@ export const searchSlice = createSlice({
                 state.errors = action.payload as string;
             }
         }).addCase(suggestRecipesByName.fulfilled, (state, action) => {
-            if (action.payload !== undefined){
+            if (action.payload !== null){
                 state.status = 'succeeded';
-                state.suggestions = action.payload
+                
+                state.suggestions = [];
+                action.payload.edges.map((item: suggestionsPayload) => {
+                    state.suggestions.push(item);
+                })
             }
         }).addCase(suggestRecipesByIngredients.pending, state => {
             state.status = 'loading',
             state.errors = ''
         }).addCase(suggestRecipesByIngredients.rejected, (state, action) => {
+            console.log('rejected', action.payload);
             if (state.status === 'loading') {
                 state.status = 'idle';
                 state.errors = action.payload as string;
             }
         }).addCase(suggestRecipesByIngredients.fulfilled, (state, action) => {
-            if (action.payload !== undefined){
+            if (action.payload !== null){
                 state.status = 'succeeded';
-                state.suggestions = action.payload;
+                
+                state.suggestions = [];
+                action.payload.edges.map((item: suggestionsPayload) => {
+                    state.suggestions.push(item);
+                })
             }
+            console.log('search by ingredients', state.suggestions);
         });
     }
 });
@@ -167,6 +198,8 @@ export const selectSearchErrors = (state: RootState) => state.search.errors;
 export const selectSearchPageInfo = (state: RootState) => state.search.pagination;
 export const selectSearchHistory = (state: RootState) => state.search.searchHistory;
 export const selectSearchStatus = (state: RootState) => state.search.status;
+export const selectSearchSuggestions = (state: RootState) => state.search.suggestions;
+export const { clearSuggestions } = searchSlice.actions
 export default searchSlice.reducer;
 
 
