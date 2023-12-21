@@ -35,7 +35,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         return(
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Recent</Text>
-                <Text style={{color: primary}} onPress={() => dispatch(clearHistory)}>Clear</Text>
+                <Text style={{color: primary}} onPress={() => dispatch(clearHistory())}>Clear</Text>
             </View>
         );
     }

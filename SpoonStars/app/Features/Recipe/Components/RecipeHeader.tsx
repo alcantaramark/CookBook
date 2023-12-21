@@ -162,8 +162,18 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleEnterPress = async () => {
-      await dispatch(saveSearchHistory(searchText));
+      await dispatch(saveSearchHistory(searchText.trim()));
       dispatch(setShowFullResults(true));
+      
+      if (searchBy === 'name') {
+        await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
+      }
+      else {
+         await dispatch(suggestRecipesByIngredients({ 
+          ingredients: searchText.split(' '),
+          searchAll: true
+        }));
+      }
   }
 
   const handleSearchIconPress = () => {
@@ -210,7 +220,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
                   icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
                 />
             }
-            onFocus={() => setIsSearching(true)}
+            onFocus={() => { setIsSearching(true); dispatch(setShowFullResults(false)); }}
             onSubmitEditing={handleEnterPress}
           />
         </View>

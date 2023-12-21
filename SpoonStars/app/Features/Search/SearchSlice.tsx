@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../Redux/Store";
 import { pageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { searchByIngredients, searchByName } from "./Queries/SuggestRecipes";
+import { searchByIngredients, searchByName } from "./Services/Queries/SuggestRecipes";
 
 
 export interface searchState {
@@ -56,7 +56,7 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
             return;
 
         if (searchHistory !== null){
-            keywords = searchHistory.split(' ');
+            keywords = searchHistory.split('\n');
             if (keywords.find(s => s === keyword) === undefined) {
                 keywords.push(keyword);
             }
@@ -65,7 +65,7 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
             keywords.push(keyword);
         }
 
-        await AsyncStorage.setItem('search-history', keywords.join(' '));
+        await AsyncStorage.setItem('search-history', keywords.join('\n'));
     }
     catch(e){
         return rejectWithValue('error saving search history');
@@ -79,7 +79,7 @@ export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', 
             return fulfillWithValue(searchHistory);
         }
         else {
-            return fulfillWithValue(searchHistory.split(' '));
+            return fulfillWithValue(searchHistory.split('\n'));
         }
     }
     catch(e){
@@ -94,10 +94,10 @@ export const clearHistory = createAsyncThunk('search/clearHistory', async () => 
 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
-        const { name, searchAll } = queries
+        const { name, searchAll } = queries;
 
         try{
-            const suggestions = await searchByName(name, searchAll).then(response => response.json());
+            const suggestions =  await searchByName(name, searchAll).then(response => response.json());
             
             return  fulfillWithValue(suggestions.data.recipeSearch);
         }
@@ -187,6 +187,8 @@ export const searchSlice = createSlice({
                 action.payload.edges.map((item: suggestionsPayload) => {
                     state.suggestions.push(item);
                 })
+                state.pagination = action.payload.pageInfo;
+                state.errors = '';
             }
         }).addCase(suggestRecipesByIngredients.pending, state => {
             state.status = 'loading',
@@ -204,6 +206,8 @@ export const searchSlice = createSlice({
                 action.payload.edges.map((item: suggestionsPayload) => {
                     state.suggestions.push(item);
                 })
+                state.pagination = action.payload.pageInfo;
+                state.errors = '';
             }
         });
     }
