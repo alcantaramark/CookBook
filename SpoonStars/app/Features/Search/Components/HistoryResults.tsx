@@ -1,12 +1,11 @@
-import RFC, { FC, ReactElement } from 'react'
+import RFC, { FC, ReactElement, useState } from 'react'
 import { Text } from 'react-native-paper';
 import { selectSearchHistory, clearHistory } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
 import { FlatList } from 'react-native';
-
 
 interface HistoryResultsProps {
     
@@ -36,14 +35,11 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         return(
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Recent</Text>
-                <Text style={{color: primary}} onPress={deleteHistory}>Clear</Text>
+                <Text style={{color: primary}} onPress={() => dispatch(clearHistory)}>Clear</Text>
             </View>
         );
     }
-    const deleteHistory = async () => {
-        dispatch(clearHistory());
-    };
-
+    
     return (
         <FlatList
             ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}

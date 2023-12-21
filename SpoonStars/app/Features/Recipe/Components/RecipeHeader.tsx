@@ -1,6 +1,6 @@
 import React, { FC, createContext, useEffect, useRef, useState } from 'react';
-import { Button, SegmentedButtons, Text, TextInput } from 'react-native-paper';
-import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
+import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
@@ -8,10 +8,12 @@ import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { selectSearchHistory, selectSearchHistoryStatus, saveSearchHistory, 
-    fetchSearchHistory, suggestRecipesByName, suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions } 
+import { selectShowFullResults, saveSearchHistory, 
+    fetchSearchHistory, suggestRecipesByName, 
+    suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions, setShowFullResults, clearHistory } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
+import FullResults from './../../Search/Components/FullResults';
 
 
 
@@ -23,12 +25,14 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const [searchText, setSearchText] = useState('');
   const [searchBy, setSearchBy] = useState('name');
   const [isSearching, setIsSearching] = useState(false);
+  
   const autocompleteField = useRef<any>(null);
 
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
   const searchSuggestions = useAppSelector(selectSearchSuggestions);
+  const showFullResults = useAppSelector(selectShowFullResults);
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -58,7 +62,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       marginStart: 10,
     },
     searchInputFieldActive: {
-      width: Dimensions.get('screen').width - 70,
+      width: Dimensions.get('screen').width - 52,
       height: 40,
       marginStart: 5,
     },
@@ -134,8 +138,11 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchTextChanged =  async (text: string) => {
+    if (text === searchText){
+      return;
+    }
+
     setSearchText(text);
-    
     if (text === ''){
       setIsSearching(false);
       return;
@@ -156,12 +163,13 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   const handleEnterPress = async () => {
       await dispatch(saveSearchHistory(searchText));
-      setIsSearching(false);
+      dispatch(setShowFullResults(true));
   }
 
   const handleSearchIconPress = () => {
     setIsSearching(!isSearching);
     dispatch(clearSuggestions());
+    dispatch(setShowFullResults(false));
     setSearchText('');
   }
 
@@ -169,6 +177,14 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     setSearchBy(val);
     setSearchText('');
     dispatch(clearSuggestions());
+  }
+
+  const mainView = () => {
+    if (isSearching){
+      return (showFullResults ? <FullResults /> : <PreviewResults />)
+    }
+    else
+      return (<RecipeMain />);
   }
   
   return (
@@ -222,7 +238,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
           </GestureHandlerRootView> 
         }  
         </View> 
-      {(isSearching) ? <PreviewResults /> : <RecipeMain />}
+        {mainView()}
     </View>
 )};
 
