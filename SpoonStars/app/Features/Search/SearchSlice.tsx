@@ -52,7 +52,9 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
     try{
         if (searchHistory !== null){
             keywords = searchHistory.split(' ');
-            keywords.push(keyword);
+            if (keywords.find(s => s === keyword) === undefined) {
+                keywords.push(keyword);
+            }
         }
         else {
             keywords.push(keyword);

@@ -1,11 +1,11 @@
 import RFC, { FC, ReactElement } from 'react'
 import { Text } from 'react-native-paper';
-import { FlashList } from '@shopify/flash-list';
 import { selectSearchHistory, clearHistory } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
+import { FlatList } from 'react-native';
 
 
 interface HistoryResultsProps {
@@ -45,13 +45,11 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     };
 
     return (
-        <FlashList
+        <FlatList
             ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}
             data={searchHistory}
             keyExtractor={(item: string):string => item}
             renderItem={renderResultItem}
-            estimatedItemSize={200}
-            estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
         />
     );
 }

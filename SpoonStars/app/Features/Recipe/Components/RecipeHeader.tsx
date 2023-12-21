@@ -80,6 +80,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       height: 28,
       margin: 10,
       borderRadius: 10,
+      
     }
   })
 

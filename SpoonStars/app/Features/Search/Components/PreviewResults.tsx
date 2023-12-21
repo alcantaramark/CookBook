@@ -1,11 +1,12 @@
 import React, { FC, ReactElement, useEffect } from 'react'
-import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Dimensions, StyleSheet, View , FlatList} from 'react-native';
+import { Avatar, Text } from 'react-native-paper';
 import { FlashList } from '@shopify/flash-list';
 import { selectSearchSuggestions, suggestionsPayload } from '../SearchSlice';
 import { useAppSelector } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { useAppTheme } from '../../../App';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 interface PreviewResultsProps {}
@@ -17,7 +18,17 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
-        return (<Text>{item.node.name}</Text>)
+        return (
+            <View style={styles.itemContainer}>
+                <View style={styles.searchDetails}>
+                    <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
+                    <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
+                </View>
+                <View>
+                    <MaterialCommunityIcons name="magnify" size={10} style={styles.searchIcon} />
+                </View>
+            </View>
+        )
     }
 
     const footerComponent = () => {
@@ -30,13 +41,12 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     return(
     <View style={styles.flashListStyle}>
-        <FlashList
+        <FlatList
             ListEmptyComponent={<HistoryResults />}
             data={searchSuggestions}
             keyExtractor={(item: suggestionsPayload):string => item.node.id}
             renderItem={renderItem}
-            estimatedItemSize={200}
-            ListFooterComponent={searchSuggestions === null ? null : footerComponent}
+            ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
         />
     </View>);
 }
@@ -50,7 +60,27 @@ const styles = StyleSheet.create({
     },
     footer: {
         alignItems: 'center',
-        
+        marginTop: 20
+    },
+    itemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    avatar: {
+        marginBottom: 20,
+        marginEnd: 10
+    },
+    searchText: {
+        top: 20,
+        fontSize: 14,
+    },
+    searchIcon: {
+        fontSize: 20,
+        color: 'gray',
+        top: 20,
+    },
+    searchDetails: {
+        flexDirection: 'row'
     }
 });
   
