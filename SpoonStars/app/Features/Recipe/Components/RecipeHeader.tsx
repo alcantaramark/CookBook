@@ -7,12 +7,12 @@ import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference
     saveRecipePreference, fetchRecipes, clearRecipes } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
-import AutocompleteInput from 'react-native-autocomplete-input';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectSearchHistory, selectSearchHistoryStatus, saveSearchHistory, 
-    fetchSearchHistory, suggestionsPayload, suggestRecipesByName, suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions } 
+    fetchSearchHistory, suggestRecipesByName, suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions } 
     from './../../Search/SearchSlice';
-import SearchResults from './../../Search/Components/SearchResults';
+import PreviewResults from './../../Search/Components/PreviewResults';
+
 
 
 interface RecipeHeaderProps {}
@@ -25,11 +25,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const [isSearching, setIsSearching] = useState(false);
   const autocompleteField = useRef<any>(null);
 
-  const { colors: { primary, secondary } } = useAppTheme();
+  const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
-  const searchHistory = useAppSelector(selectSearchHistory);
-  const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
   const searchSuggestions = useAppSelector(selectSearchSuggestions);
   
   const dispatch = useAppDispatch();
@@ -223,7 +221,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
           </GestureHandlerRootView> 
         }  
         </View> 
-      {(isSearching) ? <SearchResults /> : <RecipeMain />}
+      {(isSearching) ? <PreviewResults /> : <RecipeMain />}
     </View>
 )};
 
