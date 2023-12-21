@@ -7,11 +7,12 @@ import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference
     saveRecipePreference, fetchRecipes, clearRecipes } from '../RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
-import AutocompleteInput from 'react-native-autocomplete-input';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectSearchHistory, selectSearchHistoryStatus, saveSearchHistory, 
-    fetchSearchHistory, suggestionsPayload, suggestRecipesByName, suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions } 
+    fetchSearchHistory, suggestRecipesByName, suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions } 
     from './../../Search/SearchSlice';
+import PreviewResults from './../../Search/Components/PreviewResults';
+
 
 
 interface RecipeHeaderProps {}
@@ -24,11 +25,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const [isSearching, setIsSearching] = useState(false);
   const autocompleteField = useRef<any>(null);
 
-  const { colors: { primary, secondary } } = useAppTheme();
+  const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
-  const searchHistory = useAppSelector(selectSearchHistory);
-  const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
   const searchSuggestions = useAppSelector(selectSearchSuggestions);
   
   const dispatch = useAppDispatch();
@@ -81,6 +80,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       height: 28,
       margin: 10,
       borderRadius: 10,
+      
     }
   })
 
@@ -110,6 +110,13 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     }
   }, [preferenceStatus])
 
+  useEffect(() => { 
+    if (searchSuggestions.length === 0) {
+      fetchHistory();
+    }
+    
+  }, [searchSuggestions]);
+
   const createButtons = () => {
     return ( 
       recipeTags.map((item, index) => {
@@ -126,16 +133,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     )
   }
 
-  useEffect(() => { 
-    if (searchSuggestions.length === 0) {
-      fetchHistory();
-      console.log('history', searchHistory);
-    }
-    
-  }, [searchSuggestions]);
-  
   const handleSearchTextChanged =  async (text: string) => {
-    console.log('text change');
     setSearchText(text);
     
     if (text === ''){
@@ -156,14 +154,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     
   }
 
-  const handleKeyPress = (e:any) => {
-    //console.log('keypress', searchText);
-  }
-
   const handleEnterPress = async () => {
       await dispatch(saveSearchHistory(searchText));
       setIsSearching(false);
-      //redirect to search result list component;
   }
 
   const handleSearchIconPress = () => {
@@ -172,11 +165,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     setSearchText('');
   }
 
-  const handleSearchOnFocus = async () => {
-    //setIsSearching(!isSearching);
-    //await dispatch(fetchSearchHistory());
+  const handleSearchByValueChange = (val: string) => {
+    setSearchBy(val);
+    setSearchText('');
+    dispatch(clearSuggestions());
   }
-
+  
   return (
     <View>
       <View style={styles.container}>
@@ -187,32 +181,21 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               onPress={handleSearchIconPress}
             />
           }
-          <AutocompleteInput
-            data={searchSuggestions}
-            flatListProps={{
-              renderItem: ({ item }) => <Text>{item.node.name}</Text>
-            }}
-            inputContainerStyle={{borderWidth: 0}}
-            
-            renderTextInput={() => 
-              <TextInput
-                theme={{ roundness: 10 }}
-                placeholder='search recipes...'
-                value={searchText}
-                style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
-                onChangeText={(text: string) => handleSearchTextChanged(text)}
-                onFocus={handleSearchOnFocus}
-                mode='outlined'
-                ref={autocompleteField}
-                left={ !isSearching &&
-                    <TextInput.Icon 
-                      icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
-                    />
-                }
-                onKeyPress={(e) => handleKeyPress(e)}
-                onSubmitEditing={handleEnterPress}
-              />
+          <TextInput
+            theme={{ roundness: 10 }}
+            placeholder='search recipes...'
+            value={searchText}
+            style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
+            onChangeText={(text: string) => handleSearchTextChanged(text)}
+            mode='outlined'
+            ref={autocompleteField}
+            left={ !isSearching &&
+                <TextInput.Icon 
+                  icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
+                />
             }
+            onFocus={() => setIsSearching(true)}
+            onSubmitEditing={handleEnterPress}
           />
         </View>
         {isSearching &&
@@ -223,21 +206,23 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               { value: 'name', label: 'Name', checkedColor: primary },
               { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
             ]}
-            onValueChange={(val) => setSearchBy(val)}
+            onValueChange={(val) => handleSearchByValueChange(val) }
             density='high'
             theme={useAppTheme}
           />
         }
-        <GestureHandlerRootView>
-          <ScrollView horizontal={true} 
-            showsHorizontalScrollIndicator={false} 
-            style={styles.scroll}
-          >
+        {!isSearching && 
+          <GestureHandlerRootView>
+            <ScrollView horizontal={true} 
+              showsHorizontalScrollIndicator={false} 
+              style={styles.scroll}
+            >
           { createButtons() }
              </ScrollView>
-        </GestureHandlerRootView> 
-      </View> 
-      <RecipeMain />
+          </GestureHandlerRootView> 
+        }  
+        </View> 
+      {(isSearching) ? <PreviewResults /> : <RecipeMain />}
     </View>
 )};
 

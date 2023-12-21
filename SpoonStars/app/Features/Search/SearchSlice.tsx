@@ -52,7 +52,9 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
     try{
         if (searchHistory !== null){
             keywords = searchHistory.split(' ');
-            keywords.push(keyword);
+            if (keywords.find(s => s === keyword) === undefined) {
+                keywords.push(keyword);
+            }
         }
         else {
             keywords.push(keyword);
@@ -80,6 +82,10 @@ export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', 
     }
 });
 
+export const clearHistory = createAsyncThunk('search/clearHistory', async () => {
+    await AsyncStorage.removeItem('search-history');
+});
+
 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
@@ -104,7 +110,6 @@ export const suggestRecipesByIngredients = createAsyncThunk('search/fetchRecipes
             return fulfillWithValue(suggestions.data.searchRecipesByIngredients);
         }
         catch (e){
-            console.log('error', e);
             return rejectWithValue('error fetching suggestions by ingredients');
         }
     }
@@ -137,7 +142,6 @@ export const searchSlice = createSlice({
                 state.errors = action.payload as string;
             }
         }).addCase(saveSearchHistory.fulfilled, (state, action) => {
-            console.log('hurray');
             state.historyStatus = 'succeeded';
         }).addCase(fetchSearchHistory.pending, state => {
             state.historyStatus = 'loading';
@@ -152,7 +156,14 @@ export const searchSlice = createSlice({
                 state.historyStatus = 'succeeded';
                 state.searchHistory = action.payload!;
             }
-        }).addCase(suggestRecipesByName.pending, state => {
+        }).addCase(clearHistory.pending, state => {
+            state.historyStatus = 'loading';
+            state.errors = '';
+        }).addCase(clearHistory.fulfilled, state => {
+            state.searchHistory = [];
+            state.historyStatus = 'succeeded';
+        })
+        .addCase(suggestRecipesByName.pending, state => {
             state.status = 'loading',
             state.errors = ''
         }).addCase(suggestRecipesByName.rejected, (state, action) => {
@@ -173,7 +184,6 @@ export const searchSlice = createSlice({
             state.status = 'loading',
             state.errors = ''
         }).addCase(suggestRecipesByIngredients.rejected, (state, action) => {
-            console.log('rejected', action.payload);
             if (state.status === 'loading') {
                 state.status = 'idle';
                 state.errors = action.payload as string;
@@ -187,7 +197,6 @@ export const searchSlice = createSlice({
                     state.suggestions.push(item);
                 })
             }
-            console.log('search by ingredients', state.suggestions);
         });
     }
 });
