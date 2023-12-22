@@ -176,6 +176,18 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       }
   }
 
+  const startSearch = async () => {
+    if (searchBy === 'name') {
+      await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
+    }
+    else {
+      await dispatch(suggestRecipesByIngredients({
+        ingredients: searchText.split(' '),
+        searchAll: true
+      }));
+    }
+  }
+
   const handleSearchIconPress = () => {
     setIsSearching(!isSearching);
     dispatch(clearSuggestions());
