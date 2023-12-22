@@ -1,6 +1,6 @@
 import RFC, { FC, ReactElement, useState } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory } from '../SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchStatus, selectSearchHistoryStatus } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +15,9 @@ interface HistoryResultsProps {
 
 const HistoryResults: FC<HistoryResultsProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
+    const searchStatus = useAppSelector(selectSearchStatus);
+    const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
+
     const dispatch = useAppDispatch();
     const { colors: { primary }} = useAppTheme();    
     
@@ -41,12 +44,16 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     }
     
     return (
-        <FlatList
-            ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}
-            data={searchHistory}
-            keyExtractor={(item: string):string => item}
-            renderItem={renderResultItem}
-        />
+        <>
+        { (searchHistoryStatus === 'succeeded') &&
+            <FlatList
+                ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}
+                data={searchHistory}
+                keyExtractor={(item: string):string => item}
+                renderItem={renderResultItem}
+            />
+        }
+        </>
     );
 }
 

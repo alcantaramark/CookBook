@@ -1,7 +1,7 @@
-import { FC, ReactElement, useMemo } from 'react';
+import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload } from '../SearchSlice';
+import { Card, Text } from 'react-native-paper';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus } from '../SearchSlice';
 import { useAppSelector } from './../../../Redux/Hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
 
@@ -9,17 +9,8 @@ export interface FullResultsProps{
 
 }
 
-const renderSuggestions = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
-    return(
-        <Card style={styles.cardStyle}>
-            <Card.Cover source={{ uri: item.node.mainImage }} style={styles.cardImage} />
-        </Card>
-    );
-}
-
-const renderItem = (({item}:any) => {
+const renderSuggestions = (({item}:any) => {
     const randomBool = Math.random() < 0.5;
-
     return(
         <Card style={styles.cardStyle}>
             <Card.Cover source={{ uri: item.node.mainImage }} style={{
@@ -33,19 +24,22 @@ const renderItem = (({item}:any) => {
 
 const FullResults: FC<FullResultsProps> = () =>{
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
+    const searchStatus = useAppSelector(selectSearchStatus);
 
     return (
         <View style={styles.flashListStyle}>
-            <MasonryList
-                data={searchSuggestions}
-                numColumns={3}
-                keyExtractor={(item: suggestionsPayload) => item.node.id}
-                renderItem={renderItem}
-                style={{alignSelf: 'stretch'}}
-                contentContainerStyle={{
-                    alignSelf: 'stretch'
-                }}
-            />
+            { (searchStatus === 'succeeded') && 
+                <MasonryList
+                    data={searchSuggestions}
+                    numColumns={3}
+                    keyExtractor={(item: suggestionsPayload) => item.node.id}
+                    renderItem={renderSuggestions}
+                    style={{alignSelf: 'stretch'}}
+                    contentContainerStyle={{
+                        alignSelf: 'stretch'
+                    }}
+                />
+            }
         </View>
     );
 }

@@ -1,8 +1,7 @@
 import React, { FC, ReactElement, useEffect } from 'react'
-import { Dimensions, StyleSheet, View , FlatList} from 'react-native';
+import { StyleSheet, View , FlatList} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { FlashList } from '@shopify/flash-list';
-import { selectSearchSuggestions, suggestionsPayload } from '../SearchSlice';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchHistoryStatus } from '../SearchSlice';
 import { useAppSelector } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { useAppTheme } from '../../../App';
@@ -14,6 +13,9 @@ interface PreviewResultsProps {}
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
+    const searchStatus = useAppSelector(selectSearchStatus);
+    const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
+    
     const { colors: { primary }} = useAppTheme();    
     
 
@@ -41,13 +43,15 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     return(
     <View style={styles.flashListStyle}>
-        <FlatList
-            ListEmptyComponent={<HistoryResults />}
-            data={searchSuggestions}
-            keyExtractor={(item: suggestionsPayload):string => item.node.id}
-            renderItem={renderItem}
-            ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
-        />
+        { (searchHistoryStatus === 'succeeded') &&
+            <FlatList
+                ListEmptyComponent={<HistoryResults />}
+                data={searchSuggestions}
+                keyExtractor={(item: suggestionsPayload):string => item.node.id}
+                renderItem={renderItem}
+                ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
+            />
+        }
     </View>);
 }
 
