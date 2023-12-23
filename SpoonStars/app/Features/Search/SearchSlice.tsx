@@ -124,6 +124,14 @@ export const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
+        clearPaging: state => {
+            state.pagination = {
+                startCursor: '',
+                endCursor: '',
+                hasNextPage: false,
+                hasPreviousPage: false
+            };
+        },
         clearSuggestions: state => {
             state.historyStatus = '';
             state.errors = '';
@@ -221,7 +229,7 @@ export const selectSearchHistory = (state: RootState) => state.search.searchHist
 export const selectSearchStatus = (state: RootState) => state.search.status;
 export const selectSearchSuggestions = (state: RootState) => state.search.suggestions;
 export const selectShowFullResults = (state: RootState) => state.search.showFullResults;
-export const { clearSuggestions, setShowFullResults } = searchSlice.actions
+export const { clearSuggestions, setShowFullResults, clearPaging } = searchSlice.actions
 export default searchSlice.reducer;
 
 

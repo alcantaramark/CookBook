@@ -10,7 +10,7 @@ import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectShowFullResults, saveSearchHistory, 
     fetchSearchHistory, suggestRecipesByName, 
-    suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions, setShowFullResults, clearHistory } 
+    suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions, setShowFullResults, clearHistory, clearPaging } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
@@ -115,10 +115,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }, [preferenceStatus])
 
   useEffect(() => { 
-    if (searchSuggestions.length === 0) {
-      fetchHistory();
-    }
-    
+    // if (searchSuggestions.length === 0) {
+    //   fetchHistory();
+    // }
   }, [searchSuggestions]);
 
   const createButtons = () => {
@@ -138,75 +137,108 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchTextChanged =  async (text: string) => {
-    if (text === searchText){
-      return;
-    }
+    // if (text === searchText){
+    //   return;
+    // }
 
-    setSearchText(text);
-    if (text === ''){
-      setIsSearching(false);
-      return;
-    }
+    // setSearchText(text);
+    // if (text === ''){
+    //   setIsSearching(false);
+    //   return;
+    // }
 
-    setIsSearching(true);
-    if (searchBy === 'name') {
-      await dispatch(suggestRecipesByName({ name: text, searchAll: false }));
-    }
-    else {
-       await dispatch(suggestRecipesByIngredients({ 
-        ingredients: text.split(' '),
-        searchAll: false
-      }));
-    }
+    // setIsSearching(true);
+    // if (searchBy === 'name') {
+    //   await dispatch(suggestRecipesByName({ name: text, searchAll: false }));
+    // }
+    // else {
+    //    await dispatch(suggestRecipesByIngredients({ 
+    //     ingredients: text.split(' '),
+    //     searchAll: false
+    //   }));
+    // }
     
+    console.log(showFullResults);
+    setSearchText(text);
+    startSearch(showFullResults, text);
   }
 
   const handleEnterPress = async () => {
-      await dispatch(saveSearchHistory(searchText.trim()));
-      dispatch(setShowFullResults(true));
+      //await dispatch(saveSearchHistory(searchText.trim()));
+      // dispatch(setShowFullResults(true));
       
-      if (searchBy === 'name') {
-        await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
-      }
-      else {
-         await dispatch(suggestRecipesByIngredients({ 
-          ingredients: searchText.split(' '),
-          searchAll: true
-        }));
-      }
+      // if (searchBy === 'name') {
+      //   await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
+      // }
+      // else {
+      //    await dispatch(suggestRecipesByIngredients({ 
+      //     ingredients: searchText.split(' '),
+      //     searchAll: true
+      //   }));
+      // }
+      dispatch(setShowFullResults(true));
+      await dispatch(saveSearchHistory(searchText.trim()));
+      //startSearch(true, searchText);
   }
 
-  const startSearch = async () => {
-    if (searchBy === 'name') {
-      await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
-    }
-    else {
-      await dispatch(suggestRecipesByIngredients({
-        ingredients: searchText.split(' '),
-        searchAll: true
-      }));
-    }
+  const startSearch = async (all: boolean, text?:string) => {
+    setTimeout(async () => {
+      console.log(`full search ${ text }`, all);
+      dispatch(setShowFullResults(all));
+      if (searchBy === 'name') {
+        await dispatch(suggestRecipesByName({ name: text == undefined ? '': text, searchAll: all }));
+      }
+      else {
+        await dispatch(suggestRecipesByIngredients({
+          ingredients: text == undefined ? []: text.split(' '),
+          searchAll: all
+        }));
+      }
+    }, 1000);
   }
 
   const handleSearchIconPress = () => {
-    setIsSearching(!isSearching);
-    dispatch(clearSuggestions());
-    dispatch(setShowFullResults(false));
-    setSearchText('');
+    // setIsSearching(!isSearching);
+    // dispatch(clearSuggestions());
+    // dispatch(setShowFullResults(false));
+    // setSearchText('');
+
+  
+    autocompleteField.current.blur();
   }
 
-  const handleSearchByValueChange = (val: string) => {
+  const handleSearchOnFocus = async () => {
+    setIsSearching(true);
+    startSearch(true);
+    dispatch(setShowFullResults(false));
+    await fetchHistory();
+  }
+
+  const handleSearchByValueChange = (val: string) => {//
+    
     setSearchBy(val);
     setSearchText('');
     dispatch(clearSuggestions());
+    dispatch(setShowFullResults(true));
+  }
+
+  const handleSearchOnBlur = () => {
+    setSearchText('');
+    setIsSearching(false);
+    dispatch(setShowFullResults(true));
+    //dispatch(clearSuggestions());
   }
 
   const mainView = () => {
-    if (isSearching){
-      return (showFullResults ? <FullResults /> : <PreviewResults />)
+    // if (isSearching){
+    //   return (showFullResults ? <FullResults /> : <PreviewResults />)
+    // }
+    // else
+    //   return (<RecipeMain />);
+    if (isSearching) {
+      return  showFullResults ?  <FullResults /> : <PreviewResults />;
     }
-    else
-      return (<RecipeMain />);
+    return (<RecipeMain />);
   }
   
   return (
@@ -232,8 +264,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
                   icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
                 />
             }
-            onFocus={() => { setIsSearching(true); dispatch(setShowFullResults(false)); }}
+            onFocus={handleSearchOnFocus}
             onSubmitEditing={handleEnterPress}
+            onBlur={handleSearchOnBlur}
           />
         </View>
         {isSearching &&
