@@ -112,12 +112,10 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
       const modes = recipeTags.map(item => item.preferred == true ? 'white' : 'black'); 
       setTagStyles(modes);
     }
-  }, [preferenceStatus])
+  }, [preferenceStatus]);
 
   useEffect(() => { 
-    // if (searchSuggestions.length === 0) {
-    //   fetchHistory();
-    // }
+
   }, [searchSuggestions]);
 
   const createButtons = () => {
@@ -137,60 +135,30 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchTextChanged =  async (text: string) => {
-    // if (text === searchText){
-    //   return;
-    // }
-
-    // setSearchText(text);
-    // if (text === ''){
-    //   setIsSearching(false);
-    //   return;
-    // }
-
-    // setIsSearching(true);
-    // if (searchBy === 'name') {
-    //   await dispatch(suggestRecipesByName({ name: text, searchAll: false }));
-    // }
-    // else {
-    //    await dispatch(suggestRecipesByIngredients({ 
-    //     ingredients: text.split(' '),
-    //     searchAll: false
-    //   }));
-    // }
-    
-    console.log(showFullResults);
+    if (searchText === text || text === ''){
+      dispatch(clearPaging());
+      dispatch(setShowFullResults(true));
+      startSearch(true, text);
+    }
+    else {
+      dispatch(setShowFullResults(false));
+      startSearch(false, text);
+    }
     setSearchText(text);
-    startSearch(showFullResults, text);
   }
 
   const handleEnterPress = async () => {
-      //await dispatch(saveSearchHistory(searchText.trim()));
-      // dispatch(setShowFullResults(true));
-      
-      // if (searchBy === 'name') {
-      //   await dispatch(suggestRecipesByName({ name: searchText, searchAll: true }));
-      // }
-      // else {
-      //    await dispatch(suggestRecipesByIngredients({ 
-      //     ingredients: searchText.split(' '),
-      //     searchAll: true
-      //   }));
-      // }
-      dispatch(setShowFullResults(true));
-      await dispatch(saveSearchHistory(searchText.trim()));
-      //startSearch(true, searchText);
+    await dispatch(saveSearchHistory(searchText));
   }
 
   const startSearch = async (all: boolean, text?:string) => {
     setTimeout(async () => {
-      console.log(`full search ${ text }`, all);
-      dispatch(setShowFullResults(all));
       if (searchBy === 'name') {
-        await dispatch(suggestRecipesByName({ name: text == undefined ? '': text, searchAll: all }));
+        await dispatch(suggestRecipesByName({ name: text == undefined || text === '' ? '': text, searchAll: all }));
       }
       else {
         await dispatch(suggestRecipesByIngredients({
-          ingredients: text == undefined ? []: text.split(' '),
+          ingredients: text == undefined || text === '' ?  []: text.split(' '),
           searchAll: all
         }));
       }
@@ -198,49 +166,30 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchIconPress = () => {
-    // setIsSearching(!isSearching);
-    // dispatch(clearSuggestions());
-    // dispatch(setShowFullResults(false));
-    // setSearchText('');
-
-  
+    setIsSearching(false);
+    setSearchText('');
+    setSearchBy('name');
     autocompleteField.current.blur();
   }
 
   const handleSearchOnFocus = async () => {
-    setIsSearching(true);
-    startSearch(true);
-    dispatch(setShowFullResults(false));
-    await fetchHistory();
+    if (searchText === ''){
+      await fetchHistory();
+      setIsSearching(true) ;
+      dispatch(setShowFullResults(true));
+      startSearch(true);
+    }
   }
 
-  const handleSearchByValueChange = (val: string) => {//
-    
+  const handleSearchByValueChange = (val: string) => {
+    startSearch(true, searchText);
     setSearchBy(val);
-    setSearchText('');
-    dispatch(clearSuggestions());
-    dispatch(setShowFullResults(true));
   }
 
   const handleSearchOnBlur = () => {
-    setSearchText('');
-    setIsSearching(false);
-    dispatch(setShowFullResults(true));
-    //dispatch(clearSuggestions());
+    
   }
 
-  const mainView = () => {
-    // if (isSearching){
-    //   return (showFullResults ? <FullResults /> : <PreviewResults />)
-    // }
-    // else
-    //   return (<RecipeMain />);
-    if (isSearching) {
-      return  showFullResults ?  <FullResults /> : <PreviewResults />;
-    }
-    return (<RecipeMain />);
-  }
-  
   return (
     <View>
       <View style={styles.container}>
@@ -266,7 +215,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
             }
             onFocus={handleSearchOnFocus}
             onSubmitEditing={handleEnterPress}
-            onBlur={handleSearchOnBlur}
           />
         </View>
         {isSearching &&
@@ -293,7 +241,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
           </GestureHandlerRootView> 
         }  
         </View> 
-        {mainView()}
+        { (isSearching && showFullResults) && <FullResults /> }
+        { (isSearching && !showFullResults) && <PreviewResults /> }
+        { (!isSearching) && <RecipeMain /> }
     </View>
 )};
 

@@ -28,7 +28,7 @@ const FullResults: FC<FullResultsProps> = () =>{
 
     return (
         <View style={styles.flashListStyle}>
-            { (searchStatus === 'succeeded') && 
+           { (searchStatus === 'succeeded') && 
                 <MasonryList
                     data={searchSuggestions}
                     numColumns={3}

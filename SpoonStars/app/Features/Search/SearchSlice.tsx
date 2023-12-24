@@ -44,7 +44,7 @@ const initialState: searchState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    showFullResults: false
+    showFullResults: true
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
