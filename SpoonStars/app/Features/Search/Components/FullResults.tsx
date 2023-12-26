@@ -14,7 +14,7 @@ const renderSuggestions = (({item}:any) => {
     return(
         <Card style={styles.cardStyle}>
             <Card.Cover source={{ uri: item.node.mainImage }} style={{
-                height: randomBool ? 150 : 280,
+                height: randomBool ? 100 : 230,
                 alignSelf: 'stretch',
                 borderRadius: 0
             }} />

@@ -31,7 +31,7 @@ const searchByNameFull = async (name: string) => {
         body: JSON.stringify({
             query: `{
                 recipeSearch(query: \"${name}\" 
-                        first: 10
+                        first: 20
                         ${endCursor !== '' ? 'after: \"' + endCursor + '\"' : ''}
                     ) {
                     edges {
@@ -103,7 +103,7 @@ const searchByIngredientsFull = async (ingredients: string[]) => {
         body: JSON.stringify({
             query: `{
             searchRecipesByIngredients( mustIngredients: [${ingredientsKeywords}] 
-                first: 10
+                first: 20
                 ${endCursor !== '' ? 'after: \"' + endCursor + '\"' : ''}
                 ) {
                 edges {

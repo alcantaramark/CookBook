@@ -121,11 +121,14 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   useEffect(() => { 
     if (searchSuggestions.length == 0){
-      console.log('search text', searchText);
       fetchHistory(searchText);
     }
-
   }, [searchSuggestions]);
+
+  useEffect(() => {
+    startSearch(showFullResults, searchText);
+  }, [searchBy]);
+
 
   const createButtons = () => {
     return ( 
@@ -144,6 +147,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchTextChanged =  async (text: string) => {
+    setIsSearching(true);
     if (searchText === text || text === ''){
       dispatch(setShowFullResults(true));
       dispatch(clearPaging());
@@ -176,24 +180,15 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const handleSearchIconPress = () => {
     setIsSearching(false);
     setSearchText('');
-    setSearchBy('name');
-    autocompleteField.current.blur();
+    //autocompleteField.current.blur();
   }
 
   const handleSearchOnFocus = async () => {
-    if (searchText === ''){
-      setIsSearching(true) ;
-      dispatch(setShowFullResults(true));
-      startSearch(true);
-    }
-  }
-
-  const handleSearchByValueChange = (val: string) => {
-    setSearchText('');
+    setIsSearching(true) ;
     dispatch(setShowFullResults(true));
     startSearch(true);
-    setSearchBy(val);
   }
+
 
   const mainView = () => {
     
@@ -239,7 +234,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               { value: 'name', label: 'Name', checkedColor: primary },
               { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
             ]}
-            onValueChange={(val) => handleSearchByValueChange(val) }
+            onValueChange={(val) => setSearchBy(val)}
             density='high'
             theme={useAppTheme}
           />
