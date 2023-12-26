@@ -72,14 +72,15 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
     }
 })
 
-export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', async(_, { fulfillWithValue, rejectWithValue }) => {
+export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', async(text: string, { fulfillWithValue, rejectWithValue }) => {
     try {
         const searchHistory = await AsyncStorage.getItem('search-history');
         if (searchHistory === null){
             return fulfillWithValue(searchHistory);
         }
         else {
-            return fulfillWithValue(searchHistory.split('\n'));
+            const textArray = searchHistory.split('\n').filter(search => search.startsWith(text));
+            return fulfillWithValue(textArray);
         }
     }
     catch(e){
@@ -146,7 +147,7 @@ export const searchSlice = createSlice({
         },
         setShowFullResults: (state, action) => { 
             state.showFullResults = action.payload; 
-        }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {

@@ -9,11 +9,12 @@ import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectShowFullResults, saveSearchHistory, 
-    fetchSearchHistory, suggestRecipesByName, 
-    suggestRecipesByIngredients, selectSearchSuggestions, clearSuggestions, setShowFullResults, clearHistory, clearPaging } 
+    fetchSearchHistory, suggestRecipesByName, selectSearchHistory,
+    suggestRecipesByIngredients, selectSearchSuggestions, setShowFullResults, clearPaging } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
+import HistoryResults from 'app/Features/Search/Components/HistoryResults';
 
 
 
@@ -36,8 +37,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
-  const fetchHistory = async () => { 
-    await dispatch(fetchSearchHistory());
+  
+  const fetchHistory = async (text: string) => { 
+    if (text === undefined){
+      text = '';
+    }
+    await dispatch(fetchSearchHistory(text));
   }
 
   const styles = StyleSheet.create({
@@ -115,6 +120,10 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }, [preferenceStatus]);
 
   useEffect(() => { 
+    if (searchSuggestions.length == 0){
+      console.log('search text', searchText);
+      fetchHistory(searchText);
+    }
 
   }, [searchSuggestions]);
 
@@ -136,8 +145,8 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   const handleSearchTextChanged =  async (text: string) => {
     if (searchText === text || text === ''){
-      dispatch(clearPaging());
       dispatch(setShowFullResults(true));
+      dispatch(clearPaging());
       startSearch(true, text);
     }
     else {
@@ -148,12 +157,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleEnterPress = async () => {
+    dispatch(setShowFullResults(true));
     await dispatch(saveSearchHistory(searchText));
   }
 
   const startSearch = async (all: boolean, text?:string) => {
-    setTimeout(async () => {
-      if (searchBy === 'name') {
+    if (searchBy === 'name') {
         await dispatch(suggestRecipesByName({ name: text == undefined || text === '' ? '': text, searchAll: all }));
       }
       else {
@@ -162,7 +171,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
           searchAll: all
         }));
       }
-    }, 1000);
   }
 
   const handleSearchIconPress = () => {
@@ -174,7 +182,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   const handleSearchOnFocus = async () => {
     if (searchText === ''){
-      await fetchHistory();
       setIsSearching(true) ;
       dispatch(setShowFullResults(true));
       startSearch(true);
@@ -182,12 +189,19 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }
 
   const handleSearchByValueChange = (val: string) => {
-    startSearch(true, searchText);
+    setSearchText('');
+    dispatch(setShowFullResults(true));
+    startSearch(true);
     setSearchBy(val);
   }
 
-  const handleSearchOnBlur = () => {
+  const mainView = () => {
     
+    if (isSearching){
+      return showFullResults ? <FullResults /> : <PreviewResults />
+    }else{
+      return <RecipeMain />
+    }
   }
 
   return (
@@ -241,9 +255,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
           </GestureHandlerRootView> 
         }  
         </View> 
-        { (isSearching && showFullResults) && <FullResults /> }
-        { (isSearching && !showFullResults) && <PreviewResults /> }
-        { (!isSearching) && <RecipeMain /> }
+        { mainView() }
     </View>
 )};
 

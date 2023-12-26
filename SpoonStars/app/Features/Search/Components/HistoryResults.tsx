@@ -15,7 +15,6 @@ interface HistoryResultsProps {
 
 const HistoryResults: FC<HistoryResultsProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
-    const searchStatus = useAppSelector(selectSearchStatus);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
 
     const dispatch = useAppDispatch();
