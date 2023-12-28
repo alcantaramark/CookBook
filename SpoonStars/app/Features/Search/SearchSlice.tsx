@@ -13,7 +13,9 @@ export interface searchState {
     historyStatus: string,
     errors: string,
     pagination: pageInfo,
-    showFullResults: boolean
+    showFullResults: boolean,
+    searchBy: string,
+    searchText: string
 }
 
 export interface suggestionsPayload {
@@ -44,7 +46,9 @@ const initialState: searchState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    showFullResults: true
+    showFullResults: true,
+    searchBy: 'name',
+    searchText: ''
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -148,6 +152,12 @@ export const searchSlice = createSlice({
         setShowFullResults: (state, action) => { 
             state.showFullResults = action.payload; 
         },
+        setSearchBy: (state, action) => {
+            state.searchBy = action.payload;
+        },
+        setSearchText: (state, action) => {
+            state.searchText = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {
@@ -230,7 +240,9 @@ export const selectSearchHistory = (state: RootState) => state.search.searchHist
 export const selectSearchStatus = (state: RootState) => state.search.status;
 export const selectSearchSuggestions = (state: RootState) => state.search.suggestions;
 export const selectShowFullResults = (state: RootState) => state.search.showFullResults;
-export const { clearSuggestions, setShowFullResults, clearPaging } = searchSlice.actions
+export const selectSearchBy = (state: RootState) => state.search.searchBy;
+export const selectSearchText = (state: RootState) => state.search.searchText;
+export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText } = searchSlice.actions
 export default searchSlice.reducer;
 
 

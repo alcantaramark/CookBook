@@ -9,12 +9,13 @@ import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectShowFullResults, saveSearchHistory, 
-    fetchSearchHistory, suggestRecipesByName, selectSearchHistory,
-    suggestRecipesByIngredients, selectSearchSuggestions, setShowFullResults, clearPaging } 
+    fetchSearchHistory, setSearchBy, selectSearchSuggestions, setShowFullResults, clearPaging,
+    selectSearchBy, selectSearchText, setSearchText } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
-import HistoryResults from 'app/Features/Search/Components/HistoryResults';
+import useSearch from './../../Search/Hooks/useSearch';
+
 
 
 
@@ -23,8 +24,6 @@ interface RecipeHeaderProps {}
 export const HomeContext = createContext(null as any);
 
 const RecipeHeader: FC<RecipeHeaderProps> = () => { 
-  const [searchText, setSearchText] = useState('');
-  const [searchBy, setSearchBy] = useState('name');
   const [isSearching, setIsSearching] = useState(false);
   
   const autocompleteField = useRef<any>(null);
@@ -34,6 +33,9 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
   const searchSuggestions = useAppSelector(selectSearchSuggestions);
   const showFullResults = useAppSelector(selectShowFullResults);
+  const searchBy = useAppSelector(selectSearchBy);
+  const searchText = useAppSelector(selectSearchText);
+  const { search } = useSearch();
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
@@ -126,10 +128,10 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   }, [searchSuggestions]);
 
   useEffect(() => {
-    startSearch(showFullResults, searchText);
-  }, [searchBy]);
-
-
+    dispatch(clearPaging());
+    search(showFullResults, searchText);
+  }, [searchBy])
+  
   const createButtons = () => {
     return ( 
       recipeTags.map((item, index) => {
@@ -151,13 +153,12 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     if (searchText === text || text === ''){
       dispatch(setShowFullResults(true));
       dispatch(clearPaging());
-      startSearch(true, text);
+      search(true, text);
     }
     else {
       dispatch(setShowFullResults(false));
-      startSearch(false, text);
+      search(false, text);
     }
-    setSearchText(text);
   }
 
   const handleEnterPress = async () => {
@@ -165,30 +166,18 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     await dispatch(saveSearchHistory(searchText));
   }
 
-  const startSearch = async (all: boolean, text?:string) => {
-    if (searchBy === 'name') {
-        await dispatch(suggestRecipesByName({ name: text == undefined || text === '' ? '': text, searchAll: all }));
-      }
-      else {
-        await dispatch(suggestRecipesByIngredients({
-          ingredients: text == undefined || text === '' ?  []: text.split(' '),
-          searchAll: all
-        }));
-      }
-  }
-
   const handleSearchIconPress = () => {
     setIsSearching(false);
-    setSearchText('');
-    //autocompleteField.current.blur();
+    dispatch(setSearchText(''));
   }
 
   const handleSearchOnFocus = async () => {
-    setIsSearching(true) ;
-    dispatch(setShowFullResults(true));
-    startSearch(true);
+    if (searchText == ''){
+      setIsSearching(true) ;
+      dispatch(setShowFullResults(true));
+      search(true, searchText);
+    }
   }
-
 
   const mainView = () => {
     
@@ -234,7 +223,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
               { value: 'name', label: 'Name', checkedColor: primary },
               { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
             ]}
-            onValueChange={(val) => setSearchBy(val)}
+            onValueChange={(val) => dispatch(setSearchBy(val))}
             density='high'
             theme={useAppTheme}
           />
