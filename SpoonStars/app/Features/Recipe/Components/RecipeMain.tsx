@@ -127,6 +127,6 @@ const styles = StyleSheet.create({
   skeleton: {
     margin: 10  
   }
-})
+});
 
 export default RecipeMain;

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../Redux/Store";
 import { pageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { searchByIngredients, searchByName } from "./Queries/SuggestRecipes";
+import { searchByIngredients, searchByName } from "./Services/Queries/SuggestRecipes";
 
 
 export interface searchState {
@@ -12,7 +12,10 @@ export interface searchState {
     status: string,
     historyStatus: string,
     errors: string,
-    pagination: pageInfo
+    pagination: pageInfo,
+    showFullResults: boolean,
+    searchBy: string,
+    searchText: string
 }
 
 export interface suggestionsPayload {
@@ -42,7 +45,10 @@ const initialState: searchState = {
         endCursor: '',
         hasNextPage: false,
         hasPreviousPage: false
-    }
+    },
+    showFullResults: true,
+    searchBy: 'name',
+    searchText: ''
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -50,8 +56,11 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
     let keywords: string[] = new Array();
     
     try{
+        if (keyword == null || keyword === '')
+            return;
+
         if (searchHistory !== null){
-            keywords = searchHistory.split(' ');
+            keywords = searchHistory.split('\n');
             if (keywords.find(s => s === keyword) === undefined) {
                 keywords.push(keyword);
             }
@@ -60,21 +69,22 @@ export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', as
             keywords.push(keyword);
         }
 
-        await AsyncStorage.setItem('search-history', keywords.join(' '));
+        await AsyncStorage.setItem('search-history', keywords.join('\n'));
     }
     catch(e){
         return rejectWithValue('error saving search history');
     }
 })
 
-export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', async(_, { fulfillWithValue, rejectWithValue }) => {
+export const fetchSearchHistory = createAsyncThunk('search/fetchSearchHistory', async(text: string, { fulfillWithValue, rejectWithValue }) => {
     try {
         const searchHistory = await AsyncStorage.getItem('search-history');
         if (searchHistory === null){
             return fulfillWithValue(searchHistory);
         }
         else {
-            return fulfillWithValue(searchHistory.split(' '));
+            const textArray = searchHistory.split('\n').filter(search => search.startsWith(text));
+            return fulfillWithValue(textArray);
         }
     }
     catch(e){
@@ -89,10 +99,10 @@ export const clearHistory = createAsyncThunk('search/clearHistory', async () => 
 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
-        const { name, searchAll } = queries
+        const { name, searchAll } = queries;
 
         try{
-            const suggestions = await searchByName(name, searchAll).then(response => response.json());
+            const suggestions =  await searchByName(name, searchAll).then(response => response.json());
             
             return  fulfillWithValue(suggestions.data.recipeSearch);
         }
@@ -119,6 +129,14 @@ export const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
+        clearPaging: state => {
+            state.pagination = {
+                startCursor: '',
+                endCursor: '',
+                hasNextPage: false,
+                hasPreviousPage: false
+            };
+        },
         clearSuggestions: state => {
             state.historyStatus = '';
             state.errors = '';
@@ -130,6 +148,15 @@ export const searchSlice = createSlice({
             };
             state.status = '';
             state.suggestions = []
+        },
+        setShowFullResults: (state, action) => { 
+            state.showFullResults = action.payload; 
+        },
+        setSearchBy: (state, action) => {
+            state.searchBy = action.payload;
+        },
+        setSearchText: (state, action) => {
+            state.searchText = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -179,6 +206,8 @@ export const searchSlice = createSlice({
                 action.payload.edges.map((item: suggestionsPayload) => {
                     state.suggestions.push(item);
                 })
+                state.pagination = action.payload.pageInfo;
+                state.errors = '';
             }
         }).addCase(suggestRecipesByIngredients.pending, state => {
             state.status = 'loading',
@@ -196,6 +225,8 @@ export const searchSlice = createSlice({
                 action.payload.edges.map((item: suggestionsPayload) => {
                     state.suggestions.push(item);
                 })
+                state.pagination = action.payload.pageInfo;
+                state.errors = '';
             }
         });
     }
@@ -208,7 +239,10 @@ export const selectSearchPageInfo = (state: RootState) => state.search.paginatio
 export const selectSearchHistory = (state: RootState) => state.search.searchHistory;
 export const selectSearchStatus = (state: RootState) => state.search.status;
 export const selectSearchSuggestions = (state: RootState) => state.search.suggestions;
-export const { clearSuggestions } = searchSlice.actions
+export const selectShowFullResults = (state: RootState) => state.search.showFullResults;
+export const selectSearchBy = (state: RootState) => state.search.searchBy;
+export const selectSearchText = (state: RootState) => state.search.searchText;
+export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText } = searchSlice.actions
 export default searchSlice.reducer;
 
 

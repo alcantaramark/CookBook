@@ -11,7 +11,7 @@ import {
           MD3LightTheme as defaultTheme, 
           useTheme} 
       from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
@@ -27,6 +27,8 @@ import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RecipeDetails } from './Features/Recipe/Components/RecipeDetails';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -47,10 +49,14 @@ const theme = {
 export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
+export type ScreenNames = ["Home", "Details"];
+export type RootStackParamList = Record<ScreenNames[number], undefined>;
+export type StackNavigation = NavigationProp<RootStackParamList>;
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -61,6 +67,22 @@ function App(): JSX.Element {
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
   
+  const RecipeTab = () => {
+    return(
+      <Stack.Navigator>
+        <Stack.Screen 
+          name='Home'
+          component={RecipeHeader}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='Details'
+          component={RecipeDetails}
+        />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
@@ -71,12 +93,13 @@ function App(): JSX.Element {
                 height: StatusBar.currentHeight
               }, headerTitle:'' }
             }>
-            <Tab.Screen name="Home" 
-              options={{  tabBarShowLabel: true,
+            <Tab.Screen name="HomeTab" 
+              options={{  tabBarShowLabel: false,
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
-                        }} component={RecipeHeader}
-            />    
+                        }} component={RecipeTab}
+            >
+            </Tab.Screen>
         </Tab.Navigator>
       </PaperProvider>
     </NavigationContainer>
