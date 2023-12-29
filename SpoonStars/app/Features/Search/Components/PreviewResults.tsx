@@ -1,14 +1,14 @@
 import React, { FC, ReactElement, useEffect } from 'react'
 import { StyleSheet, View , FlatList} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchHistoryStatus } from '../SearchSlice';
-import { useAppSelector } from '../../../Redux/Hooks';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setSearchText } from '../SearchSlice';
+import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
-import { useAppTheme } from '../../../App';
+import { StackNavigation, useAppTheme } from '../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-//import { type StackNavigation } from './../../Recipe/Components/RecipeHeader';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import useSearch from '../Hooks/useSearch';
 
 
 interface PreviewResultsProps {}
@@ -17,14 +17,17 @@ interface PreviewResultsProps {}
 const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
-    //const { navigate } = useNavigation<StackNavigation>();
+    const searchText = useAppSelector(selectSearchText);
+
+    const { search } = useSearch();
+    const { navigate } = useNavigation<StackNavigation>();
+    const dispatch = useAppDispatch();
     
     const { colors: { primary }} = useAppTheme();    
-    
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (
-            <TouchableOpacity style={styles.itemContainer} >
+            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details')}>
                 <View style={styles.searchDetails}>
                     <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
                     <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
@@ -39,10 +42,15 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     const footerComponent = () => {
         return(
-            <View style={styles.footer}>
+            <TouchableOpacity style={styles.footer} onPress={showAllResults}>
                 <Text style={{color: primary}}>See all Results</Text>
-            </View>
+            </TouchableOpacity>
         );
+    }
+
+    const showAllResults = () => {
+        dispatch(setShowFullResults(true));
+        search(true, searchText);
     }
 
     return(

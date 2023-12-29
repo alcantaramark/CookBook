@@ -49,14 +49,14 @@ const theme = {
 export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
-export type ScreenNames = ["Details"];
+export type ScreenNames = ["Home", "Details"];
 export type RootStackParamList = Record<ScreenNames[number], undefined>;
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const Tab = createBottomTabNavigator();
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -67,6 +67,22 @@ function App(): JSX.Element {
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
   
+  const RecipeTab = () => {
+    return(
+      <Stack.Navigator>
+        <Stack.Screen 
+          name='Home'
+          component={RecipeHeader}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='Details'
+          component={RecipeDetails}
+        />
+      </Stack.Navigator>
+    );
+  }
+
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
@@ -77,11 +93,11 @@ function App(): JSX.Element {
                 height: StatusBar.currentHeight
               }, headerTitle:'' }
             }>
-            <Tab.Screen name="Home" 
-              options={{  tabBarShowLabel: true,
+            <Tab.Screen name="HomeTab" 
+              options={{  tabBarShowLabel: false,
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
-                        }} component={RecipeHeader}
+                        }} component={RecipeTab}
             >
             </Tab.Screen>
         </Tab.Navigator>
