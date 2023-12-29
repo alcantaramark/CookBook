@@ -11,7 +11,7 @@ import {
           MD3LightTheme as defaultTheme, 
           useTheme} 
       from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
@@ -27,6 +27,8 @@ import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RecipeDetails } from './Features/Recipe/Components/RecipeDetails';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -47,10 +49,14 @@ const theme = {
 export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
+export type ScreenNames = ["Details"];
+export type RootStackParamList = Record<ScreenNames[number], undefined>;
+export type StackNavigation = NavigationProp<RootStackParamList>;
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -76,7 +82,8 @@ function App(): JSX.Element {
                           tabBarActiveTintColor: theme.colors.primary,
                           tabBarIcon: () => ( <MaterialCommunityIcons name="food" color={theme.colors.primary} size={26} /> ),
                         }} component={RecipeHeader}
-            />    
+            >
+            </Tab.Screen>
         </Tab.Navigator>
       </PaperProvider>
     </NavigationContainer>

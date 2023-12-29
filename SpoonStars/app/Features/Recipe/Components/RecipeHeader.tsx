@@ -15,13 +15,16 @@ import { selectShowFullResults, saveSearchHistory,
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
 import useSearch from './../../Search/Hooks/useSearch';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RecipeDetails } from './RecipeDetails';
+import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 
 
 
 
 interface RecipeHeaderProps {}
 
-export const HomeContext = createContext(null as any);
+
 
 const RecipeHeader: FC<RecipeHeaderProps> = () => { 
   const [isSearching, setIsSearching] = useState(false);
@@ -39,7 +42,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
-  
+
   const fetchHistory = async (text: string) => { 
     if (text === undefined){
       text = '';

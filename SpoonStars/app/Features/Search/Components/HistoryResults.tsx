@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useAppTheme } from './../../../App';
 import { FlatList } from 'react-native';
 import useSearch from '../Hooks/useSearch';
+import { GestureDetector, GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 
 interface HistoryResultsProps {
     
@@ -23,13 +24,15 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     
     const renderResultItem = ({item}: { item: string, index?:number }): ReactElement => {
         return(
-            <View style={styles.resultContainer}>
-                <MaterialCommunityIcons
-                    name='history'
-                    size={20}
-                    style={styles.historyIcon}
-                />
-                <Text style={styles.historyText} onPress={() => handleHistorySearch(item)}>{item}</Text>
+            <View>
+                <TouchableOpacity onPress={() => handleHistorySearch(item)} style={styles.resultContainer}>
+                    <MaterialCommunityIcons
+                        name='history'
+                        size={20}
+                        style={styles.historyIcon}
+                    />
+                    <Text style={styles.historyText}>{item}</Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -50,7 +53,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     }
     
     return (
-        <>
+        <GestureHandlerRootView>
         { (searchHistoryStatus === 'succeeded') &&
             <FlatList
                 ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}
@@ -59,7 +62,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
                 renderItem={renderResultItem}
             />
         }
-        </>
+        </GestureHandlerRootView>
     );
 }
 

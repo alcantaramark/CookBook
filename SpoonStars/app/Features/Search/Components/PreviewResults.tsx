@@ -6,6 +6,9 @@ import { useAppSelector } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { useAppTheme } from '../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+//import { type StackNavigation } from './../../Recipe/Components/RecipeHeader';
+import { useNavigation } from '@react-navigation/native';
+import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 
 
 interface PreviewResultsProps {}
@@ -13,23 +16,24 @@ interface PreviewResultsProps {}
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
-    const searchStatus = useAppSelector(selectSearchStatus);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
+    //const { navigate } = useNavigation<StackNavigation>();
     
     const { colors: { primary }} = useAppTheme();    
     
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (
-            <View style={styles.itemContainer}>
+            <TouchableOpacity style={styles.itemContainer} >
                 <View style={styles.searchDetails}>
                     <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
                     <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
+                    
                 </View>
                 <View>
                     <MaterialCommunityIcons name="magnify" size={10} style={styles.searchIcon} />
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 
@@ -42,17 +46,19 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     return(
-    <View style={styles.flashListStyle}>
-        { (searchHistoryStatus === 'succeeded') &&
-            <FlatList
-                ListEmptyComponent={<HistoryResults />}
-                data={searchSuggestions}
-                keyExtractor={(item: suggestionsPayload):string => item.node.id}
-                renderItem={renderItem}
-                ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
-            />
-        }
-    </View>);
+    <GestureHandlerRootView>
+        <View style={styles.flashListStyle}>
+            { (searchHistoryStatus === 'succeeded') &&
+                <FlatList
+                    ListEmptyComponent={<HistoryResults />}
+                    data={searchSuggestions}
+                    keyExtractor={(item: suggestionsPayload):string => item.node.id}
+                    renderItem={renderItem}
+                    ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
+                />
+            }
+        </View>
+    </GestureHandlerRootView>);
 }
 
 const styles = StyleSheet.create({
