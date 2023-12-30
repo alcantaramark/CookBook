@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useEffect } from 'react'
 import { StyleSheet, View , FlatList} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setSearchText } from '../SearchSlice';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchText, selectSearchHistoryStatus, setShowFullResults, selectSearchStatus } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, useAppTheme } from '../../../App';
@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import useSearch from '../Hooks/useSearch';
+import useLoading from './../../Shared/Hooks/useLoading';
 
 
 interface PreviewResultsProps {}
@@ -18,8 +19,10 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchSuggestions = useAppSelector(selectSearchSuggestions);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
     const searchText = useAppSelector(selectSearchText);
+    const searchStatus = useAppSelector(selectSearchStatus);
 
     const { search } = useSearch();
+    const { SearchLoader } = useLoading();
     const { navigate } = useNavigation<StackNavigation>();
     const dispatch = useAppDispatch();
     
@@ -56,7 +59,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
-            { (searchHistoryStatus === 'succeeded') &&
+            { (searchHistoryStatus === 'succeeded' && searchStatus === 'succeeded') &&
                 <FlatList
                     ListEmptyComponent={<HistoryResults />}
                     data={searchSuggestions}
@@ -65,6 +68,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
                     ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
                 />
             }
+            { (searchHistoryStatus === 'loading' || searchStatus === 'loading') && SearchLoader() }
         </View>
     </GestureHandlerRootView>);
 }

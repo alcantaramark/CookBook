@@ -45,6 +45,11 @@ const FullResults: FC<FullResultsProps> = () =>{
         }
     }
 
+    const footer = () =>{
+        if (searchStatus === 'loading')
+            return (<UIActivityIndicator size={30} />)
+    }   
+
     return (
         <GestureHandlerRootView>
             <View style={styles.flashListStyle}>
@@ -60,7 +65,7 @@ const FullResults: FC<FullResultsProps> = () =>{
                     onEndReachedThreshold={0}
                     onEndReached={handleLoadMore}
                     onRefresh={() => search(true, searchText)}
-                    ListFooterComponent={() => searchStatus === 'loading' && <UIActivityIndicator size={30} />}
+                    ListFooterComponent={footer()}
                 />
             </View>
         </GestureHandlerRootView>

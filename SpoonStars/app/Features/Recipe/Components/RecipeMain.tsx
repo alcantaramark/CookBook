@@ -11,6 +11,7 @@ import { Rect } from 'react-native-svg';
 import { ErrorMain } from '../../Error/ErrorMain';
 import { FlashList } from '@shopify/flash-list';
 import { selectConfigError } from '../../Configuration/ConfigSlice';
+import useLoading from './../../Shared/Hooks/useLoading';
 
 interface RecipeMainProps {}
 
@@ -19,25 +20,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
   const recipesState: recipePayload[] = useAppSelector(selectRecipes);
   const [refreshing, setRefreshing] = useState(false);
   const flashList = useRef(null);
-
-  const recipeLoader = () => (
-    <ContentLoader
-      width={500}
-      height={600}
-      viewBox="0 0 600 800"
-      backgroundColor="#d6d6d6"
-      foregroundColor="#aaaaaa"
-    >
-    <Rect x="0" y="630" rx="10" ry="10" width="450" height="217" />
-    <Rect x="0" y="560" rx="3" ry="3" width="330" height="6" />
-    <Rect x="0" y="580" rx="4" ry="4" width="250" height="9" />
-    <Rect x="0" y="330" rx="10" ry="10" width="450" height="217" />
-    <Rect x="0" y="270" rx="4" ry="4" width="250" height="9" />
-    <Rect x="0" y="250" rx="3" ry="3" width="330" height="6" />
-    <Rect x="0" y="20" rx="10" ry="10" width="450" height="217" />
-  </ContentLoader>
-  )
-  
+  const { RecipeLoader } = useLoading();
 
   const renderItem = ({item}:{
     item: recipePayload;
@@ -91,7 +74,7 @@ const RecipeMain: FC<RecipeMainProps> = () => {
       <GestureHandlerRootView>
         {
           (recipeStatusState === 'loading'  || configStatusState === 'loading') && recipesState.length == 0 
-              ? recipeLoader() : configStateErrors !== '' ? <ErrorMain message={configStateErrors}/> :
+              ? RecipeLoader() : configStateErrors !== '' ? <ErrorMain message={configStateErrors}/> :
               recipeStateErrors !== '' ? <ErrorMain message={recipeStateErrors}/> :
                   <View style={styles.flashListStyle}>
                     <FlashList
