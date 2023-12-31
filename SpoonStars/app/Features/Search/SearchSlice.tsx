@@ -201,14 +201,23 @@ export const searchSlice = createSlice({
         }).addCase(suggestRecipesByName.fulfilled, (state, action) => {
             if (action.payload !== null){
                 state.status = 'succeeded';
+                if (!action.payload.pageInfo.hasPreviousPage) {
+                    state.suggestions = [];
+                }
                 
-                state.suggestions = [];
                 action.payload.edges.map((item: suggestionsPayload) => {
-                    state.suggestions.push(item);
+                    if (state.suggestions.findIndex(recipe => recipe.node.id === item.node.id) < 0){
+                        state.suggestions.push(item);
+                    }
                 })
+
                 state.pagination = action.payload.pageInfo;
                 state.errors = '';
             }
+            else {
+                state.errors = `Error searching`
+            }
+            state.status = 'succeeded'
         }).addCase(suggestRecipesByIngredients.pending, state => {
             state.status = 'loading',
             state.errors = ''
@@ -221,13 +230,22 @@ export const searchSlice = createSlice({
             if (action.payload !== null){
                 state.status = 'succeeded';
                 
-                state.suggestions = [];
+                if (!action.payload.pageInfo.hasPreviousPage) {
+                    state.suggestions = [];
+                }
+                
                 action.payload.edges.map((item: suggestionsPayload) => {
-                    state.suggestions.push(item);
+                    if (state.suggestions.findIndex(recipe => recipe.node.id === item.node.id) < 0){
+                        state.suggestions.push(item);
+                    }
                 })
                 state.pagination = action.payload.pageInfo;
                 state.errors = '';
             }
+            else{
+                state.errors = `Error searching`
+            }
+            state.status = 'succeeded'
         });
     }
 });

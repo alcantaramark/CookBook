@@ -1,13 +1,13 @@
 import RFC, { FC, ReactElement, useState } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory, selectSearchStatus, selectSearchHistoryStatus, setShowFullResults, clearPaging } from '../SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
 import { FlatList } from 'react-native';
 import useSearch from '../Hooks/useSearch';
-import { GestureDetector, GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 
 interface HistoryResultsProps {
     
@@ -18,6 +18,7 @@ interface HistoryResultsProps {
 const HistoryResults: FC<HistoryResultsProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
+    const searchText = useAppSelector(selectSearchText);
     const { search } = useSearch();
     const dispatch = useAppDispatch();
     const { colors: { primary }} = useAppTheme();    
@@ -46,12 +47,19 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     const listHeader = () => {
         return(
             <View style={styles.headerContainer}>
-                <Text style={styles.headerTitle}>Recent</Text>
+                <Text>Recent</Text>
                 <Text style={{color: primary}} onPress={() => dispatch(clearHistory())}>Clear</Text>
             </View>
         );
     }
     
+    const noResultsFounds = () =>{
+        return(<View style={styles.noResults}>
+                <Text>No results found for "{searchText}"</Text>
+            </View>
+        );
+    }
+
     return (
         <GestureHandlerRootView>
         { (searchHistoryStatus === 'succeeded') &&
@@ -60,6 +68,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
                 data={searchHistory}
                 keyExtractor={(item: string):string => item}
                 renderItem={renderResultItem}
+                ListFooterComponent={noResultsFounds}
             />
         }
         </GestureHandlerRootView>
@@ -87,8 +96,10 @@ const styles = StyleSheet.create({
     clearHistory: {
         
     },
-    headerTitle: {
-        
+    noResults: {
+        flexDirection: 'row',
+        marginTop: 20,
+        alignSelf: 'center'
     }
 });
 
