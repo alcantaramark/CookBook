@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo } from '../SearchSlice';
@@ -9,6 +9,7 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigation } from './../../../App';
 import { useNavigation } from '@react-navigation/native';
+import useLoading from './../../Shared/Hooks/useLoading';
 
 export interface FullResultsProps{
 
@@ -23,6 +24,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     const searchPageInfo = useAppSelector(selectSearchPageInfo);
     const { search } = useSearch();
     const { navigate } = useNavigation<StackNavigation>();
+    const { MasonryLoader } = useLoading();
 
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
@@ -62,12 +64,14 @@ const FullResults: FC<FullResultsProps> = () =>{
                     contentContainerStyle={{
                         alignSelf: 'stretch'
                     }}
-                    onEndReachedThreshold={0}
+                    onEndReachedThreshold={0.8}
                     onEndReached={handleLoadMore}
                     onRefresh={() => search(true, searchText)}
                     ListFooterComponent={footer()}
+                    ListEmptyComponent={MasonryLoader()}
                 />
-            </View>
+                </View>
+            {/* {(searchStatus === 'loading' && searchSuggestions.length == 0) && MasonryLoader()} */}
         </GestureHandlerRootView>
     );
 }

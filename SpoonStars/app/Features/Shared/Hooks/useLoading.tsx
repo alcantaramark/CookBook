@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import ContentLoader from 'react-content-loader/native';
+import { View } from 'react-native';
 import { Circle, Rect } from 'react-native-svg';
 
 
@@ -49,7 +50,44 @@ const useLoading = () => {
     );
   }
 
-  return {RecipeLoader, SearchLoader};
+  const MasonryLoader = () => {
+    return(
+      <View>
+        <ContentLoader 
+          viewBox="0 0 900 600" 
+          height={500} 
+          width={429}
+          backgroundColor='#d6d6d6'
+          foregroundColor='#aaaaaa'
+          style={{ marginTop: -90 }}
+        >
+          <Rect x="10" y="10" rx="5" ry="5" width="260" height="140" />
+          <Rect x="280" y="10" rx="5" ry="5" width="260" height="280" />
+          <Rect x="550" y="10" rx="5" ry="5" width="260" height="140" />
+          <Rect x="10" y="160" rx="5" ry="5" width="260" height="280" />
+          <Rect x="280" y="300" rx="5" ry="5" width="260" height="140" />
+          <Rect x="550" y="160" rx="5" ry="5" width="260" height="280" />
+      </ContentLoader>
+      <ContentLoader 
+          viewBox="0 0 900 600" 
+          height={500} 
+          width={429}
+          backgroundColor='#d6d6d6'
+          foregroundColor='#aaaaaa'
+          style={{ marginTop: -290  }}
+        >
+          <Rect x="10" y="10" rx="5" ry="5" width="260" height="140" />
+          <Rect x="280" y="10" rx="5" ry="5" width="260" height="280" />
+          <Rect x="550" y="10" rx="5" ry="5" width="260" height="140" />
+          <Rect x="10" y="160" rx="5" ry="5" width="260" height="280" />
+          <Rect x="280" y="300" rx="5" ry="5" width="260" height="140" />
+          <Rect x="550" y="160" rx="5" ry="5" width="260" height="280" />
+      </ContentLoader>
+    </View>
+    );
+  }
+
+  return {RecipeLoader, SearchLoader, MasonryLoader};
 }
 
 export default useLoading;
