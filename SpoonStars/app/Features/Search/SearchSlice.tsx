@@ -214,6 +214,10 @@ export const searchSlice = createSlice({
                 state.pagination = action.payload.pageInfo;
                 state.errors = '';
             }
+            else {
+                state.errors = `Error searching`
+            }
+            state.status = 'succeeded'
         }).addCase(suggestRecipesByIngredients.pending, state => {
             state.status = 'loading',
             state.errors = ''
@@ -238,6 +242,10 @@ export const searchSlice = createSlice({
                 state.pagination = action.payload.pageInfo;
                 state.errors = '';
             }
+            else{
+                state.errors = `Error searching`
+            }
+            state.status = 'succeeded'
         });
     }
 });

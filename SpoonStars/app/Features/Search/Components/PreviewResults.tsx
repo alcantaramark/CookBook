@@ -1,7 +1,8 @@
 import React, { FC, ReactElement, useEffect } from 'react'
 import { StyleSheet, View , FlatList} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchText, selectSearchHistoryStatus, setShowFullResults, selectSearchStatus } from '../SearchSlice';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
+    selectSearchHistoryStatus, setShowFullResults, selectSearchStatus, selectSearchErrors } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, useAppTheme } from '../../../App';
@@ -10,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import useSearch from '../Hooks/useSearch';
 import useLoading from './../../Shared/Hooks/useLoading';
+import useErrorHandler from './../../Shared/Hooks/useErrorHandler';
 
 
 interface PreviewResultsProps {}
@@ -20,9 +22,12 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
     const searchText = useAppSelector(selectSearchText);
     const searchStatus = useAppSelector(selectSearchStatus);
+    const searchErrors = useAppSelector(selectSearchErrors);
 
     const { search } = useSearch();
     const { SearchLoader } = useLoading();
+    const { showError } = useErrorHandler();
+
     const { navigate } = useNavigation<StackNavigation>();
     const dispatch = useAppDispatch();
     
@@ -59,7 +64,8 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
-            { (searchHistoryStatus === 'succeeded' && searchStatus === 'succeeded') &&
+            { searchErrors !== '' && showError(searchErrors)}
+            { (searchHistoryStatus === 'succeeded' && searchStatus === 'succeeded' && searchErrors === '') &&
                 <FlatList
                     ListEmptyComponent={<HistoryResults />}
                     data={searchSuggestions}
