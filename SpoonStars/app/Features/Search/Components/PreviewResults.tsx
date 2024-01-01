@@ -1,8 +1,9 @@
-import React, { FC, ReactElement, useEffect } from 'react'
-import { StyleSheet, View , FlatList} from 'react-native';
+import React, { FC, ReactElement } from 'react'
+import { StyleSheet, View , FlatList, KeyboardAvoidingView, Platform, Dimensions} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
-    selectSearchHistoryStatus, setShowFullResults, selectSearchStatus, selectSearchErrors } from '../SearchSlice';
+    selectSearchHistoryStatus, selectSearchStatus, selectSearchErrors,
+    selectShowListResults, setShowListResults, selectSearchPageInfo } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, useAppTheme } from '../../../App';
@@ -12,6 +13,8 @@ import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-h
 import useSearch from '../Hooks/useSearch';
 import useLoading from './../../Shared/Hooks/useLoading';
 import useErrorHandler from './../../Shared/Hooks/useErrorHandler';
+import { UIActivityIndicator } from 'react-native-indicators';
+import { FlashList } from '@shopify/flash-list';
 
 
 interface PreviewResultsProps {}
@@ -23,6 +26,9 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchText = useAppSelector(selectSearchText);
     const searchStatus = useAppSelector(selectSearchStatus);
     const searchErrors = useAppSelector(selectSearchErrors);
+    const showListResults = useAppSelector(selectShowListResults);
+    const searchPageInfo = useAppSelector(selectSearchPageInfo);
+    
 
     const { search } = useSearch();
     const { SearchLoader } = useLoading();
@@ -49,32 +55,52 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const footerComponent = () => {
-        return(
-            <TouchableOpacity style={styles.footer} onPress={showAllResults}>
-                <Text style={{color: primary}}>See all Results</Text>
-            </TouchableOpacity>
-        );
+        if (showListResults || searchSuggestions.length == 0){ 
+            return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
+        }
+        else {
+            return(
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                >
+                    <TouchableOpacity style={styles.footer} onPress={showAllResults}>
+                        <Text style={{color: primary}}>See all Results</Text>
+                    </TouchableOpacity>
+                </KeyboardAvoidingView>
+            );
+        }
     }
 
     const showAllResults = () => {
-        dispatch(setShowFullResults(true));
+        dispatch(setShowListResults(true));
         search(true, searchText);
+    }
+
+    const handleLoadMore = async () => {
+        if (!showListResults)
+            return;
+        if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
+            await search(true, searchText);
+        }
     }
 
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
             { searchErrors !== '' && showError(searchErrors)}
-            { (searchHistoryStatus === 'succeeded' && searchStatus === 'succeeded' && searchErrors === '') &&
-                <FlatList
-                    ListEmptyComponent={<HistoryResults />}
+            { searchErrors === '' && searchSuggestions.length == 0 && <HistoryResults />}
+            { searchErrors === '' && searchSuggestions.length > 0 &&
+                <FlashList
                     data={searchSuggestions}
                     keyExtractor={(item: suggestionsPayload):string => item.node.id}
                     renderItem={renderItem}
-                    ListFooterComponent={searchSuggestions.length == 0 ? null : footerComponent}
+                    ListFooterComponent={footerComponent}
+                    onEndReached={handleLoadMore}
+                    estimatedItemSize={200}
+                    estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
                 />
             }
-            { (searchHistoryStatus === 'loading' || searchStatus === 'loading') && SearchLoader() }
+            { (searchStatus === 'loading' && searchSuggestions.length == 0) && SearchLoader() }
         </View>
     </GestureHandlerRootView>);
 }
@@ -84,7 +110,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       flexDirection: 'row',
       marginStart: 10,
-      marginEnd: 10
+      flexGrow: 1
     },
     footer: {
         alignItems: 'center',

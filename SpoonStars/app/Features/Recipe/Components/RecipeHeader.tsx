@@ -1,6 +1,6 @@
-import React, { FC, createContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View, Keyboard } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
@@ -10,14 +10,11 @@ import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectShowFullResults, saveSearchHistory, 
     fetchSearchHistory, setSearchBy, selectSearchSuggestions, setShowFullResults, clearPaging,
-    selectSearchBy, selectSearchText, setSearchText } 
+    selectSearchBy, selectSearchText, setSearchText, setShowListResults, clearSuggestions } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
 import useSearch from './../../Search/Hooks/useSearch';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RecipeDetails } from './RecipeDetails';
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 
 
 
@@ -43,13 +40,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const dispatch = useAppDispatch();
   const [tagStyles, setTagStyles] = useState<string[]>([]);
 
-  const fetchHistory = async (text: string) => { 
-    if (text === undefined){
-      text = '';
-    }
-    await dispatch(fetchSearchHistory(text));
-  }
-
+  
   const styles = StyleSheet.create({
     loading: {
       alignContent: "center"
@@ -135,6 +126,60 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     search(showFullResults, searchText);
   }, [searchBy])
   
+
+  const fetchHistory = async (text: string) => { 
+    if (text === undefined){
+      text = '';
+    }
+    await dispatch(fetchSearchHistory(text));
+  }
+  
+  const handleSearchTextChanged =  async (text: string) => {
+    if (!isSearching)
+      return;
+
+    setIsSearching(true);
+    if (text === ''){ //initial
+      dispatch(setShowFullResults(true));
+      dispatch(setShowListResults(false));
+      dispatch(clearPaging());
+      search(true, text);
+    }
+    else if (searchText === text){ //enter pressed
+      dispatch(setShowFullResults(false));
+      dispatch(setShowListResults(true));
+      dispatch(clearPaging());
+      search(true, text);
+    }
+    else { //normal course of typing and searching
+      dispatch(setShowFullResults(false));
+      dispatch(setShowListResults(false));
+      search(false, text);
+    }
+  }
+
+  const handleSearchIconPress = () => {
+    setIsSearching(false);
+    autocompleteField.current.blur();
+    dispatch(clearSuggestions());
+  }
+
+  const handleSearchOnFocus = async () => {
+    if (searchText == ''){
+      setIsSearching(true) ;
+      dispatch(setShowFullResults(true));
+      search(true, searchText);
+    }
+  }
+
+  const mainView = () => {
+    if (isSearching){
+      return showFullResults ? <FullResults /> : <PreviewResults />
+    }else{
+      return <RecipeMain />
+    }
+  }
+
   const createButtons = () => {
     return ( 
       recipeTags.map((item, index) => {
@@ -149,46 +194,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
         )
       })
     )
-  }
-
-  const handleSearchTextChanged =  async (text: string) => {
-    setIsSearching(true);
-    if (searchText === text || text === ''){
-      dispatch(setShowFullResults(true));
-      dispatch(clearPaging());
-      search(true, text);
-    }
-    else {
-      dispatch(setShowFullResults(false));
-      search(false, text);
-    }
-  }
-
-  const handleEnterPress = async () => {
-    dispatch(setShowFullResults(true));
-    await dispatch(saveSearchHistory(searchText));
-  }
-
-  const handleSearchIconPress = () => {
-    setIsSearching(false);
-    dispatch(setSearchText(''));
-  }
-
-  const handleSearchOnFocus = async () => {
-    if (searchText == ''){
-      setIsSearching(true) ;
-      dispatch(setShowFullResults(true));
-      search(true, searchText);
-    }
-  }
-
-  const mainView = () => {
-    
-    if (isSearching){
-      return showFullResults ? <FullResults /> : <PreviewResults />
-    }else{
-      return <RecipeMain />
-    }
   }
 
   return (
@@ -215,7 +220,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
                 />
             }
             onFocus={handleSearchOnFocus}
-            onSubmitEditing={handleEnterPress}
+            onSubmitEditing={async () => { await dispatch(saveSearchHistory(searchText)); }}
           />
         </View>
         {isSearching &&
