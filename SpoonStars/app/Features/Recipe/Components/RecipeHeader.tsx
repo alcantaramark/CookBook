@@ -1,6 +1,6 @@
-import React, { FC, createContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View, Keyboard } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
@@ -10,14 +10,11 @@ import RecipeMain from './RecipeMain';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { selectShowFullResults, saveSearchHistory, 
     fetchSearchHistory, setSearchBy, selectSearchSuggestions, setShowFullResults, clearPaging,
-    selectSearchBy, selectSearchText, setSearchText } 
+    selectSearchBy, selectSearchText, setSearchText, setShowListResults, clearSuggestions } 
     from './../../Search/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
 import useSearch from './../../Search/Hooks/useSearch';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RecipeDetails } from './RecipeDetails';
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 
 
 
@@ -153,9 +150,15 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   const handleSearchTextChanged =  async (text: string) => {
     setIsSearching(true);
-    if (searchText === text || text === ''){
+    if (text === ''){
       dispatch(setShowFullResults(true));
       dispatch(clearPaging());
+      search(true, text);
+    }
+    else if (searchText === text){
+      dispatch(setShowFullResults(false));
+      dispatch(clearPaging());
+      dispatch(setShowListResults(true));
       search(true, text);
     }
     else {
@@ -171,7 +174,8 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
 
   const handleSearchIconPress = () => {
     setIsSearching(false);
-    dispatch(setSearchText(''));
+    dispatch(clearSuggestions());
+    autocompleteField.current.blur();
   }
 
   const handleSearchOnFocus = async () => {

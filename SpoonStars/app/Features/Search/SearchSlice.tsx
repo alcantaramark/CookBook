@@ -15,7 +15,8 @@ export interface searchState {
     pagination: pageInfo,
     showFullResults: boolean,
     searchBy: string,
-    searchText: string
+    searchText: string,
+    showListResults: boolean
 }
 
 export interface suggestionsPayload {
@@ -48,7 +49,8 @@ const initialState: searchState = {
     },
     showFullResults: true,
     searchBy: 'name',
-    searchText: ''
+    searchText: '',
+    showListResults: false
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -137,18 +139,7 @@ export const searchSlice = createSlice({
                 hasPreviousPage: false
             };
         },
-        clearSuggestions: state => {
-            state.historyStatus = '';
-            state.errors = '';
-            state.pagination = {
-                startCursor: '',
-                endCursor: '',
-                hasNextPage: false,
-                hasPreviousPage: false
-            };
-            state.status = '';
-            state.suggestions = []
-        },
+        clearSuggestions: () => initialState,
         setShowFullResults: (state, action) => { 
             state.showFullResults = action.payload; 
         },
@@ -157,6 +148,9 @@ export const searchSlice = createSlice({
         },
         setSearchText: (state, action) => {
             state.searchText = action.payload;
+        },
+        setShowListResults: (state, action) => {
+            state.showListResults = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -260,7 +254,8 @@ export const selectSearchSuggestions = (state: RootState) => state.search.sugges
 export const selectShowFullResults = (state: RootState) => state.search.showFullResults;
 export const selectSearchBy = (state: RootState) => state.search.searchBy;
 export const selectSearchText = (state: RootState) => state.search.searchText;
-export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText } = searchSlice.actions
+export const selectShowListResults = (state: RootState) => state.search.showListResults;
+export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults } = searchSlice.actions
 export default searchSlice.reducer;
 
 

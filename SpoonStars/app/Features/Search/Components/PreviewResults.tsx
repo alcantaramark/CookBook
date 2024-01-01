@@ -1,8 +1,9 @@
-import React, { FC, ReactElement, useEffect } from 'react'
+import React, { FC, ReactElement } from 'react'
 import { StyleSheet, View , FlatList} from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
-    selectSearchHistoryStatus, setShowFullResults, selectSearchStatus, selectSearchErrors } from '../SearchSlice';
+    selectSearchHistoryStatus, setShowFullResults, selectSearchStatus, selectSearchErrors,
+    selectShowListResults } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, useAppTheme } from '../../../App';
@@ -23,6 +24,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchText = useAppSelector(selectSearchText);
     const searchStatus = useAppSelector(selectSearchStatus);
     const searchErrors = useAppSelector(selectSearchErrors);
+    const showListResults = useAppSelector(selectShowListResults);
 
     const { search } = useSearch();
     const { SearchLoader } = useLoading();
@@ -57,7 +59,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const showAllResults = () => {
-        dispatch(setShowFullResults(true));
+        //dispatch(setShowFullResults(true));
         search(true, searchText);
     }
 
