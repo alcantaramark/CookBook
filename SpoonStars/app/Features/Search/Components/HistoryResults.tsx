@@ -1,14 +1,14 @@
-import RFC, { FC, ReactElement, useState } from 'react'
+import { FC, ReactElement } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging } from '../SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setShowListResults } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
-import { FlatList } from 'react-native';
 import useSearch from '../Hooks/useSearch';
-import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FlashList } from '@shopify/flash-list';
+import { ActionSheetIOS } from 'react-native';
 
 interface HistoryResultsProps {
     
@@ -41,7 +41,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
 
     const handleHistorySearch = (query: string) => {
         dispatch(clearPaging());
-        dispatch(setShowFullResults(true));
+        dispatch(setShowListResults(true));
         search(true, query);
     };
     
@@ -49,7 +49,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         return(
             <View style={styles.headerContainer}>
                 <Text>Recent</Text>
-                <Text style={{color: primary}} onPress={() => dispatch(clearHistory())}>Clear</Text>
+                <Text style={{color: primary}} onPress={showConfirmActionSheet}>Clear</Text>
             </View>
         );
     }
@@ -59,6 +59,17 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
                 <Text>No results found for "{searchText}"</Text>
             </View>
         );
+    }
+
+    const showConfirmActionSheet = () => {
+        ActionSheetIOS.showActionSheetWithOptions({
+            options: ['Cancel', 'Delete History'],
+            cancelButtonIndex: 0
+        }, async buttonIndex => {
+            if (buttonIndex == 1){
+                await dispatch(clearHistory())
+            }
+        });
     }
     
     return (
@@ -99,6 +110,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         marginBottom: 10,
+        marginEnd: 20,
         flexDirection: 'row',
         justifyContent: 'space-between'
         

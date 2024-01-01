@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react'
-import { StyleSheet, View , FlatList, KeyboardAvoidingView, Platform, Dimensions} from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
     selectSearchHistoryStatus, selectSearchStatus, selectSearchErrors,
@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginEnd: 20
     },
     avatar: {
         marginBottom: 20,
