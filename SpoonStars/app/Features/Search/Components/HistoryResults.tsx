@@ -2,12 +2,13 @@ import RFC, { FC, ReactElement, useState } from 'react'
 import { Text } from 'react-native-paper';
 import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging } from '../SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
 import { FlatList } from 'react-native';
 import useSearch from '../Hooks/useSearch';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlashList } from '@shopify/flash-list';
 
 interface HistoryResultsProps {
     
@@ -59,23 +60,32 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
             </View>
         );
     }
-
+    
     return (
-        <GestureHandlerRootView>
-        { (searchHistoryStatus === 'succeeded') &&
-            <FlatList
-                ListHeaderComponent={searchHistory.length > 0 ? listHeader : null}
+        <View style={styles.flashList}>
+        { (searchHistoryStatus === 'succeeded' && searchHistory.length > 0) &&
+            <FlashList
+                ListHeaderComponent={listHeader}
                 data={searchHistory}
                 keyExtractor={(item: string):string => item}
                 renderItem={renderResultItem}
                 ListFooterComponent={noResultsFounds}
+                estimatedItemSize={10}
+                estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+                numColumns={1}
             />
         }
-        </GestureHandlerRootView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    flashList: {
+        flexGrow: 1,
+        flexDirection: 'row',
+        height: 200,
+        width: Dimensions.get('screen').width
+    },
     resultContainer: {
         flexDirection: 'row',
     },

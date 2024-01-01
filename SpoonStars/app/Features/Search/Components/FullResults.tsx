@@ -51,7 +51,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     }
 
     const footer = () =>{
-        if (searchStatus === 'loading')
+        if (searchStatus === 'loading' && searchSuggestions.length > 0)
             return (<UIActivityIndicator size={30} />)
     }   
 
@@ -82,7 +82,7 @@ const FullResults: FC<FullResultsProps> = () =>{
 
 const styles = StyleSheet.create({
     flashListStyle: {
-      marginTop: 20,
+      marginTop: 0,
       flexDirection: 'row'
     },
     cardStyle: {
