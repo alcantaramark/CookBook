@@ -1,8 +1,8 @@
-import { useAppDispatch, useAppSelector } from "./../../../Redux/Hooks";
-import { suggestRecipesByName, suggestRecipesByIngredients, selectSearchBy, setSearchText } from "../SearchSlice";
+import { useAppDispatch, useAppSelector } from "../../../Redux/Hooks";
+import { suggestRecipesByName, suggestRecipesByIngredients, selectSearchBy, setSearchText } from "./SearchSlice";
 
 
-const useSearch = () => {
+const Search = () => {
     const dispatch = useAppDispatch();
     const searchBy = useAppSelector(selectSearchBy);
 
@@ -21,4 +21,4 @@ const useSearch = () => {
     return { search };
 }
 
-export default useSearch;
+export default Search;

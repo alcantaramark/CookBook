@@ -1,7 +1,7 @@
 import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
 import configReducer from "../Features/Configuration/ConfigSlice";
-import recipeReducer from "./../Features/Recipe/RecipeSlice";
-import searchReducer from "./../Features/Search/SearchSlice"
+import recipeReducer from "../Features/Recipe/Scripts/RecipeSlice";
+import searchReducer from "../Features/Search/Scripts/SearchSlice"
 
 export const store = configureStore({
     reducer: {

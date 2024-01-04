@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { recipePayload } from '../RecipeSlice';
+import { recipePayload } from '../Scripts/RecipeSlice';
 import { Avatar, Card, Text } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 

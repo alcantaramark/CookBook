@@ -1,20 +1,20 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
-import { Dimensions, StyleSheet, View, Keyboard } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { Button, SegmentedButtons } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useAppTheme } from '../../../App'
 import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
-    saveRecipePreference, fetchRecipes, clearRecipes } from '../RecipeSlice';
+    saveRecipePreference, fetchRecipes, clearRecipes } from '../Scripts/RecipeSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import RecipeMain from './RecipeMain';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { selectShowFullResults, saveSearchHistory, 
-    fetchSearchHistory, setSearchBy, selectSearchSuggestions, setShowFullResults, clearPaging,
-    selectSearchBy, selectSearchText, setSearchText, setShowListResults, clearSuggestions } 
-    from './../../Search/SearchSlice';
+import { selectShowFullResults, selectIsSearching,
+    fetchSearchHistory, setSearchBy, selectSearchSuggestions, clearPaging,
+    selectSearchBy, selectSearchText, setShowListResults } 
+    from '../../Search/Scripts/SearchSlice';
 import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
-import useSearch from './../../Search/Hooks/useSearch';
+import SearchHelper from '../../Search/Scripts/Search';
+import SearchBar from './../../Search/Components/SearchBar';
 
 
 
@@ -24,10 +24,6 @@ interface RecipeHeaderProps {}
 
 
 const RecipeHeader: FC<RecipeHeaderProps> = () => { 
-  const [isSearching, setIsSearching] = useState(false);
-  
-  const autocompleteField = useRef<any>(null);
-
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);
@@ -35,9 +31,11 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   const showFullResults = useAppSelector(selectShowFullResults);
   const searchBy = useAppSelector(selectSearchBy);
   const searchText = useAppSelector(selectSearchText);
-  const { search } = useSearch();
+  const isSearching = useAppSelector(selectIsSearching);
   
+  const { search } = SearchHelper();
   const dispatch = useAppDispatch();
+
   const [tagStyles, setTagStyles] = useState<string[]>([]);
 
   
@@ -53,25 +51,6 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     },
     header: {
       backgroundColor: 'transparent'
-    },
-    searchInput: {
-      flexDirection: 'row',
-    },
-    searchInputField: {
-      width: Dimensions.get('screen').width - 20,
-      height: 40,
-      marginStart: 10,
-    },
-    searchInputFieldActive: {
-      width: Dimensions.get('screen').width - 52,
-      height: 40,
-      marginStart: 5,
-    },
-    searchIconBack: {
-      color: 'gray',
-      fontSize: 30,
-      top: 8,
-      marginStart: 10
     },
     searchIconMagnify: {
       color: 'gray',
@@ -119,58 +98,23 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
     if (searchSuggestions.length == 0){
       fetchHistory(searchText);
     }
+
   }, [searchSuggestions]);
 
   useEffect(() => {
     dispatch(clearPaging());
+    dispatch(setShowListResults(false));
     search(showFullResults, searchText);
-  }, [searchBy])
+  }, [searchBy, isSearching])
   
-
   const fetchHistory = async (text: string) => { 
     if (text === undefined){
       text = '';
     }
     await dispatch(fetchSearchHistory(text));
   }
+
   
-  const handleSearchTextChanged =  async (text: string) => {
-    if (!isSearching)
-      return;
-
-    setIsSearching(true);
-    if (text === ''){ //initial
-      dispatch(setShowFullResults(true));
-      dispatch(setShowListResults(false));
-      dispatch(clearPaging());
-      search(true, text);
-    }
-    else if (searchText === text){ //enter pressed
-      dispatch(setShowFullResults(false));
-      dispatch(setShowListResults(true));
-      dispatch(clearPaging());
-      search(true, text);
-    }
-    else { //normal course of typing and searching
-      dispatch(setShowFullResults(false));
-      dispatch(setShowListResults(false));
-      search(false, text);
-    }
-  }
-
-  const handleSearchIconPress = () => {
-    setIsSearching(false);
-    autocompleteField.current.blur();
-    dispatch(clearSuggestions());
-  }
-
-  const handleSearchOnFocus = async () => {
-    if (searchText == ''){
-      setIsSearching(true) ;
-      dispatch(setShowFullResults(true));
-      search(true, searchText);
-    }
-  }
 
   const mainView = () => {
     if (isSearching){
@@ -199,30 +143,7 @@ const RecipeHeader: FC<RecipeHeaderProps> = () => {
   return (
     <View>
       <View style={styles.container}>
-        <View style={styles.searchInput}>
-          {isSearching &&
-            <MaterialCommunityIcons 
-              name='arrow-left-thin' style={styles.searchIconBack} 
-              onPress={handleSearchIconPress}
-            />
-          }
-          <TextInput
-            theme={{ roundness: 10 }}
-            placeholder='search recipes...'
-            value={searchText}
-            style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
-            onChangeText={(text: string) => handleSearchTextChanged(text)}
-            mode='outlined'
-            ref={autocompleteField}
-            left={ !isSearching &&
-                <TextInput.Icon 
-                  icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
-                />
-            }
-            onFocus={handleSearchOnFocus}
-            onSubmitEditing={async () => { await dispatch(saveSearchHistory(searchText)); }}
-          />
-        </View>
+          <SearchBar />
         {isSearching &&
           <SegmentedButtons 
             value={searchBy}

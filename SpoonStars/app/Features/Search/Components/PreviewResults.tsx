@@ -1,18 +1,18 @@
-import React, { FC, ReactElement } from 'react'
+import React, { FC, ReactElement, useEffect } from 'react'
 import { StyleSheet, View, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
     selectSearchHistoryStatus, selectSearchStatus, selectSearchErrors,
-    selectShowListResults, setShowListResults, selectSearchPageInfo } from '../SearchSlice';
+    selectShowListResults, setShowListResults, selectSearchPageInfo } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, useAppTheme } from '../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
-import useSearch from '../Hooks/useSearch';
-import useLoading from './../../Shared/Hooks/useLoading';
-import useErrorHandler from './../../Shared/Hooks/useErrorHandler';
+import SearchHelper from '../Scripts/Search';
+import useLoading from '../../Shared/Components/Loading';
+import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
 
@@ -30,7 +30,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchPageInfo = useAppSelector(selectSearchPageInfo);
     
 
-    const { search } = useSearch();
+    const { search } = SearchHelper();
     const { SearchLoader } = useLoading();
     const { showError } = useErrorHandler();
 

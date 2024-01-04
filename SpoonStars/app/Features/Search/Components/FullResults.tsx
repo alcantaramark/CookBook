@@ -1,16 +1,16 @@
 import { FC } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo, selectSearchErrors } from '../SearchSlice';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
 import { useAppSelector } from './../../../Redux/Hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
-import useSearch from '../Hooks/useSearch';
+import SearchHelper from '../Scripts/Search';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigation } from './../../../App';
 import { useNavigation } from '@react-navigation/native';
-import useLoading from './../../Shared/Hooks/useLoading';
-import useErrorHandler from '../../Shared/Hooks/useErrorHandler';
+import useLoading from '../../Shared/Components/Loading';
+import useErrorHandler from '../../Shared/Components/ErrorHandler';
 export interface FullResultsProps{
 
 }
@@ -24,7 +24,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     const searchPageInfo = useAppSelector(selectSearchPageInfo);
     const searchErrors = useAppSelector(selectSearchErrors);
 
-    const { search } = useSearch();
+    const { search } = SearchHelper();
     const { showError } = useErrorHandler();
     const { navigate } = useNavigation<StackNavigation>();
     const { MasonryLoader } = useLoading();

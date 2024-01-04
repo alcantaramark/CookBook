@@ -5,7 +5,7 @@ import { Circle, Rect } from 'react-native-svg';
 
 
 
-const useLoading = () => {
+const Loading = () => {
   
   const RecipeLoader = () => {
     return (
@@ -90,4 +90,4 @@ const useLoading = () => {
   return {RecipeLoader, SearchLoader, MasonryLoader};
 }
 
-export default useLoading;
+export default Loading;
