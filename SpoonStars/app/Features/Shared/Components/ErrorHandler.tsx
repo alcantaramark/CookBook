@@ -1,7 +1,7 @@
 import { Text } from "react-native-paper";
 
 
-const useErrorHandler = () => {
+const ErrorHandler = () => {
     const showError = (message: string) => {
         return (
             <Text>{message}</Text>
@@ -11,4 +11,4 @@ const useErrorHandler = () => {
     return { showError }
 }
 
-export default useErrorHandler;
+export default ErrorHandler;

@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { searchByTag, searchPopular } from "./Services/Queries/SearchRecipes";
-import { RootState } from "./../../Redux/Store";
-import recipePreference from './Data/RecipePreference.json';
+import { searchByTag, searchPopular } from "../Services/Queries/SearchRecipes";
+import { RootState } from "../../../Redux/Store";
+import recipePreference from '../Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { recipe, recipeTag, pageInfo } from '../../../types/App_Types';
+import { recipe, recipeTag, pageInfo } from '../../../../types/App_Types';
 
 export interface recipesState {
     recipes: recipePayload[],

@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../Redux/Store";
+import { RootState } from "../../../Redux/Store";
 import { pageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { searchByIngredients, searchByName } from "./Services/Queries/SuggestRecipes";
+import { searchByIngredients, searchByName } from "../Services/Queries/SuggestRecipes";
 
 
 export interface searchState {
@@ -16,7 +16,8 @@ export interface searchState {
     showFullResults: boolean,
     searchBy: string,
     searchText: string,
-    showListResults: boolean
+    showListResults: boolean,
+    isSearching: boolean;
 }
 
 export interface suggestionsPayload {
@@ -50,7 +51,8 @@ const initialState: searchState = {
     showFullResults: true,
     searchBy: 'name',
     searchText: '',
-    showListResults: false
+    showListResults: false,
+    isSearching: false
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -151,6 +153,9 @@ export const searchSlice = createSlice({
         },
         setShowListResults: (state, action) => {
             state.showListResults = action.payload;
+        },
+        setIsSearching: (state, action) => {
+            state.isSearching = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -255,7 +260,9 @@ export const selectShowFullResults = (state: RootState) => state.search.showFull
 export const selectSearchBy = (state: RootState) => state.search.searchBy;
 export const selectSearchText = (state: RootState) => state.search.searchText;
 export const selectShowListResults = (state: RootState) => state.search.showListResults;
-export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults } = searchSlice.actions
+export const selectIsSearching = (state: RootState) => state.search.isSearching;
+
+export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults, setIsSearching } = searchSlice.actions
 export default searchSlice.reducer;
 
 

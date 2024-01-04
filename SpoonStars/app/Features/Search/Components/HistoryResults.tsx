@@ -1,11 +1,11 @@
 import { FC, ReactElement } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setShowListResults } from '../SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setShowListResults } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
-import useSearch from '../Hooks/useSearch';
+import SearchHelper from '../Scripts/Search';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FlashList } from '@shopify/flash-list';
 import { ActionSheetIOS } from 'react-native';
@@ -20,7 +20,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
     const searchText = useAppSelector(selectSearchText);
-    const { search } = useSearch();
+    const { search } = SearchHelper();
     const dispatch = useAppDispatch();
     const { colors: { primary }} = useAppTheme();    
     

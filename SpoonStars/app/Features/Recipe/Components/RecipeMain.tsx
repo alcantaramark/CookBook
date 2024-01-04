@@ -1,7 +1,7 @@
 import React, { FC, useEffect, ReactElement, useState, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import { selectConfig, selectConfigStatus } from '../../Configuration/ConfigSlice';
-import { selectRecipes, recipePayload, fetchRecipes, selectRecipesStatus, selectRecipesPageInfo, selectRecipeErrors, clearRecipes } from '../RecipeSlice';
+import { selectRecipes, recipePayload, fetchRecipes, selectRecipesStatus, selectRecipesPageInfo, selectRecipeErrors, clearRecipes } from '../Scripts/RecipeSlice';
 import RecipeItem from './RecipeItem';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
@@ -11,7 +11,7 @@ import { Rect } from 'react-native-svg';
 import { ErrorMain } from '../../Error/ErrorMain';
 import { FlashList } from '@shopify/flash-list';
 import { selectConfigError } from '../../Configuration/ConfigSlice';
-import useLoading from './../../Shared/Hooks/useLoading';
+import useLoading from '../../Shared/Components/Loading';
 
 interface RecipeMainProps {}
 
