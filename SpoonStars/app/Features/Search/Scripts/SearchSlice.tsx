@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../../Redux/Store";
 import { pageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { searchByIngredients, searchByName } from "../Services/Queries/SuggestRecipes";
+import SuggestRecipes from "../Services/Queries/SuggestRecipes";
 
 
 export interface searchState {
@@ -104,6 +104,7 @@ export const clearHistory = createAsyncThunk('search/clearHistory', async () => 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
         const { name, searchAll } = queries;
+        const { searchByName } = SuggestRecipes();
 
         try{
             const suggestions =  await searchByName(name, searchAll).then(response => response.json());
@@ -118,6 +119,7 @@ export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName'
 export const suggestRecipesByIngredients = createAsyncThunk('search/fetchRecipesByIngredients', async (queries: searchQueriesIngredients
     , {rejectWithValue, fulfillWithValue}) => {
         const { ingredients, searchAll } = queries;
+        const { searchByIngredients } = SuggestRecipes();
 
         try {
             const suggestions = await searchByIngredients(ingredients, searchAll).then(response => response.json());

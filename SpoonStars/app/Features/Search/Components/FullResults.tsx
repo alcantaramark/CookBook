@@ -7,10 +7,11 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import SearchHelper from '../Scripts/Search';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StackNavigation } from './../../../App';
+import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
+
 export interface FullResultsProps{
 
 }
@@ -32,7 +33,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
         return(
-            <TouchableOpacity onPress={() => navigate('Details')}>
+            <TouchableOpacity onPress={() => navigate('Details', {id: 'test id'})}>
                 <Card style={styles.cardStyle}>
                     <Card.Cover source={{ uri: item.node.mainImage }} style={{
                         height: randomBool ? 100 : 230,

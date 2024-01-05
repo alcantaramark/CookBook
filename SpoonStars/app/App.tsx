@@ -29,6 +29,7 @@ import { loadRecipePreference } from './Features/Recipe/Scripts/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
+import { RootStackParamList } from './../types/App_Types';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -50,8 +51,7 @@ export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
 export type ScreenNames = ["Home", "Details"];
-export type RootStackParamList = Record<ScreenNames[number], undefined>;
-export type StackNavigation = NavigationProp<RootStackParamList>;
+
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -78,6 +78,7 @@ function App(): JSX.Element {
         <Stack.Screen 
           name='Details'
           component={RecipeDetails}
+          initialParams={{ id: 'testid' }}
         />
       </Stack.Navigator>
     );

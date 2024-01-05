@@ -1,3 +1,5 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
 export interface recipe{
     id: string,
     name: string,
@@ -19,3 +21,13 @@ export interface pageInfo{
     hasNextPage: boolean,
     hasPreviousPage: boolean
 }
+
+export type RootStackParamList = {
+    Home: undefined;
+    Details: { id: string }
+  };
+
+ export type DetailsScreenProps = NativeStackScreenProps<RootStackParamList, 'Details'>
+ export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>
+ 
+ export type StackNavigation = NavigationProp<RootStackParamList>;

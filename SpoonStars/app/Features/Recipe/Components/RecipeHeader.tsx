@@ -15,15 +15,14 @@ import PreviewResults from './../../Search/Components/PreviewResults';
 import FullResults from './../../Search/Components/FullResults';
 import SearchHelper from '../../Search/Scripts/Search';
 import SearchBar from './../../Search/Components/SearchBar';
+import { HomeScreenProps } from './../../../../types/App_Types';
 
 
 
 
-interface RecipeHeaderProps {}
 
+const RecipeHeader: FC<HomeScreenProps> = ({route, navigation} : HomeScreenProps) => { 
 
-
-const RecipeHeader: FC<RecipeHeaderProps> = () => { 
   const { colors: { primary } } = useAppTheme();
   const recipeTags = useAppSelector(selectRecipeTags);
   const preferenceStatus = useAppSelector(selectRecipePreferencesStatus);

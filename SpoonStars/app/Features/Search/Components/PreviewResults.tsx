@@ -6,7 +6,8 @@ import { selectSearchSuggestions, suggestionsPayload, selectSearchText,
     selectShowListResults, setShowListResults, selectSearchPageInfo } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
-import { StackNavigation, useAppTheme } from '../../../App';
+import { StackNavigation } from './../../../../types/App_Types';
+import { useAppTheme } from './../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -41,7 +42,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details')}>
+            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details', { id: 'test' })}>
                 <View style={styles.searchDetails}>
                     <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
                     <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
