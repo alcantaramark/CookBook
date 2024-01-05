@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { recipePayload } from '../Scripts/RecipeSlice';
-import { Avatar, Card, Text } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { Card } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 
 
 interface RecipeItemProps { 

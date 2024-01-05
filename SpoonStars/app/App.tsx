@@ -28,7 +28,7 @@ import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/Scripts/RecipeSlice';
 import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RecipeDetails } from './Features/Recipe/Components/RecipeDetails';
+import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
 
 type SectionProps = PropsWithChildren<{
   title: string;

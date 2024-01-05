@@ -2,7 +2,10 @@ export interface recipe{
     id: string,
     name: string,
     mainImage: string,
-    totalTime: string
+    totalTime: string,
+    numberOfServings: number,
+    ingredientLines: Array<string>,
+    instructions: Array<string>
 }
 
 export interface recipeTag{

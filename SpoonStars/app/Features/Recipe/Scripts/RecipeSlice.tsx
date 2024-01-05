@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { searchByTag, searchPopular } from "../Services/Queries/SearchRecipes";
+import SearchRecipes from "../Services/Queries/SearchRecipes";
 import { RootState } from "../../../Redux/Store";
 import recipePreference from '../Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import { recipe, recipeTag, pageInfo } from '../../../../types/App_Types';
 
 export interface recipesState {
     recipes: recipePayload[],
+    recipeItem: recipe,
     status: string,
     tags: recipeTag[],
     preferenceStatus: string,
@@ -21,6 +22,15 @@ export interface recipePayload {
 
 const initialState: recipesState = {
     recipes: [],
+    recipeItem: {
+        mainImage: '',
+        id: '',
+        numberOfServings: 0,
+        ingredientLines: new Array<string>(),
+        instructions: new Array<string>(),
+        name: '',
+        totalTime: ''
+    },
     status: "idle",
     preferenceStatus: "idle",
     tags: [],
@@ -33,10 +43,22 @@ const initialState: recipesState = {
     errors:''
 };
 
+export const searchRecipeById = createAsyncThunk('recipe/searchRecipeById', async(id: string, { rejectWithValue, fulfillWithValue }) => {
+    try {
+        const { searchByRecipeId } = SearchRecipes();
+        const recipeItem = await searchByRecipeId(id).then(response => response.json());
+        return fulfillWithValue(recipeItem);
+    }
+    catch (e){
+        return rejectWithValue("Error getting recipe details");
+    }
+});
+
 export const fetchRecipes = createAsyncThunk("recipe/fetchRecipes", async (_, { getState, rejectWithValue, fulfillWithValue }) => {
     try{
         const state = getState() as RootState;
         const preferred = state.recipe.tags.find(tag => tag.preferred == true);
+        const { searchByTag, searchPopular } = SearchRecipes();
 
         const recipes = preferred == undefined ? await searchPopular().then(response => response.json()) :
             await searchByTag(preferred.name).then(response => response.json());
@@ -131,6 +153,16 @@ export const RecipeSlice = createSlice({
         .addCase(loadRecipePreference.fulfilled, (state, action) => {
             state.tags = action.payload;
             state.preferenceStatus = "succeeded";
+        }).addCase(searchRecipeById.pending, state => {
+            state.status = 'loading';
+        }).addCase(searchRecipeById.fulfilled, (state, action) => {
+            state.recipeItem = action.payload;
+            state.status = 'fulfilled';
+        }).addCase(searchRecipeById.rejected, (state, action) => {
+            if (state.status === 'loading') {
+                state.status = 'idle';
+                state.errors = action.payload as string;
+            }
         });
     }
 });
@@ -140,6 +172,7 @@ export const selectRecipesStatus = (state: RootState) => state.recipe.status;
 export const selectRecipesPageInfo = (state: RootState) => state.recipe.pagination;
 export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.preferenceStatus;
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
+export const selectRecipeItem = (state: RootState) => state.recipe.recipeItem;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
 export const { clearRecipes, updateRecipePreference } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
