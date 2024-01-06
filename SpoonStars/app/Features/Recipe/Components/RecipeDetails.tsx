@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Text } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
 import { searchRecipeById, selectRecipeItem } from './../Scripts/RecipeSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import { DetailsScreenProps } from './../../../../types/App_Types';
@@ -16,9 +16,15 @@ const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScree
     await dispatch(searchRecipeById(''));
   }
 
-  
+  const handleOnPress = () => {
+    navigation.pop();
+  }
+
   return (
-    <Text>{route.params.id}</Text>
+    <>
+      <Button onPress={handleOnPress}>Go Back</Button>
+      <Text>{route.params.id}</Text>
+    </>
   )
 }
 

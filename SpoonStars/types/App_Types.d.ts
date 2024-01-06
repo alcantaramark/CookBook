@@ -24,10 +24,12 @@ export interface pageInfo{
 
 export type RootStackParamList = {
     Home: undefined;
-    Details: { id: string }
+    Details: { id: string };
+    Search: undefined;
   };
 
- export type DetailsScreenProps = NativeStackScreenProps<RootStackParamList, 'Details'>
- export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>
+ export type DetailsScreenProps = NativeStackScreenProps<RootStackParamList, 'Details'>;
+ export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+ export type SearchScreenProps = NativeStackScreenProps<RootStackParamList, 'Search'>;
  
  export type StackNavigation = NavigationProp<RootStackParamList>;

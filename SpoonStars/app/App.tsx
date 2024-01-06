@@ -30,6 +30,7 @@ import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
 import { RootStackParamList } from './../types/App_Types';
+import RecipeMain from './Features/Recipe/Components/RecipeMain';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -50,8 +51,6 @@ const theme = {
 export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
-export type ScreenNames = ["Home", "Details"];
-
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -69,16 +68,22 @@ function App(): JSX.Element {
   
   const RecipeTab = () => {
     return(
-      <Stack.Navigator>
-        <Stack.Screen 
+      <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen
           name='Home'
-          component={RecipeHeader}
+          component={RecipeMain}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='Search'
+          component={RecipeHeader}
+          options={{ headerShown: true }}
         />
         <Stack.Screen 
           name='Details'
           component={RecipeDetails}
           initialParams={{ id: 'testid' }}
+          options={{headerBackVisible: false}}
         />
       </Stack.Navigator>
     );

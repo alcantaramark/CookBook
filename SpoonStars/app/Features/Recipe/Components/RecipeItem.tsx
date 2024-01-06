@@ -2,18 +2,28 @@ import React, { FC } from 'react';
 import { recipePayload } from '../Scripts/RecipeSlice';
 import { Card } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
-
+import { StackNavigation } from './../../../../types/App_Types';
+import { useNavigation } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 interface RecipeItemProps { 
     item: recipePayload
 };
 
 const RecipeItem: FC<RecipeItemProps> = ({item}) => {
+    const { navigate } = useNavigation<StackNavigation>();
+
+    const handleItemPress = () => {
+        navigate('Details', {id: 'test id from main'});
+    }
+
     return(
-        <Card style={ styles.card }>
-            <Card.Cover style={styles.cardCover} source={{ uri: item.node.mainImage }} />
-            <Card.Title titleVariant='titleMedium' title={ item.node.name } subtitle={ item.node.totalTime } />
-        </Card>
+        <GestureHandlerRootView>
+            <Card style={ styles.card } onPress={handleItemPress}>
+                <Card.Cover style={styles.cardCover} source={{ uri: item.node.mainImage }} />
+                <Card.Title titleVariant='titleMedium' title={ item.node.name } subtitle={ item.node.totalTime } />
+            </Card>
+        </GestureHandlerRootView>
     );
 }
 
