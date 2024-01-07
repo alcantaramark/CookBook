@@ -1,26 +1,21 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Button, SegmentedButtons } from 'react-native-paper';
+import { SegmentedButtons } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../App'
-import { selectRecipeTags, selectRecipePreferencesStatus, updateRecipePreference, 
-    saveRecipePreference, fetchRecipes, clearRecipes } from '../Scripts/RecipeSlice';
-import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
+import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 
 import { selectShowFullResults, selectIsSearching,
     fetchSearchHistory, setSearchBy, selectSearchSuggestions, clearPaging,
     selectSearchBy, selectSearchText, setShowListResults } 
     from '../../Search/Scripts/SearchSlice';
-import PreviewResults from './../../Search/Components/PreviewResults';
-import FullResults from './../../Search/Components/FullResults';
+import PreviewResults from '../../Search/Components/PreviewResults';
+import FullResults from '../../Search/Components/FullResults';
 import SearchHelper from '../../Search/Scripts/Search';
-import SearchBar from './../../Search/Components/SearchBar';
-import { SearchScreenProps } from './../../../../types/App_Types';
+import SearchBar from '../../Search/Components/SearchBar';
+import { SearchScreenProps } from '../../../../types/App_Types';
 
 
-
-
-
-const RecipeHeader: FC<SearchScreenProps> = ({route, navigation} : SearchScreenProps) => { 
+const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenProps) => { 
 
   const { colors: { primary } } = useAppTheme();
   const searchSuggestions = useAppSelector(selectSearchSuggestions);
@@ -61,18 +56,18 @@ const RecipeHeader: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
     }
   })
 
-  useEffect(() => { 
-    if (searchSuggestions.length == 0){
-      fetchHistory(searchText);
-    }
+  // useEffect(() => { 
+  //   if (searchSuggestions.length == 0){
+  //     fetchHistory(searchText);
+  //   }
 
-  }, [searchSuggestions]);
+  // }, [searchSuggestions]);
 
-  useEffect(() => {
-    dispatch(clearPaging());
-    dispatch(setShowListResults(false));
-    search(showFullResults, searchText);
-  }, [searchBy, isSearching])
+  // useEffect(() => {
+  //   dispatch(clearPaging());
+  //   dispatch(setShowListResults(false));
+  //   search(showFullResults, searchText);
+  // }, [searchBy, isSearching])
   
   const fetchHistory = async (text: string) => { 
     if (text === undefined){
@@ -81,20 +76,15 @@ const RecipeHeader: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
     await dispatch(fetchSearchHistory(text));
   }
 
-  
-
   const mainView = () => {
-    if (isSearching){
-      return showFullResults ? <FullResults /> : <PreviewResults />
-    }
+    //return showFullResults ? <FullResults /> : <PreviewResults />
+    return <FullResults />
   }
 
-  
   return (
     <View>
       <View style={styles.container}>
           <SearchBar />
-        {isSearching &&
           <SegmentedButtons 
             value={searchBy}
             style={styles.searchBy}
@@ -106,11 +96,10 @@ const RecipeHeader: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
             density='high'
             theme={useAppTheme}
           />
-        }
-        </View> 
-        { mainView() }
+      </View> 
+      { mainView() }
     </View>
 )};
 
 
-export default RecipeHeader;
+export default RecipeSearch;

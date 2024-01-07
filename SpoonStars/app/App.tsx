@@ -11,7 +11,7 @@ import {
           MD3LightTheme as defaultTheme, 
           useTheme} 
       from 'react-native-paper';
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
@@ -26,7 +26,7 @@ import {
 import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/Scripts/RecipeSlice';
-import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
+import RecipeSearch from './Features/Recipe/Components/RecipeSearch';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
 import { RootStackParamList } from './../types/App_Types';
@@ -76,8 +76,8 @@ function App(): JSX.Element {
         />
         <Stack.Screen 
           name='Search'
-          component={RecipeHeader}
-          options={{ headerShown: true }}
+          component={RecipeSearch}
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name='Details'

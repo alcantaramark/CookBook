@@ -7,6 +7,8 @@ import { saveSearchHistory, selectSearchText, setShowFullResults, selectIsSearch
 clearPaging, setShowListResults, setSearchText } from '../Scripts/SearchSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import SearchHelper from './../Scripts/Search';
+import { StackNavigation } from './../../../../types/App_Types';
+import { useNavigation } from '@react-navigation/native';
 
 interface SearchBarProps{
 
@@ -17,19 +19,20 @@ const SearchBar: FC<SearchBarProps> = () => {
     const debouncedValue = useDebounce<string>(searchValue, 1000);
     const autocompleteField = useRef<any>(null);
     const { search } = SearchHelper();
+    const { navigate } = useNavigation<StackNavigation>();
     
     const searchText = useAppSelector(selectSearchText);
     const isSearching = useAppSelector(selectIsSearching);
     const dispatch = useAppDispatch();
 
     const handleSearchOnFocus = async () => {
-        if (searchText == ''){
-          dispatch(setIsSearching(true)) ;
-          dispatch(setShowFullResults(true));
-          search(true, searchText);
-        }
+        // if (searchText == ''){
+        //   dispatch(setIsSearching(true)) ;
+        //   dispatch(setShowFullResults(true));
+        //   search(true, searchText);
+        // }
       }
-
+    
     const handleInputSearchChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setSearchValue(e.nativeEvent.text);
     }
@@ -66,36 +69,33 @@ const SearchBar: FC<SearchBarProps> = () => {
       }
 
 
-    useEffect(() => {
-        performSearch(debouncedValue);
-    }, [debouncedValue])
+    // useEffect(() => {
+    //     performSearch(debouncedValue);
+    // }, [debouncedValue])
 
-
+    useEffect(() => autocompleteField.current.focus(), []);
     return (
         <View style={styles.searchInput}>
-          {isSearching &&
-            <MaterialCommunityIcons 
-              name='arrow-left-thin' style={styles.searchIconBack} 
-              onPress={() => autocompleteField.current.blur()}
-            />
-          }
             <TextInput
                 theme={{ roundness: 10 }}
                 ref={autocompleteField}
                 placeholder='search recipes...'
                 value={searchValue}
-                style={ isSearching ? styles.searchInputFieldActive : styles.searchInputField }
+                style={ styles.searchInputField }
                 onChange={(e: NativeSyntheticEvent<TextInputChangeEventData>) => handleInputSearchChange(e)}
                 mode='outlined'
-                left={ !isSearching &&
-                    <TextInput.Icon 
-                    icon={() => <MaterialCommunityIcons name='magnify' style={styles.searchIconMagnify} /> }  
-                    />
-                }
                 onFocus={handleSearchOnFocus}
                 onSubmitEditing={handleOnSubmit}
                 onBlur={handleOnBlur}
                 blurOnSubmit={false}
+                left={ 
+                  <TextInput.Icon icon={() => <MaterialCommunityIcons 
+                      name='arrow-left-thin' 
+                      onPress={() => navigate('Home')} 
+                      style={styles.searchIconBack}
+                      />}
+                  />
+                }
             />
           </View>
     );
@@ -121,9 +121,7 @@ const styles = StyleSheet.create({
       },
       searchIconBack: {
         color: 'gray',
-        fontSize: 30,
-        top: 8,
-        marginStart: 10
+        fontSize: 30
       }
       
 });
