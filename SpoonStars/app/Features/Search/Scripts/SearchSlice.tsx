@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../../Redux/Store";
-import { pageInfo, recipe } from "types/App_Types";
+import { PageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuggestRecipes from "../Services/Queries/SuggestRecipes";
 
@@ -12,7 +12,7 @@ export interface searchState {
     status: string,
     historyStatus: string,
     errors: string,
-    pagination: pageInfo,
+    pagination: PageInfo,
     showFullResults: boolean,
     searchBy: string,
     searchText: string,

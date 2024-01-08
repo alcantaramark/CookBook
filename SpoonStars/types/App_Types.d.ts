@@ -15,7 +15,7 @@ export interface recipeTag{
     preferred: boolean
 }
 
-export interface pageInfo{
+export interface PageInfo{
     startCursor: string,
     endCursor: string,
     hasNextPage: boolean,
@@ -25,6 +25,11 @@ export interface pageInfo{
 interface Suggestions {
     node: recipe,
     cursor: string
+}
+
+interface RecipeSearch{
+    edges: Suggestions[],
+    pageInfo: PageInfo
 }
 
 export type RootStackParamList = {

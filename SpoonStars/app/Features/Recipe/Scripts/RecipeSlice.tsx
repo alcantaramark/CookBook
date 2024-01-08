@@ -3,7 +3,7 @@ import SearchRecipes from "../Services/Queries/SearchRecipes";
 import { RootState } from "../../../Redux/Store";
 import recipePreference from '../Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { recipe, recipeTag, pageInfo } from '../../../../types/App_Types';
+import { recipe, recipeTag, PageInfo } from '../../../../types/App_Types';
 
 export interface recipesState {
     recipes: recipePayload[],
@@ -11,7 +11,7 @@ export interface recipesState {
     status: string,
     tags: recipeTag[],
     preferenceStatus: string,
-    pagination: pageInfo,
+    pagination: PageInfo,
     errors: string
 };
 
