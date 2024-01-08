@@ -32,6 +32,7 @@ import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
 import { RootStackParamList } from './../types/App_Types';
 import RecipeMain from './Features/Recipe/Components/RecipeMain';
 
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;

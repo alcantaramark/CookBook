@@ -11,6 +11,7 @@ import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
+import { useSuggestRecipesQuery } from '../../Api/SearchApi'
 
 
 export interface FullResultsProps{
@@ -31,7 +32,11 @@ const FullResults: FC<FullResultsProps> = () =>{
     const { navigate } = useNavigation<StackNavigation>();
     const { MasonryLoader } = useLoading();
     
-
+    //RTK Query
+    const { data, isLoading, error } = useSuggestRecipesQuery({
+        query: "Chicken",
+        recordPerPage: 50
+    })
     
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
@@ -64,6 +69,9 @@ const FullResults: FC<FullResultsProps> = () =>{
         return showError(searchErrors);
     if (searchStatus === 'loading')
         return MasonryLoader();
+
+    //console.log('data', data?.recipeSearch?.edges.length);
+    console.log('error', error);
 
     return (
         <GestureHandlerRootView>
