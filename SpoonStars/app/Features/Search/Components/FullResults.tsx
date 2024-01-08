@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { Card } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
 import { useAppSelector } from './../../../Redux/Hooks';
@@ -7,7 +7,7 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import SearchHelper from '../Scripts/Search';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StackNavigation } from './../../../../types/App_Types';
+import { StackNavigation, Suggestions } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
@@ -35,7 +35,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     //RTK Query
     const { data, isLoading, error } = useSuggestRecipesQuery({
         query: "Chicken",
-        recordPerPage: 2
+        recordPerPage: 20
     })
     
     const renderSuggestions = (({item}:any) => {
@@ -70,15 +70,24 @@ const FullResults: FC<FullResultsProps> = () =>{
     if (searchStatus === 'loading')
         return MasonryLoader();
 
-    console.log('data', data?.recipeSearch.edges[0].node.name);
-    
+    console.log('data fron call', data?.length);
+
+    if (isLoading){
+        return (MasonryLoader());
+    }
+
+    if (error != undefined){
+        console.log(error);
+        return (showError(error as string));
+    }
+
     return (
         <GestureHandlerRootView>
             <View style={styles.flashListStyle}>
                 <MasonryList
-                    data={searchSuggestions}
+                    data={data as Suggestions[]}
                     numColumns={3}
-                    keyExtractor={(item: suggestionsPayload) => item.node.id}
+                    keyExtractor={(item: Suggestions) => item.node.id}
                     renderItem={renderSuggestions}
                     style={{alignSelf: 'stretch'}}
                     contentContainerStyle={{

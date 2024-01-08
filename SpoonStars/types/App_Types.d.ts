@@ -22,6 +22,11 @@ export interface pageInfo{
     hasPreviousPage: boolean
 }
 
+interface Suggestions {
+    node: recipe,
+    cursor: string
+}
+
 export type RootStackParamList = {
     Home: undefined;
     Details: { id: string };

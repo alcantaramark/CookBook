@@ -1,20 +1,17 @@
 import { gql } from "graphql-request";
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
-import { recipe } from '../../../types/App_Types';
+import { Suggestions } from '../../../types/App_Types';
 import { RootState } from "app/Redux/Store";
 import Config from 'react-native-config';
 
-interface suggestRecipesResponse{
+interface SuggestRecipesResponse{
     recipeSearch: {
-        edges: suggestionsPayload[]
+        edges: Suggestions[]
     }
 }
 
-interface suggestionsPayload {
-    node: recipe,
-    cursor: string
-}
+
 
 export const searchApi = createApi({
     baseQuery: graphqlRequestBaseQuery({
@@ -26,13 +23,14 @@ export const searchApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
+        customErrors: () => "Error Handling Request"
     }),
     endpoints: (builder) => ({
-        suggestRecipes: builder.query<suggestRecipesResponse, {
+        suggestRecipes: builder.query<Suggestions[], {
             query: string, recordPerPage: Number
         }>({
             query: ({query, recordPerPage}) => ({
-                document: gql `query Search($query: String = "" $recordPerPage: Int = 10){
+                document: gql `query Search($query: String = "" $recordPerPage: Int = 20){
                     recipeSearch(query: $query
                         first: $recordPerPage ){
                         edges{
@@ -49,6 +47,7 @@ export const searchApi = createApi({
                     recordPerPage
                 }
             }),
+            transformResponse: (response: SuggestRecipesResponse) => response.recipeSearch.edges,
         }),
     }),
 });
