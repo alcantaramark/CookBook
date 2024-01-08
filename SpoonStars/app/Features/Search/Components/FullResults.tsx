@@ -35,7 +35,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     //RTK Query
     const { data, isLoading, error } = useSuggestRecipesQuery({
         query: "Chicken",
-        recordPerPage: 50
+        recordPerPage: 2
     })
     
     const renderSuggestions = (({item}:any) => {
@@ -70,9 +70,8 @@ const FullResults: FC<FullResultsProps> = () =>{
     if (searchStatus === 'loading')
         return MasonryLoader();
 
-    //console.log('data', data?.recipeSearch?.edges.length);
-    console.log('error', error);
-
+    console.log('data', data?.recipeSearch.edges[0].node.name);
+    
     return (
         <GestureHandlerRootView>
             <View style={styles.flashListStyle}>

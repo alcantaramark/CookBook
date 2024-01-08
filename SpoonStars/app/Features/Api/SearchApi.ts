@@ -6,9 +6,9 @@ import { RootState } from "app/Redux/Store";
 import Config from 'react-native-config';
 
 interface suggestRecipesResponse{
-    
+    recipeSearch: {
         edges: suggestionsPayload[]
-    
+    }
 }
 
 interface suggestionsPayload {
@@ -24,9 +24,6 @@ export const searchApi = createApi({
             headers.set('Content-Type', "application/json");
             headers.set('sg-user', state.apiConfig.config.suggesticUserId);
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
-
-            console.log('sg_user', state.apiConfig.config.suggesticUserId);
-            console.log('Authorization', state.apiConfig.config.suggesticUserId);
             return headers;
         },
     }),
@@ -34,7 +31,7 @@ export const searchApi = createApi({
         suggestRecipes: builder.query<suggestRecipesResponse, {
             query: string, recordPerPage: Number
         }>({
-            query: () => ({
+            query: ({query, recordPerPage}) => ({
                 document: gql `query Search($query: String = "" $recordPerPage: Int = 10){
                     recipeSearch(query: $query
                         first: $recordPerPage ){
@@ -46,8 +43,12 @@ export const searchApi = createApi({
                             }
                         }
                     }
-                }`
-            })
+                }`,
+                variables: {
+                    query, 
+                    recordPerPage
+                }
+            }),
         }),
     }),
 });
