@@ -1,17 +1,19 @@
 import { FC, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, RefreshControl } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
-import { useAppSelector } from './../../../Redux/Hooks';
+import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, 
+    selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
+import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
-import SearchHelper from '../Scripts/Search';
-import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigation, Suggestions } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
-import { useSuggestRecipesQuery } from '../../Api/SearchApi'
+import { searchApi, useSuggestRecipesQuery } from '../../Api/SearchApi';
+import { UIActivityIndicator } from 'react-native-indicators';
+
+
 
 
 export interface FullResultsProps{
@@ -21,9 +23,11 @@ export interface FullResultsProps{
 const FullResults: FC<FullResultsProps> = () =>{
     //const searchSuggestions = useAppSelector(selectSearchSuggestions);
     const searchText = useAppSelector(selectSearchText);
+    const dispatch = useAppDispatch();
     // const searchStatus = useAppSelector(selectSearchStatus);
     // const searchPageInfo = useAppSelector(selectSearchPageInfo);
     // const searchErrors = useAppSelector(selectSearchErrors);
+    
 
     //const { search } = SearchHelper();
     const [lastRecord, setLastRecord] = useState<string>("");
@@ -34,7 +38,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     //RTK Query
     const { data, isLoading, error, refetch } = useSuggestRecipesQuery({
         query: searchText,
-        recordPerPage: 20,
+        recordPerPage: 50,
         endCursor: lastRecord
     })
     
@@ -53,25 +57,23 @@ const FullResults: FC<FullResultsProps> = () =>{
         );
     })
 
-    // const handleLoadMore = async () => {
-    //     if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
-    //         await search(true, searchText);
-    //     }
-    // }
-
-    // const footer = () =>{
-    //     if (searchStatus === 'loading' && searchSuggestions.length > 0)
-    //         return (<UIActivityIndicator size={30} />)
-    // }   
-
     
-    // if (searchErrors !== '')
-    //     return showError(searchErrors);
-    // if (searchStatus === 'loading')
-    //     return MasonryLoader();
+
+    const footer = () =>{
+        if (isLoading){
+            return (<UIActivityIndicator size={30} />);
+        }
+    }   
 
     const handleLoadMore = async () => {
-        setLastRecord(data!.pageInfo.endCursor);
+        if (!isLoading){
+            setLastRecord(data!.pageInfo.endCursor);
+        }
+    }
+
+    const handleOnRefresh = () => {
+        dispatch(searchApi.util.resetApiState());
+        refetch();
     }
 
     if (isLoading){
@@ -81,8 +83,8 @@ const FullResults: FC<FullResultsProps> = () =>{
     if (error != undefined){
         return (showError(error as string));
     }
-    console.log(data);
 
+    
     return (
         <GestureHandlerRootView>
             <View style={styles.flashListStyle}>
@@ -95,10 +97,9 @@ const FullResults: FC<FullResultsProps> = () =>{
                     contentContainerStyle={{
                         alignSelf: 'stretch'
                     }}
-                    onRefresh={() => refetch()}
-                    onEndReachedThreshold={0.8}
+                    onRefresh={handleOnRefresh}
                     onEndReached={handleLoadMore}
-                    // ListFooterComponent={footer()}
+                    ListFooterComponent={footer()}
                 /> 
             </View> 
         </GestureHandlerRootView>

@@ -21,7 +21,7 @@ export const searchApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
-        customErrors: ({message}) => message
+        customErrors: () => "error handling request"
     }),
     endpoints: (builder) => ({
         suggestRecipes: builder.query<RecipeSearch, { query: string, recordPerPage: Number, endCursor: string}>({
@@ -29,14 +29,17 @@ export const searchApi = createApi({
                 return endpointName;
             },
             merge: (currentCache, newItems) => {
-                currentCache.edges.push(...newItems.edges);
+                currentCache.edges.push(...newItems.edges.filter(x => !currentCache.edges.some(c => c.node.id === x.node.id)));
+                currentCache.pageInfo = newItems.pageInfo;
             },
-            forceRefetch: ({ currentArg, previousArg }) => currentArg !== previousArg,
+            forceRefetch: ({ currentArg, previousArg }) => { 
+                return currentArg !== previousArg 
+            },
             query: ({query, recordPerPage, endCursor}) => ({
                 document: gql `query Search($query: String = "" $recordPerPage: Int = 20 $endCursor: String = ""){
                     recipeSearch(query: $query
-                        after: $endCursor
-                        first: $recordPerPage){
+                        first: $recordPerPage
+                        after: $endCursor){
                         edges{
                             node{
                                 name
@@ -55,7 +58,8 @@ export const searchApi = createApi({
                 }`,
                 variables: {
                     query, 
-                    recordPerPage
+                    recordPerPage,
+                    endCursor
                 }
             }),
             transformResponse: (response: SuggestRecipesResponse) => response   .recipeSearch,

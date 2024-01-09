@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from 'react'
+import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
@@ -6,7 +6,7 @@ import { selectSearchSuggestions, suggestionsPayload, selectSearchText,
     selectShowListResults, setShowListResults, selectSearchPageInfo } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
-import { StackNavigation } from './../../../../types/App_Types';
+import { StackNavigation, Suggestions } from './../../../../types/App_Types';
 import { useAppTheme } from './../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +16,7 @@ import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
+import { searchApi, useSuggestRecipesQuery } from '../../Api/SearchApi';
 
 
 interface PreviewResultsProps {}
@@ -37,6 +38,14 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     const { navigate } = useNavigation<StackNavigation>();
     const dispatch = useAppDispatch();
+
+    //RTK
+    const [lastRecord, setLastRecord] = useState<string>('');
+    const { data, isLoading, error } = useSuggestRecipesQuery({
+        query: searchText,
+        recordPerPage: 5,
+        endCursor: lastRecord
+    })
     
     const { colors: { primary }} = useAppTheme();    
 
@@ -56,7 +65,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const footerComponent = () => {
-        if (showListResults || searchSuggestions.length == 0){ 
+        if (isLoading){ 
             return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
         }
         else {
@@ -85,23 +94,30 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         }
     }
 
+    if (isLoading){
+        return (SearchLoader());
+    }
+    
+    if (error != undefined){
+        return (showError(error as string));
+    }
+
+    if (data!.edges.length == 0){
+        return (<HistoryResults />);
+    }
+
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
-            { searchErrors !== '' && showError(searchErrors)}
-            { searchErrors === '' && searchSuggestions.length == 0 && <HistoryResults />}
-            { searchErrors === '' && searchSuggestions.length > 0 &&
-                <FlashList
-                    data={searchSuggestions}
-                    keyExtractor={(item: suggestionsPayload):string => item.node.id}
-                    renderItem={renderItem}
-                    ListFooterComponent={footerComponent}
-                    onEndReached={handleLoadMore}
-                    estimatedItemSize={200}
-                    estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-                />
-            }
-            { (searchStatus === 'loading' && searchSuggestions.length == 0) && SearchLoader() }
+            <FlashList
+                data={data!.edges as Suggestions[] }
+                keyExtractor={(item: suggestionsPayload):string => item.node.id}
+                renderItem={renderItem}
+                ListFooterComponent={footerComponent}
+                //onEndReached={handleLoadMore}
+                estimatedItemSize={200}
+                estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+            />
         </View>
     </GestureHandlerRootView>);
 }

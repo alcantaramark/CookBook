@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import SearchHelper from './../Scripts/Search';
 import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
+import { searchApi } from '../../Api/SearchApi';
 
 interface SearchBarProps{
 
@@ -35,18 +36,21 @@ const SearchBar: FC<SearchBarProps> = () => {
     
     const handleInputSearchChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setSearchValue(e.nativeEvent.text);
+        dispatch(searchApi.util.resetApiState());
+        dispatch(setShowListResults(e.nativeEvent.text === '' ? false : true));
+        
     }
 
     const handleOnBlur = () => {
-        setSearchValue('');
-        dispatch(setIsSearching(false));
-        dispatch(setSearchText(''));
-        autocompleteField.current.setNativeProps({ text : "" });
+        // setSearchValue('');
+        // dispatch(setIsSearching(false));
+        // dispatch(setSearchText(''));
+        // autocompleteField.current.setNativeProps({ text : "" });
     }
 
     const handleOnSubmit = async () => {
-        await dispatch(saveSearchHistory(searchText));  
-        performSearch(searchText);
+        // await dispatch(saveSearchHistory(searchText));  
+        // performSearch(searchText);
     }
 
     const performSearch =  async (text: string) => {
@@ -69,11 +73,20 @@ const SearchBar: FC<SearchBarProps> = () => {
       }
 
 
-    // useEffect(() => {
-    //     performSearch(debouncedValue);
-    // }, [debouncedValue])
+    useEffect(() => {
+      dispatch(searchApi.util.resetApiState());
+      dispatch(setSearchText(searchValue));
+    }, [debouncedValue])
 
     useEffect(() => autocompleteField.current.focus(), []);
+
+    const handleBackOnPress = () => {
+      dispatch(setShowListResults(false));
+      dispatch(searchApi.util.resetApiState());
+      dispatch(setSearchText(''));
+      navigate('Home');
+    }
+
     return (
         <View style={styles.searchInput}>
             <TextInput
@@ -91,7 +104,7 @@ const SearchBar: FC<SearchBarProps> = () => {
                 left={ 
                   <TextInput.Icon icon={() => <MaterialCommunityIcons 
                       name='arrow-left-thin' 
-                      onPress={() => navigate('Home')} 
+                      onPress={handleBackOnPress} 
                       style={styles.searchIconBack}
                       />}
                   />

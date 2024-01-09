@@ -6,7 +6,8 @@ import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 
 import { selectShowFullResults, selectIsSearching,
     fetchSearchHistory, setSearchBy, selectSearchSuggestions, clearPaging,
-    selectSearchBy, selectSearchText, setShowListResults } 
+    selectSearchBy, selectSearchText, setShowListResults, 
+    selectShowListResults} 
     from '../../Search/Scripts/SearchSlice';
 import PreviewResults from '../../Search/Components/PreviewResults';
 import FullResults from '../../Search/Components/FullResults';
@@ -23,6 +24,7 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
   const searchBy = useAppSelector(selectSearchBy);
   const searchText = useAppSelector(selectSearchText);
   const isSearching = useAppSelector(selectIsSearching);
+  const showListResults = useAppSelector(selectShowListResults);
   
   const { search } = SearchHelper();
   const dispatch = useAppDispatch();
@@ -75,12 +77,6 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
     }
     await dispatch(fetchSearchHistory(text));
   }
-
-  const mainView = () => {
-    //return showFullResults ? <FullResults /> : <PreviewResults />
-    return <FullResults />
-  }
-
   return (
     <View>
       <View style={styles.container}>
@@ -97,7 +93,7 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
             theme={useAppTheme}
           />
       </View> 
-      { mainView() }
+      { showListResults ? <PreviewResults /> : <FullResults /> }
     </View>
 )};
 
