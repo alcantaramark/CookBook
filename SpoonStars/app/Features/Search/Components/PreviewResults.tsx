@@ -41,9 +41,12 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     //RTK
     const [lastRecord, setLastRecord] = useState<string>('');
-    const { data, isLoading, error } = useSuggestRecipesQuery({
+    const [recordPerPage, setRecordPerPage] = useState<Number>(5);
+    const [showAll, setShowAll] = useState<boolean>(false);
+
+    const { data, isLoading, error, isFetching } = useSuggestRecipesQuery({
         query: searchText,
-        recordPerPage: 5,
+        recordPerPage: recordPerPage,
         endCursor: lastRecord
     })
     
@@ -65,32 +68,55 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const footerComponent = () => {
-        if (isLoading){ 
-            return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
+        // if (isLoading){ 
+        //     return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
+        // }
+        // else {
+        //     return(
+        //         <KeyboardAvoidingView
+        //             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        //         >
+        //             <TouchableOpacity style={styles.footer} onPress={showAllResults}>
+        //                 <Text style={{color: primary}}>See all Results</Text>
+        //             </TouchableOpacity>
+        //         </KeyboardAvoidingView>
+        //     );
+        // }
+        if (isFetching){
+            return (<UIActivityIndicator  size={30} />);
         }
-        else {
-            return(
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                >
-                    <TouchableOpacity style={styles.footer} onPress={showAllResults}>
-                        <Text style={{color: primary}}>See all Results</Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
-            );
+        if (showAll){
+            return null;
         }
+
+        return(
+            <TouchableOpacity style={styles.footer} onPress={showAllResults}>
+                <Text style={{color: primary}}>See all Results</Text>
+            </TouchableOpacity>
+        );
     }
 
     const showAllResults = () => {
-        dispatch(setShowListResults(true));
-        search(true, searchText);
+        // dispatch(setShowListResults(true));
+        // search(true, searchText);
+        setShowAll(true);
+        if (!isLoading){
+            setLastRecord(data!.pageInfo.endCursor);
+            setRecordPerPage(10);
+        }
     }
 
     const handleLoadMore = async () => {
-        if (!showListResults)
-            return;
-        if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
-            await search(true, searchText);
+        // if (!showListResults)
+        //     return;
+        // if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
+        //     await search(true, searchText);
+        // }
+
+        if (showAll){
+            if (!isFetching){
+                setLastRecord(data!.pageInfo.endCursor);   
+            }
         }
     }
 
@@ -114,7 +140,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
                 keyExtractor={(item: suggestionsPayload):string => item.node.id}
                 renderItem={renderItem}
                 ListFooterComponent={footerComponent}
-                //onEndReached={handleLoadMore}
+                onEndReached={handleLoadMore}
                 estimatedItemSize={200}
                 estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
             />

@@ -36,9 +36,6 @@ const SearchBar: FC<SearchBarProps> = () => {
     
     const handleInputSearchChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
         setSearchValue(e.nativeEvent.text);
-        dispatch(searchApi.util.resetApiState());
-        dispatch(setShowListResults(e.nativeEvent.text === '' ? false : true));
-        
     }
 
     const handleOnBlur = () => {
@@ -53,29 +50,30 @@ const SearchBar: FC<SearchBarProps> = () => {
         // performSearch(searchText);
     }
 
-    const performSearch =  async (text: string) => {
-        if (!isSearching)
-          return;
+    // const performSearch =  async (text: string) => {
+    //     if (!isSearching)
+    //       return;
     
-        dispatch(setIsSearching(true));
+    //     dispatch(setIsSearching(true));
 
-        if (searchText === text){ //enter pressed
-          dispatch(setShowFullResults(false));
-          dispatch(setShowListResults(true));
-          dispatch(clearPaging());
-          search(true, text);
-        }
-        else { //normal course of typing and searching
-          dispatch(setShowFullResults(false));
-          dispatch(setShowListResults(false));
-          search(false, text);
-        }
-      }
+    //     if (searchText === text){ //enter pressed
+    //       dispatch(setShowFullResults(false));
+    //       dispatch(setShowListResults(true));
+    //       dispatch(clearPaging());
+    //       search(true, text);
+    //     }
+    //     else { //normal course of typing and searching
+    //       dispatch(setShowFullResults(false));
+    //       dispatch(setShowListResults(false));
+    //       search(false, text);
+    //     }
+    //   }
 
 
     useEffect(() => {
       dispatch(searchApi.util.resetApiState());
       dispatch(setSearchText(searchValue));
+      dispatch(setShowListResults(searchValue === '' ? false : true));
     }, [debouncedValue])
 
     useEffect(() => autocompleteField.current.focus(), []);
