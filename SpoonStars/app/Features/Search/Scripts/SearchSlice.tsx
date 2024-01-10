@@ -48,7 +48,7 @@ const initialState: searchState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    showFullResults: true,
+    showFullResults: false,
     searchBy: 'name',
     searchText: '',
     showListResults: false,

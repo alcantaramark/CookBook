@@ -1,9 +1,7 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
-import { StyleSheet, View, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
-    selectSearchHistoryStatus, selectSearchStatus, selectSearchErrors,
-    selectShowListResults, setShowListResults, selectSearchPageInfo } from '../Scripts/SearchSlice';
+import { suggestionsPayload, selectSearchText, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, Suggestions } from './../../../../types/App_Types';
@@ -11,28 +9,21 @@ import { useAppTheme } from './../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
-import SearchHelper from '../Scripts/Search';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
-import { searchApi, useSuggestRecipesQuery } from '../../Api/SearchApi';
+import { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery } from '../../Api/SearchApi';
 
 
 interface PreviewResultsProps {}
 
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
-    const searchSuggestions = useAppSelector(selectSearchSuggestions);
-    const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
-    const searchText = useAppSelector(selectSearchText);
-    const searchStatus = useAppSelector(selectSearchStatus);
-    const searchErrors = useAppSelector(selectSearchErrors);
-    const showListResults = useAppSelector(selectShowListResults);
-    const searchPageInfo = useAppSelector(selectSearchPageInfo);
     
-
-    const { search } = SearchHelper();
+    const searchText = useAppSelector(selectSearchText);
+    const showFullResults = useAppSelector(selectShowFullResults);
+    const searchBy = useAppSelector(selectSearchBy);
     const { SearchLoader } = useLoading();
     const { showError } = useErrorHandler();
 
@@ -42,13 +33,18 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     //RTK
     const [lastRecord, setLastRecord] = useState<string>('');
     const [recordPerPage, setRecordPerPage] = useState<Number>(5);
-    const [showAll, setShowAll] = useState<boolean>(false);
-
-    const { data, isLoading, error, isFetching } = useSuggestRecipesQuery({
+    
+    const { data, isLoading, error, isFetching } = useSuggestRecipesByNameQuery({
         query: searchText,
         recordPerPage: recordPerPage,
         endCursor: lastRecord
-    })
+    }, {skip: searchBy === 'name'});
+
+    // const { data, isLoading, error, isFetching } = useSuggestRecipesByIngredientsQuery({
+    //     query: [],
+    //     recordPerPage: recordPerPage,
+    //     endCursor: lastRecord
+    // }, {skip: searchBy === 'ingredients'});
     
     const { colors: { primary }} = useAppTheme();    
 
@@ -68,24 +64,10 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const footerComponent = () => {
-        // if (isLoading){ 
-        //     return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
-        // }
-        // else {
-        //     return(
-        //         <KeyboardAvoidingView
-        //             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        //         >
-        //             <TouchableOpacity style={styles.footer} onPress={showAllResults}>
-        //                 <Text style={{color: primary}}>See all Results</Text>
-        //             </TouchableOpacity>
-        //         </KeyboardAvoidingView>
-        //     );
-        // }
         if (isFetching){
             return (<UIActivityIndicator  size={30} />);
         }
-        if (showAll){
+        if (showFullResults){
             return null;
         }
 
@@ -97,9 +79,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const showAllResults = () => {
-        // dispatch(setShowListResults(true));
-        // search(true, searchText);
-        setShowAll(true);
+        dispatch(setShowFullResults(true));
         if (!isLoading){
             setLastRecord(data!.pageInfo.endCursor);
             setRecordPerPage(10);
@@ -107,13 +87,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const handleLoadMore = async () => {
-        // if (!showListResults)
-        //     return;
-        // if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
-        //     await search(true, searchText);
-        // }
-
-        if (showAll){
+        if (showFullResults){
             if (!isFetching){
                 setLastRecord(data!.pageInfo.endCursor);   
             }

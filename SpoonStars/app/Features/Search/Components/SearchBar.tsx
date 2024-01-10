@@ -1,10 +1,10 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { TextInput } from 'react-native-paper'
-import { Dimensions, NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View } from 'react-native';
+import { Dimensions, NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View, unstable_batchedUpdates } from 'react-native';
 import useDebounce from '../../Shared/Hooks/useDebounce';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { saveSearchHistory, selectSearchText, setShowFullResults, selectIsSearching, setIsSearching,
-clearPaging, setShowListResults, setSearchText } from '../Scripts/SearchSlice';
+import { saveSearchHistory, selectSearchText, setShowFullResults, selectShowFullResults, selectIsSearching,
+setShowListResults, setSearchText } from '../Scripts/SearchSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import SearchHelper from './../Scripts/Search';
 import { StackNavigation } from './../../../../types/App_Types';
@@ -22,8 +22,7 @@ const SearchBar: FC<SearchBarProps> = () => {
     const { search } = SearchHelper();
     const { navigate } = useNavigation<StackNavigation>();
     
-    const searchText = useAppSelector(selectSearchText);
-    const isSearching = useAppSelector(selectIsSearching);
+    
     const dispatch = useAppDispatch();
 
     const handleSearchOnFocus = async () => {
@@ -82,6 +81,7 @@ const SearchBar: FC<SearchBarProps> = () => {
       dispatch(setShowListResults(false));
       dispatch(searchApi.util.resetApiState());
       dispatch(setSearchText(''));
+      dispatch(setShowFullResults(false));
       navigate('Home');
     }
 

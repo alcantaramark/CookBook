@@ -24,7 +24,47 @@ export const searchApi = createApi({
         customErrors: () => "error handling request"
     }),
     endpoints: (builder) => ({
-        suggestRecipes: builder.query<RecipeSearch, { query: string, recordPerPage: Number, endCursor: string}>({
+        suggestRecipesByIngredients: builder.query<RecipeSearch, { query: string[], recordPerPage: Number, endCursor: string}>({
+            serializeQueryArgs: ( { endpointName } ) => {
+                return endpointName;
+            },
+            merge: (currentCache, newItems) => {
+                currentCache.edges.push(...newItems.edges.filter(x => !currentCache.edges.some(c => c.node.id === x.node.id)));
+                currentCache.pageInfo = newItems.pageInfo;
+            },
+            forceRefetch: ({ currentArg, previousArg }) => { 
+                return currentArg !== previousArg 
+            },
+            query: ({query, recordPerPage, endCursor}) => ({
+                document: gql `query Search($query: [String!]  $recordPerPage: Int = 20 $endCursor: String = ""){
+                    searchRecipesByIngredients(mustIngredients: $query
+                        first: $recordPerPage
+                        after: $endCursor){
+                        edges{
+                            node{
+                                name
+                                id
+                                mainImage        
+                            }
+                            cursor
+                        }
+                        pageInfo{
+                            startCursor
+                            endCursor
+                            hasPreviousPage
+                            hasNextPage
+                        }
+                    }
+                }`,
+                variables: {
+                    query, 
+                    recordPerPage,
+                    endCursor
+                }
+            }),
+            transformResponse: (response: SuggestRecipesResponse) => response.recipeSearch,
+        }),
+        suggestRecipesByName: builder.query<RecipeSearch, { query: string, recordPerPage: Number, endCursor: string}>({
             serializeQueryArgs: ( { endpointName }) => {
                 return endpointName;
             },
@@ -62,9 +102,9 @@ export const searchApi = createApi({
                     endCursor
                 }
             }),
-            transformResponse: (response: SuggestRecipesResponse) => response   .recipeSearch,
+            transformResponse: (response: SuggestRecipesResponse) => response.recipeSearch,
         }),
-    }),
+    })
 });
 
-export const { useSuggestRecipesQuery } = searchApi;
+export const { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery } = searchApi;

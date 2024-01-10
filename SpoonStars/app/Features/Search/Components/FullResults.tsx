@@ -10,7 +10,7 @@ import { StackNavigation, Suggestions } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
-import { searchApi, useSuggestRecipesQuery } from '../../Api/SearchApi';
+import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
 import { UIActivityIndicator } from 'react-native-indicators';
 
 
@@ -36,7 +36,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     const { MasonryLoader } = useLoading();
     
     //RTK Query
-    const { data, isLoading, error, refetch } = useSuggestRecipesQuery({
+    const { data, isLoading, error, refetch } = useSuggestRecipesByNameQuery({
         query: searchText,
         recordPerPage: 50,
         endCursor: lastRecord
