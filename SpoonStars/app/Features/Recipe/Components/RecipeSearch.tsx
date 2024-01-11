@@ -5,8 +5,8 @@ import { useAppTheme } from '../../../App'
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 
 import { setSearchBy, selectSearchBy, selectShowListResults } from '../../Search/Scripts/SearchSlice';
-import PreviewResults from '../../Search/Components/PreviewResults';
-import FullResults from '../../Search/Components/FullResults';
+import PreviewResultsByName from '../../Search/Components/PreviewResultsByName';
+import FullResultsByName from '../../Search/Components/FullResultsByName';
 import SearchHelper from '../../Search/Scripts/Search';
 import SearchBar from '../../Search/Components/SearchBar';
 import { SearchScreenProps } from '../../../../types/App_Types';
@@ -53,8 +53,19 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
     <View>
       <View style={styles.container}>
           <SearchBar />
+          <SegmentedButtons 
+            value={searchBy}
+            style={styles.searchBy}
+            buttons={[
+              { value: 'name', label: 'Name', checkedColor: primary },
+              { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
+            ]}
+            onValueChange={(val) => dispatch(setSearchBy(val))}
+            density='high'
+            theme={useAppTheme}
+          />
       </View> 
-      { showListResults ? <PreviewResults /> : <FullResults /> }
+      { showListResults ? <PreviewResultsByName /> : <FullResultsByName /> }
     </View>
 )};
 

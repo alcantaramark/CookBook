@@ -1,11 +1,11 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { Avatar, SegmentedButtons, Text } from 'react-native-paper';
+import { Avatar, Text } from 'react-native-paper';
 import { suggestionsPayload, selectSearchText, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
-import { StackNavigation, Suggestions } from './../../../../types/App_Types';
-import { useAppTheme } from './../../../App';
+import { StackNavigation, Suggestions } from '../../../../types/App_Types';
+import { useAppTheme } from '../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -17,10 +17,10 @@ import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
 
 
 
-interface PreviewResultsProps {}
+interface PreviewResultsByNameProps {}
 
 
-const PreviewResults: FC<PreviewResultsProps> = () => {
+const PreviewResultsByName: FC<PreviewResultsByNameProps> = () => {
     const searchText = useAppSelector(selectSearchText);
     const showFullResults = useAppSelector(selectShowFullResults);
     const searchBy = useAppSelector(selectSearchBy);
@@ -104,17 +104,6 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
     return(
     <GestureHandlerRootView>
-        <SegmentedButtons 
-            value={searchBy}
-            style={styles.searchBy}
-            buttons={[
-              { value: 'name', label: 'Name', checkedColor: primary },
-              { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
-            ]}
-            onValueChange={(val) => console.log(val)}
-            density='high'
-            theme={useAppTheme}
-          />
         <View style={styles.flashListStyle}>
             <FlashList
                 data={data!.edges as Suggestions[] }
@@ -160,13 +149,7 @@ const styles = StyleSheet.create({
     },
     searchDetails: {
         flexDirection: 'row'
-    },
-    searchBy: {
-        height: 28,
-        margin: 10,
-        borderRadius: 10,
-        
     }
 });
   
-export default PreviewResults;
+export default PreviewResultsByName;
