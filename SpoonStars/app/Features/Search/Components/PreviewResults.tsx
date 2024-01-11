@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { Avatar, Text } from 'react-native-paper';
+import { Avatar, SegmentedButtons, Text } from 'react-native-paper';
 import { suggestionsPayload, selectSearchText, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
@@ -13,14 +13,14 @@ import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
-import { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery } from '../../Api/SearchApi';
+import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
+
 
 
 interface PreviewResultsProps {}
 
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
-    
     const searchText = useAppSelector(selectSearchText);
     const showFullResults = useAppSelector(selectShowFullResults);
     const searchBy = useAppSelector(selectSearchBy);
@@ -38,14 +38,8 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         query: searchText,
         recordPerPage: recordPerPage,
         endCursor: lastRecord
-    }, {skip: searchBy === 'name'});
+    });
 
-    // const { data, isLoading, error, isFetching } = useSuggestRecipesByIngredientsQuery({
-    //     query: [],
-    //     recordPerPage: recordPerPage,
-    //     endCursor: lastRecord
-    // }, {skip: searchBy === 'ingredients'});
-    
     const { colors: { primary }} = useAppTheme();    
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
@@ -105,9 +99,22 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     if (data!.edges.length == 0){
         return (<HistoryResults />);
     }
+    
+    
 
     return(
     <GestureHandlerRootView>
+        <SegmentedButtons 
+            value={searchBy}
+            style={styles.searchBy}
+            buttons={[
+              { value: 'name', label: 'Name', checkedColor: primary },
+              { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
+            ]}
+            onValueChange={(val) => console.log(val)}
+            density='high'
+            theme={useAppTheme}
+          />
         <View style={styles.flashListStyle}>
             <FlashList
                 data={data!.edges as Suggestions[] }
@@ -153,6 +160,12 @@ const styles = StyleSheet.create({
     },
     searchDetails: {
         flexDirection: 'row'
+    },
+    searchBy: {
+        height: 28,
+        margin: 10,
+        borderRadius: 10,
+        
     }
 });
   

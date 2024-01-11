@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Card, SegmentedButtons } from 'react-native-paper';
 import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, 
     selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
+import { useAppTheme } from './../../../App';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigation, Suggestions } from './../../../../types/App_Types';
@@ -21,26 +22,21 @@ export interface FullResultsProps{
 }
 
 const FullResults: FC<FullResultsProps> = () =>{
-    //const searchSuggestions = useAppSelector(selectSearchSuggestions);
     const searchText = useAppSelector(selectSearchText);
     const dispatch = useAppDispatch();
-    // const searchStatus = useAppSelector(selectSearchStatus);
-    // const searchPageInfo = useAppSelector(selectSearchPageInfo);
-    // const searchErrors = useAppSelector(selectSearchErrors);
-    
-
-    //const { search } = SearchHelper();
     const [lastRecord, setLastRecord] = useState<string>("");
     const { showError } = useErrorHandler();
     const { navigate } = useNavigation<StackNavigation>();
     const { MasonryLoader } = useLoading();
-    
+    const { colors: { primary }} = useAppTheme();
+    const [searchBy, setSearchBy] = useState<string>('name');
     //RTK Query
     const { data, isLoading, error, refetch } = useSuggestRecipesByNameQuery({
         query: searchText,
         recordPerPage: 50,
         endCursor: lastRecord
     })
+    
     
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
@@ -84,9 +80,21 @@ const FullResults: FC<FullResultsProps> = () =>{
         return (showError(error as string));
     }
 
-    
     return (
         <GestureHandlerRootView>
+            <View style={{ backgroundColor: primary }}>
+                <SegmentedButtons 
+                    value={searchBy}
+                    style={styles.searchBy}
+                    buttons={[
+                    { value: 'name', label: 'Name', checkedColor: primary },
+                    { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
+                    ]}
+                    onValueChange={(val) => console.log(val)}
+                    density='high'
+                    theme={useAppTheme}
+                />
+            </View>
             <View style={styles.flashListStyle}>
                 <MasonryList
                     data={data?.edges as Suggestions[]}
@@ -117,6 +125,12 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         borderRadius: 0
+    },
+    searchBy: {
+        height: 28,
+        margin: 10,
+        borderRadius: 10,
+        
     }
 });
 
