@@ -5,11 +5,12 @@ import { useAppTheme } from '../../../App'
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 
 import { setSearchBy, selectSearchBy, selectShowListResults } from '../../Search/Scripts/SearchSlice';
-import PreviewResultsByName from '../../Search/Components/PreviewResultsByName';
-import FullResultsByName from '../../Search/Components/FullResultsByName';
-import SearchHelper from '../../Search/Scripts/Search';
+import PreviewResults from '../../Search/Components/PreviewResults';
+import FullResults from '../../Search/Components/FullResults';
+import SearchHelper from '../../Search/Scripts/useSearch';
 import SearchBar from '../../Search/Components/SearchBar';
 import { SearchScreenProps } from '../../../../types/App_Types';
+
 
 
 const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenProps) => { 
@@ -65,7 +66,8 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
             theme={useAppTheme}
           />
       </View> 
-      { showListResults ? <PreviewResultsByName /> : <FullResultsByName /> }
+      { showListResults ? <PreviewResults /> : <FullResults />}
+
     </View>
 )};
 

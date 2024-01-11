@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
-import SearchHelper from '../Scripts/Search';
+import SearchHelper from '../Scripts/useSearch';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FlashList } from '@shopify/flash-list';
 import { ActionSheetIOS } from 'react-native';

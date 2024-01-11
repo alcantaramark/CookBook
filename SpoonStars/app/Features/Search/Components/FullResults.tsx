@@ -12,15 +12,16 @@ import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
 import { UIActivityIndicator } from 'react-native-indicators';
+import useSearch from '../Scripts/useSearch';
 
 
 
 
-export interface FullResultsByNameProps{
+export interface FullResultsProps{
 
 }
 
-const FullResultsByName: FC<FullResultsByNameProps> = () =>{
+const FullResults: FC<FullResultsProps> = () =>{
     const searchText = useAppSelector(selectSearchText);
     const dispatch = useAppDispatch();
     const [lastRecord, setLastRecord] = useState<string>("");
@@ -29,12 +30,7 @@ const FullResultsByName: FC<FullResultsByNameProps> = () =>{
     const { MasonryLoader } = useLoading();
     
     //RTK Query
-    const { data, isLoading, error, refetch } = useSuggestRecipesByNameQuery({
-        query: searchText,
-        recordPerPage: 50,
-        endCursor: lastRecord
-    })
-    
+    const { data, isLoading, error, refetch } = useSearch(50, lastRecord);
     
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
@@ -113,4 +109,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FullResultsByName;
+export default FullResults;

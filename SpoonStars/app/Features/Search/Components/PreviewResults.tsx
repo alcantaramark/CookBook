@@ -17,10 +17,10 @@ import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
 
 
 
-interface PreviewResultsByNameProps {}
+interface PreviewResultsProps {}
 
 
-const PreviewResultsByName: FC<PreviewResultsByNameProps> = () => {
+const PreviewResults: FC<PreviewResultsProps> = () => {
     const searchText = useAppSelector(selectSearchText);
     const showFullResults = useAppSelector(selectShowFullResults);
     const searchBy = useAppSelector(selectSearchBy);
@@ -152,4 +152,4 @@ const styles = StyleSheet.create({
     }
 });
   
-export default PreviewResultsByName;
+export default PreviewResults;

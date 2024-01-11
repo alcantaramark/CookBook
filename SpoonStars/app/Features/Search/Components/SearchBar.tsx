@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { saveSearchHistory, selectSearchText, setShowFullResults, selectShowFullResults, selectIsSearching,
 setShowListResults, setSearchText } from '../Scripts/SearchSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
-import SearchHelper from './../Scripts/Search';
+import SearchHelper from '../Scripts/useSearch';
 import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import { searchApi } from '../../Api/SearchApi';
