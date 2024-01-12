@@ -50,7 +50,7 @@ jobs:
       - name: Tests
         run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
-      #modify connection string in appsettings
+      #modify connection string in appsettings to conform with environment
       - name: Update Connection String and API Keys
         if: | 
             github.event_name != 'pull_request' &&
@@ -70,6 +70,7 @@ jobs:
             env.APP_ENVIRONMENT != 'feature_branch'
         run: |
               dotnet tool install --global dotnet-ef
+              dotnet tool update --global dotnet-ef
               dotnet ef migrations script -o ./script.sql -p ./Backend/SecretCode.Api/SecretCode.Api.csproj --idempotent
               cat ./script.sql
       # Install the cosign tool except on PR
