@@ -1,6 +1,6 @@
 {
     "ConnectionStrings": {
-      "SqlDatabase": "Test Database Production Connection String"
+      "SqlDatabase": "Test Database Production Connection String - test changes"
       },
       "Configurations": {
         "SuggesticUserId": "",
