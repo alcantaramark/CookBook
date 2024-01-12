@@ -37,9 +37,9 @@ jobs:
       - run: echo ${{ env.APP_ENVIRONMENT }}
       
       - name: Setup Dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '7.x.x'
 
       - name: Restore Dependencies
         run: nuget restore ./Backend/SecretCode.sln
@@ -70,7 +70,6 @@ jobs:
             env.APP_ENVIRONMENT != 'feature_branch'
         run: |
               dotnet tool install --global dotnet-ef
-              dotnet tool update --global dotnet-ef
               dotnet ef migrations script -o ./script.sql -p ./Backend/SecretCode.Api/SecretCode.Api.csproj --idempotent
               cat ./script.sql
       # Install the cosign tool except on PR
