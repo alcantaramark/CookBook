@@ -7,7 +7,7 @@ const useSearch = (recordPerPage: number, lastRecord: string) => {
     const searchBy = useAppSelector(selectSearchBy);
     const searchText = useAppSelector(selectSearchText);
 
-    
+    console.log(searchBy)
     if (searchBy === 'name'){
         return useSuggestRecipesByNameQuery({
             query: searchText,
@@ -15,9 +15,8 @@ const useSearch = (recordPerPage: number, lastRecord: string) => {
             endCursor: lastRecord
         })
     }else {
-        console.log('searching by ingredients');
         return useSuggestRecipesByIngredientsQuery({
-            query: searchText.split(' '),
+            ingredients: searchText === '' ? [] :  searchText.split(' '),
             recordPerPage: recordPerPage,
             endCursor: lastRecord
         })

@@ -1,16 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, 
-    selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
-import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
+import { useAppDispatch } from '../../../Redux/Hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StackNavigation, Suggestions } from '../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
-import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
+import { searchApi } from '../../Api/SearchApi';
 import { UIActivityIndicator } from 'react-native-indicators';
 import useSearch from '../Scripts/useSearch';
 
@@ -22,7 +20,6 @@ export interface FullResultsProps{
 }
 
 const FullResults: FC<FullResultsProps> = () =>{
-    const searchText = useAppSelector(selectSearchText);
     const dispatch = useAppDispatch();
     const [lastRecord, setLastRecord] = useState<string>("");
     const { showError } = useErrorHandler();

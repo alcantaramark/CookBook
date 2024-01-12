@@ -1,13 +1,18 @@
 import { gql } from "graphql-request";
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
-import { PageInfo, RecipeSearch, Suggestions } from '../../../types/App_Types';
+import { RecipeSearch } from '../../../types/App_Types';
 import { RootState } from "app/Redux/Store";
 import Config from 'react-native-config';
 
-interface SuggestRecipesResponse{
+interface SuggestRecipesByNameResponse{
     recipeSearch: RecipeSearch
 }
+
+interface SuggestRecipesByIngredientsResponse{
+    searchRecipesByIngredients: RecipeSearch
+}
+
 
 
 
@@ -21,10 +26,10 @@ export const searchApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
-        customErrors: () => "error handling request"
+        customErrors: (error) => error.message
     }),
     endpoints: (builder) => ({
-        suggestRecipesByIngredients: builder.query<RecipeSearch, { query: string[], recordPerPage: Number, endCursor: string}>({
+        suggestRecipesByIngredients: builder.query<RecipeSearch, { ingredients: string[], recordPerPage: Number, endCursor: string}>({
             serializeQueryArgs: ( { endpointName } ) => {
                 return endpointName;
             },
@@ -35,8 +40,8 @@ export const searchApi = createApi({
             forceRefetch: ({ currentArg, previousArg }) => { 
                 return currentArg !== previousArg 
             },
-            query: ({query, recordPerPage, endCursor}) => ({
-                document: gql `query Search($query: [String!]  $recordPerPage: Int = 20 $endCursor: String = ""){
+            query: ({ingredients, recordPerPage, endCursor}) => ({
+                document: gql `query Search($query: [String!]!, $recordPerPage: Int = 20, $endCursor: String = ""){
                     searchRecipesByIngredients(mustIngredients: $query
                         first: $recordPerPage
                         after: $endCursor){
@@ -57,12 +62,12 @@ export const searchApi = createApi({
                     }
                 }`,
                 variables: {
-                    query, 
+                    query: ingredients, 
                     recordPerPage,
                     endCursor
                 }
             }),
-            transformResponse: (response: SuggestRecipesResponse) => response.recipeSearch,
+            transformResponse: (response: SuggestRecipesByIngredientsResponse) => response.searchRecipesByIngredients,
         }),
         suggestRecipesByName: builder.query<RecipeSearch, { query: string, recordPerPage: Number, endCursor: string}>({
             serializeQueryArgs: ( { endpointName }) => {
@@ -76,7 +81,7 @@ export const searchApi = createApi({
                 return currentArg !== previousArg 
             },
             query: ({query, recordPerPage, endCursor}) => ({
-                document: gql `query Search($query: String = "" $recordPerPage: Int = 20 $endCursor: String = ""){
+                document: gql `query Search($query: String = "", $recordPerPage: Int = 20, $endCursor: String = ""){
                     recipeSearch(query: $query
                         first: $recordPerPage
                         after: $endCursor){
@@ -102,7 +107,7 @@ export const searchApi = createApi({
                     endCursor
                 }
             }),
-            transformResponse: (response: SuggestRecipesResponse) => response.recipeSearch,
+            transformResponse: (response: SuggestRecipesByNameResponse) => response.recipeSearch,
         }),
     })
 });

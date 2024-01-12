@@ -20,7 +20,6 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     const searchHistory = useAppSelector(selectSearchHistory);
     const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
     const searchText = useAppSelector(selectSearchText);
-    const { search } = SearchHelper();
     const dispatch = useAppDispatch();
     const { colors: { primary }} = useAppTheme();    
     
@@ -42,7 +41,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     const handleHistorySearch = (query: string) => {
         dispatch(clearPaging());
         dispatch(setShowListResults(true));
-        search(true, query);
+        //search(true, query);
     };
     
     const listHeader = () => {
