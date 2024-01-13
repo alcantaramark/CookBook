@@ -35,7 +35,8 @@ const SearchBar: FC<SearchBarProps> = () => {
     }
 
     const handleOnSubmit = async () => {
-        // await dispatch(saveSearchHistory(searchText));  
+      console.log(autocompleteField.current);
+        await dispatch(saveSearchHistory(autocompleteField.current));  
         // performSearch(searchText);
     }
 

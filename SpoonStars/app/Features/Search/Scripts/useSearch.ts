@@ -3,11 +3,10 @@ import { selectSearchBy, selectSearchText } from "./SearchSlice";
 import { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery } from '../../Api/SearchApi';
 
 
-const useSearch = (recordPerPage: number, lastRecord: string) => {
+const useSearch = (recordPerPage: Number, lastRecord: string) => {
     const searchBy = useAppSelector(selectSearchBy);
     const searchText = useAppSelector(selectSearchText);
 
-    console.log(searchBy)
     if (searchBy === 'name'){
         return useSuggestRecipesByNameQuery({
             query: searchText,

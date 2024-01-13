@@ -3,13 +3,12 @@ import { SegmentedButtons } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../App'
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
-
-import { setSearchBy, selectSearchBy, selectShowListResults } from '../../Search/Scripts/SearchSlice';
+import { setSearchBy, selectSearchBy, selectShowListResults, setShowFullResults } from '../../Search/Scripts/SearchSlice';
 import PreviewResults from '../../Search/Components/PreviewResults';
 import FullResults from '../../Search/Components/FullResults';
-import SearchHelper from '../../Search/Scripts/useSearch';
 import SearchBar from '../../Search/Components/SearchBar';
 import { SearchScreenProps } from '../../../../types/App_Types';
+import { searchApi } from '../../Api/SearchApi';
 
 
 
@@ -50,6 +49,10 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
     }
   })
 
+  const handleSearchByChange = (val: string) => {
+    dispatch(setSearchBy(val));
+  }
+
   return (
     <View>
       <View style={styles.container}>
@@ -61,7 +64,7 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
               { value: 'name', label: 'Name', checkedColor: primary },
               { value: 'ingredients', label: 'Ingredients', checkedColor: primary }
             ]}
-            onValueChange={(val) => dispatch(setSearchBy(val))}
+            onValueChange={(val) => handleSearchByChange(val)}
             density='high'
             theme={useAppTheme}
           />

@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { suggestionsPayload, selectSearchText, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
+import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, Suggestions } from '../../../../types/App_Types';
@@ -13,7 +13,7 @@ import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
-import { searchApi, useSuggestRecipesByNameQuery } from '../../Api/SearchApi';
+import useSearch from '../Scripts/useSearch';
 
 
 
@@ -21,9 +21,7 @@ interface PreviewResultsProps {}
 
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
-    const searchText = useAppSelector(selectSearchText);
     const showFullResults = useAppSelector(selectShowFullResults);
-    const searchBy = useAppSelector(selectSearchBy);
     const { SearchLoader } = useLoading();
     const { showError } = useErrorHandler();
 
@@ -34,13 +32,12 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const [lastRecord, setLastRecord] = useState<string>('');
     const [recordPerPage, setRecordPerPage] = useState<Number>(5);
     
-    const { data, isLoading, error, isFetching } = useSuggestRecipesByNameQuery({
-        query: searchText,
-        recordPerPage: recordPerPage,
-        endCursor: lastRecord
-    });
+    
+    const { data, isLoading, error, isFetching } = useSearch(recordPerPage, lastRecord);
 
     const { colors: { primary }} = useAppTheme();    
+
+    
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (
@@ -61,10 +58,11 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         if (isFetching){
             return (<UIActivityIndicator  size={30} />);
         }
+
         if (showFullResults){
             return null;
         }
-
+        
         return(
             <TouchableOpacity style={styles.footer} onPress={showAllResults}>
                 <Text style={{color: primary}}>See all Results</Text>
