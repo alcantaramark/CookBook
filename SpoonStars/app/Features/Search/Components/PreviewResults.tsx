@@ -31,13 +31,9 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     //RTK
     const [lastRecord, setLastRecord] = useState<string>('');
     const [recordPerPage, setRecordPerPage] = useState<Number>(5);
-    
-    
     const { data, isLoading, error, isFetching } = useSearch(recordPerPage, lastRecord);
-
     const { colors: { primary }} = useAppTheme();    
 
-    
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (

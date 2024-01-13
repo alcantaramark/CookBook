@@ -37,8 +37,8 @@ export const searchApi = createApi({
                 currentCache.edges.push(...newItems.edges.filter(x => !currentCache.edges.some(c => c.node.id === x.node.id)));
                 currentCache.pageInfo = newItems.pageInfo;
             },
-            forceRefetch: ({ currentArg, previousArg }) => { 
-                return currentArg !== previousArg 
+            forceRefetch: ({ currentArg, previousArg }) => {
+                return !(JSON.stringify(currentArg) === JSON.stringify(previousArg));
             },
             query: ({ingredients, recordPerPage, endCursor}) => ({
                 document: gql `query Search($query: [String!]!, $recordPerPage: Int = 20, $endCursor: String = ""){
