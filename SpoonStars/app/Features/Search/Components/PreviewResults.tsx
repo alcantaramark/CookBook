@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchBy} from '../Scripts/SearchSlice';
+import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchText } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, Suggestions } from '../../../../types/App_Types';
@@ -22,6 +22,7 @@ interface PreviewResultsProps {}
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
     const showFullResults = useAppSelector(selectShowFullResults);
+    const searchText = useAppSelector(selectSearchText);
     const { SearchLoader } = useLoading();
     const { showError } = useErrorHandler();
 
@@ -31,7 +32,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     //RTK
     const [lastRecord, setLastRecord] = useState<string>('');
     const [recordPerPage, setRecordPerPage] = useState<Number>(5);
-    const { data, isLoading, error, isFetching } = useSearch(recordPerPage, lastRecord);
+    const { data, isLoading, error, isFetching } = useSearch(lastRecord);
     const { colors: { primary }} = useAppTheme();    
 
 
@@ -81,6 +82,14 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
             }
         }
     }
+    
+    const headerComponent = () => {
+        if (showFullResults || data!.edges.length > 0){
+            return null;
+        }
+
+        return(<HistoryResults />)
+    }
 
     if (isLoading){
         return (SearchLoader());
@@ -93,13 +102,12 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     if (data!.edges.length == 0){
         return (<HistoryResults />);
     }
-    
-    
 
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
             <FlashList
+                ListHeaderComponent={headerComponent}
                 data={data!.edges as Suggestions[] }
                 keyExtractor={(item: suggestionsPayload):string => item.node.id}
                 renderItem={renderItem}
@@ -143,7 +151,7 @@ const styles = StyleSheet.create({
     },
     searchDetails: {
         flexDirection: 'row'
-    }
+    },
 });
   
 export default PreviewResults;

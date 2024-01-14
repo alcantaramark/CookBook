@@ -18,6 +18,7 @@ export interface searchState {
     searchText: string,
     showListResults: boolean,
     isSearching: boolean;
+    recordPerPage: Number
 }
 
 export interface suggestionsPayload {
@@ -52,7 +53,8 @@ const initialState: searchState = {
     searchBy: 'name',
     searchText: '',
     showListResults: false,
-    isSearching: false
+    isSearching: false,
+    recordPerPage: 10
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -158,7 +160,8 @@ export const searchSlice = createSlice({
         },
         setIsSearching: (state, action) => {
             state.isSearching = action.payload;
-        }
+        },
+        setRecordPerPage: (state, action) => state.recordPerPage = action.payload
     },
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {
@@ -263,8 +266,9 @@ export const selectSearchBy = (state: RootState) => state.search.searchBy;
 export const selectSearchText = (state: RootState) => state.search.searchText;
 export const selectShowListResults = (state: RootState) => state.search.showListResults;
 export const selectIsSearching = (state: RootState) => state.search.isSearching;
+export const selectRecordPerPage = (state: RootState) => state.search.recordPerPage;
 
-export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults, setIsSearching } = searchSlice.actions
+export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults, setIsSearching, setRecordPerPage } = searchSlice.actions
 export default searchSlice.reducer;
 
 

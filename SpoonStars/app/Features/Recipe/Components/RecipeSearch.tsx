@@ -1,15 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { SegmentedButtons } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../App'
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
-import { setSearchBy, selectSearchBy, selectShowListResults, setShowFullResults } from '../../Search/Scripts/SearchSlice';
+import { setSearchBy, selectSearchBy, selectShowListResults, selectShowFullResults } from '../../Search/Scripts/SearchSlice';
 import PreviewResults from '../../Search/Components/PreviewResults';
 import FullResults from '../../Search/Components/FullResults';
 import SearchBar from '../../Search/Components/SearchBar';
 import { SearchScreenProps } from '../../../../types/App_Types';
-import { searchApi } from '../../Api/SearchApi';
-
 
 
 const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenProps) => { 
@@ -17,6 +15,7 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
   const { colors: { primary } } = useAppTheme();
   const searchBy = useAppSelector(selectSearchBy);
   const showListResults = useAppSelector(selectShowListResults);
+  const showFullResults = useAppSelector(selectShowFullResults);
   
   const dispatch = useAppDispatch();
 

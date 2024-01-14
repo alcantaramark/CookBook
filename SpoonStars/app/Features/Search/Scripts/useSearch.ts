@@ -1,11 +1,12 @@
 import { useAppSelector } from "../../../Redux/Hooks";
-import { selectSearchBy, selectSearchText } from "./SearchSlice";
-import { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery, searchApi } from '../../Api/SearchApi';
+import { selectSearchBy, selectSearchText, selectRecordPerPage } from "./SearchSlice";
+import { useSuggestRecipesByNameQuery, useSuggestRecipesByIngredientsQuery } from '../../Api/SearchApi';
 
 
-const useSearch = (recordPerPage: Number, lastRecord: string) => {
+const useSearch = (lastRecord: string) => {
     const searchBy = useAppSelector(selectSearchBy);
     const searchText = useAppSelector(selectSearchText);
+    const recordPerPage = useAppSelector(selectRecordPerPage);
 
     if (searchBy === 'name'){
         return useSuggestRecipesByNameQuery({

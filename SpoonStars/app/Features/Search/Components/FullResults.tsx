@@ -27,7 +27,7 @@ const FullResults: FC<FullResultsProps> = () =>{
     const { MasonryLoader } = useLoading();
     
     //RTK Query
-    const { data, isLoading, error, refetch } = useSearch(50, lastRecord);
+    const { data, isLoading, error, refetch } = useSearch(lastRecord);
     
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;

@@ -1,12 +1,11 @@
-import { FC, ReactElement } from 'react'
+import { FC, ReactElement, useEffect } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, setShowFullResults, clearPaging, setShowListResults } from '../Scripts/SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, clearPaging, setShowListResults, fetchSearchHistory } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from './../../../App';
-import SearchHelper from '../Scripts/useSearch';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FlashList } from '@shopify/flash-list';
 import { ActionSheetIOS } from 'react-native';
 
@@ -44,6 +43,13 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         //search(true, query);
     };
     
+    const noResultsFounds = () =>{
+        return(<View style={styles.noResults}>
+                <Text>No results found for "{searchText}"</Text>
+            </View>
+        );
+    }
+
     const listHeader = () => {
         return(
             <View style={styles.headerContainer}>
@@ -53,13 +59,6 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         );
     }
     
-    const noResultsFounds = () =>{
-        return(<View style={styles.noResults}>
-                <Text>No results found for "{searchText}"</Text>
-            </View>
-        );
-    }
-
     const showConfirmActionSheet = () => {
         ActionSheetIOS.showActionSheetWithOptions({
             options: ['Cancel', 'Delete History'],
@@ -71,21 +70,28 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
         });
     }
     
+    const fetchHistory = () => {
+        dispatch(fetchSearchHistory(searchText));
+    }
+
+    useEffect(() => {
+        fetchHistory();
+    }, [searchText])
+
     return (
-        <View style={styles.flashList}>
+        <GestureHandlerRootView style={styles.flashList}>
         { (searchHistoryStatus === 'succeeded' && searchHistory.length > 0) &&
             <FlashList
                 ListHeaderComponent={listHeader}
                 data={searchHistory}
                 keyExtractor={(item: string):string => item}
                 renderItem={renderResultItem}
-                ListFooterComponent={noResultsFounds}
                 estimatedItemSize={10}
-                estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+                estimatedListSize={{ height: 100, width: Dimensions.get('screen').width }}
                 numColumns={1}
             />
         }
-        </View>
+        </GestureHandlerRootView>
     );
 }
 
@@ -93,8 +99,9 @@ const styles = StyleSheet.create({
     flashList: {
         flexGrow: 1,
         flexDirection: 'row',
-        height: 200,
-        width: Dimensions.get('screen').width
+        height: 100,
+        width: Dimensions.get('screen').width,
+        margin: 15
     },
     resultContainer: {
         flexDirection: 'row',
@@ -112,9 +119,6 @@ const styles = StyleSheet.create({
         marginEnd: 20,
         flexDirection: 'row',
         justifyContent: 'space-between'
-        
-    },
-    clearHistory: {
         
     },
     noResults: {
