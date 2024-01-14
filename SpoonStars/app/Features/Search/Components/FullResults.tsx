@@ -11,6 +11,7 @@ import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { searchApi } from '../../Api/SearchApi';
 import { UIActivityIndicator } from 'react-native-indicators';
 import useSearch from '../Scripts/useSearch';
+import { setRecordPerPage, setSearchPageInfo } from '../Scripts/SearchSlice';
 
 
 
@@ -21,13 +22,12 @@ export interface FullResultsProps{
 
 const FullResults: FC<FullResultsProps> = () =>{
     const dispatch = useAppDispatch();
-    const [lastRecord, setLastRecord] = useState<string>("");
     const { showError } = useErrorHandler();
     const { navigate } = useNavigation<StackNavigation>();
     const { MasonryLoader } = useLoading();
     
     //RTK Query
-    const { data, isLoading, error, refetch } = useSearch(lastRecord);
+    const { data, isLoading, error, refetch } = useSearch();
     
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
@@ -54,7 +54,8 @@ const FullResults: FC<FullResultsProps> = () =>{
 
     const handleLoadMore = async () => {
         if (!isLoading){
-            setLastRecord(data!.pageInfo.endCursor);
+            dispatch(setRecordPerPage(50));
+            dispatch(setSearchPageInfo(data!.pageInfo));
         }
     }
 

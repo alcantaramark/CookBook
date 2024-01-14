@@ -3,7 +3,7 @@ import { SegmentedButtons } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 import { useAppTheme } from '../../../App'
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
-import { setSearchBy, selectSearchBy, selectShowListResults, selectShowFullResults } from '../../Search/Scripts/SearchSlice';
+import { setSearchBy, selectSearchBy, selectShowListResults, selectShowFullResults, setRecordPerPage } from '../../Search/Scripts/SearchSlice';
 import PreviewResults from '../../Search/Components/PreviewResults';
 import FullResults from '../../Search/Components/FullResults';
 import SearchBar from '../../Search/Components/SearchBar';

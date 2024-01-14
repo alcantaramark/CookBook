@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchText } from '../Scripts/SearchSlice';
+import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchText, setSearchPageInfo, setRecordPerPage } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
 import { StackNavigation, Suggestions } from '../../../../types/App_Types';
@@ -30,9 +30,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const dispatch = useAppDispatch();
 
     //RTK
-    const [lastRecord, setLastRecord] = useState<string>('');
-    const [recordPerPage, setRecordPerPage] = useState<Number>(5);
-    const { data, isLoading, error, isFetching } = useSearch(lastRecord);
+    const { data, isLoading, error, isFetching } = useSearch();
     const { colors: { primary }} = useAppTheme();    
 
 
@@ -70,15 +68,15 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const showAllResults = () => {
         dispatch(setShowFullResults(true));
         if (!isLoading){
-            setLastRecord(data!.pageInfo.endCursor);
-            setRecordPerPage(10);
+            dispatch(setSearchPageInfo(data!.pageInfo));
+            dispatch(setRecordPerPage(10));
         }
     }
 
     const handleLoadMore = async () => {
         if (showFullResults){
             if (!isFetching){
-                setLastRecord(data!.pageInfo.endCursor);   
+                dispatch(setSearchPageInfo(data!.pageInfo));
             }
         }
     }
@@ -89,6 +87,14 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         }
 
         return(<HistoryResults />)
+    }
+
+    const noResultsFounds = () =>{
+        console.log('emtpy')
+        return(<View style={styles.noResults}>
+                <Text>No results found for "{searchText}"</Text>
+            </View>
+        );
     }
 
     if (isLoading){
@@ -115,6 +121,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
                 onEndReached={handleLoadMore}
                 estimatedItemSize={200}
                 estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+                ListEmptyComponent={noResultsFounds}
             />
         </View>
     </GestureHandlerRootView>);
@@ -152,6 +159,11 @@ const styles = StyleSheet.create({
     searchDetails: {
         flexDirection: 'row'
     },
+    noResults: {
+        flexDirection: 'row',
+        marginTop: 20,
+        alignSelf: 'center'
+    }
 });
   
 export default PreviewResults;

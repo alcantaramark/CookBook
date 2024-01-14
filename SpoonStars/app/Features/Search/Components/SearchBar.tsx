@@ -3,8 +3,9 @@ import { TextInput } from 'react-native-paper'
 import { Dimensions, NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View, unstable_batchedUpdates } from 'react-native';
 import useDebounce from '../../Shared/Hooks/useDebounce';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { saveSearchHistory, selectSearchText, setShowFullResults, selectShowFullResults, selectIsSearching,
-setShowListResults, setSearchText } from '../Scripts/SearchSlice';
+import { saveSearchHistory, setShowFullResults, 
+setShowListResults, setSearchText, 
+setRecordPerPage} from '../Scripts/SearchSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import SearchHelper from '../Scripts/useSearch';
 import { StackNavigation } from './../../../../types/App_Types';
@@ -21,7 +22,6 @@ const SearchBar: FC<SearchBarProps> = () => {
     const autocompleteField = useRef<any>(null);
     const { navigate } = useNavigation<StackNavigation>();
     
-    
     const dispatch = useAppDispatch();
 
     const handleSearchOnFocus = async () => {
@@ -37,12 +37,22 @@ const SearchBar: FC<SearchBarProps> = () => {
     const handleOnSubmit = async () => {
       await dispatch(saveSearchHistory(searchValue));
       dispatch(setShowFullResults(true));
+      dispatch(setRecordPerPage(10));
     }
 
     useEffect(() => {
       dispatch(searchApi.util.resetApiState());
       dispatch(setSearchText(searchValue));
-      dispatch(setShowListResults(searchValue === '' ? false : true));
+      if (searchValue === ''){
+        dispatch(setShowListResults(false));
+        dispatch(setShowFullResults(false));
+        dispatch(setRecordPerPage(50));
+      }
+      else {
+        dispatch(setShowListResults(true));
+        dispatch(setRecordPerPage(5));
+      }
+      
     }, [debouncedValue])
 
     useEffect(() => autocompleteField.current.focus(), []);
@@ -52,6 +62,7 @@ const SearchBar: FC<SearchBarProps> = () => {
       dispatch(searchApi.util.resetApiState());
       dispatch(setSearchText(''));
       dispatch(setShowFullResults(false));
+      dispatch(setRecordPerPage(50));
       navigate('Home');
     }
 

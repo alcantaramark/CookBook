@@ -54,7 +54,7 @@ const initialState: searchState = {
     searchText: '',
     showListResults: false,
     isSearching: false,
-    recordPerPage: 10
+    recordPerPage: 50
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -161,7 +161,12 @@ export const searchSlice = createSlice({
         setIsSearching: (state, action) => {
             state.isSearching = action.payload;
         },
-        setRecordPerPage: (state, action) => state.recordPerPage = action.payload
+        setRecordPerPage: (state, action) =>  { 
+            state.recordPerPage = action.payload
+        },
+        setSearchPageInfo: (state, action) =>  { 
+            state.pagination = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(saveSearchHistory.pending, state => {
@@ -268,7 +273,10 @@ export const selectShowListResults = (state: RootState) => state.search.showList
 export const selectIsSearching = (state: RootState) => state.search.isSearching;
 export const selectRecordPerPage = (state: RootState) => state.search.recordPerPage;
 
-export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults, setIsSearching, setRecordPerPage } = searchSlice.actions
-export default searchSlice.reducer;
+export const { clearSuggestions, setShowFullResults, clearPaging, 
+    setSearchBy, setSearchText, setShowListResults, 
+    setIsSearching, setRecordPerPage, setSearchPageInfo } = searchSlice.actions
+
+    export default searchSlice.reducer;
 
 

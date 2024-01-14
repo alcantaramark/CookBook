@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react'
 import { Text } from 'react-native-paper';
-import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, clearPaging, setShowListResults, fetchSearchHistory } from '../Scripts/SearchSlice';
+import { selectSearchHistory, clearHistory, selectSearchText, selectSearchHistoryStatus, clearPaging, setShowListResults, fetchSearchHistory, setRecordPerPage, setSearchText, setShowFullResults } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from './../../../Redux/Hooks';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,6 +8,7 @@ import { useAppTheme } from './../../../App';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import { FlashList } from '@shopify/flash-list';
 import { ActionSheetIOS } from 'react-native';
+import { searchApi } from '../../Api/SearchApi';
 
 interface HistoryResultsProps {
     
@@ -38,9 +39,11 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     }
 
     const handleHistorySearch = (query: string) => {
-        dispatch(clearPaging());
+        dispatch(searchApi.util.resetApiState());
+        dispatch(setRecordPerPage(10));
         dispatch(setShowListResults(true));
-        //search(true, query);
+        dispatch(setShowFullResults(true));
+        dispatch(setSearchText(query));
     };
     
     const noResultsFounds = () =>{
