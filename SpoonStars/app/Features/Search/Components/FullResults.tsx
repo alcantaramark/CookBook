@@ -1,38 +1,38 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchStatus, selectSearchText, selectSearchPageInfo, selectSearchErrors } from '../Scripts/SearchSlice';
-import { useAppSelector } from './../../../Redux/Hooks';
+import { useAppDispatch } from '../../../Redux/Hooks';
 import MasonryList from '@react-native-seoul/masonry-list';
-import SearchHelper from '../Scripts/Search';
-import { UIActivityIndicator } from 'react-native-indicators';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StackNavigation } from './../../../App';
+import { StackNavigation, Suggestions } from '../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
+import { searchApi } from '../../Api/SearchApi';
+import { UIActivityIndicator } from 'react-native-indicators';
+import useSearch from '../Scripts/useSearch';
+import { setRecordPerPage, setSearchPageInfo } from '../Scripts/SearchSlice';
+
+
+
+
 export interface FullResultsProps{
 
 }
 
-
-
 const FullResults: FC<FullResultsProps> = () =>{
-    const searchSuggestions = useAppSelector(selectSearchSuggestions);
-    const searchText = useAppSelector(selectSearchText);
-    const searchStatus = useAppSelector(selectSearchStatus);
-    const searchPageInfo = useAppSelector(selectSearchPageInfo);
-    const searchErrors = useAppSelector(selectSearchErrors);
-
-    const { search } = SearchHelper();
+    const dispatch = useAppDispatch();
     const { showError } = useErrorHandler();
     const { navigate } = useNavigation<StackNavigation>();
     const { MasonryLoader } = useLoading();
-
+    
+    //RTK Query
+    const { data, isLoading, error, refetch } = useSearch();
+    
     const renderSuggestions = (({item}:any) => {
         const randomBool = Math.random() < 0.5;
         return(
-            <TouchableOpacity onPress={() => navigate('Details')}>
+            <TouchableOpacity onPress={() => navigate('Details', {id: 'test id'})}>
                 <Card style={styles.cardStyle}>
                     <Card.Cover source={{ uri: item.node.mainImage }} style={{
                         height: randomBool ? 100 : 230,
@@ -44,37 +44,50 @@ const FullResults: FC<FullResultsProps> = () =>{
         );
     })
 
+    
+
+    const footer = () =>{
+        if (isLoading){
+            return (<UIActivityIndicator size={30} />);
+        }
+    }   
+
     const handleLoadMore = async () => {
-        if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
-            await search(true, searchText);
+        if (!isLoading){
+            dispatch(setRecordPerPage(50));
+            dispatch(setSearchPageInfo(data!.pageInfo));
         }
     }
 
-    const footer = () =>{
-        if (searchStatus === 'loading' && searchSuggestions.length > 0)
-            return (<UIActivityIndicator size={30} />)
-    }   
+    const handleOnRefresh = () => {
+        dispatch(searchApi.util.resetApiState());
+        refetch();
+    }
+
+    if (isLoading){
+        return (MasonryLoader());
+    }
+
+    if (error != undefined){
+        return (showError(error as string));
+    }
 
     return (
         <GestureHandlerRootView>
             <View style={styles.flashListStyle}>
-                { searchErrors === '' ? 
-                    <MasonryList
-                        data={searchSuggestions}
-                        numColumns={3}
-                        keyExtractor={(item: suggestionsPayload) => item.node.id}
-                        renderItem={renderSuggestions}
-                        style={{alignSelf: 'stretch'}}
-                        contentContainerStyle={{
-                            alignSelf: 'stretch'
-                        }}
-                        onEndReachedThreshold={0.8}
-                        onEndReached={handleLoadMore}
-                        onRefresh={() => search(true, searchText)}
-                        ListFooterComponent={footer()}
-                        ListEmptyComponent={MasonryLoader()}
-                    /> : showError(searchErrors)
-                }
+                <MasonryList
+                    data={data?.edges as Suggestions[]}
+                    numColumns={3}
+                    keyExtractor={(item: Suggestions) => item.node.id}
+                    renderItem={renderSuggestions}
+                    style={{alignSelf: 'stretch'}}
+                    contentContainerStyle={{
+                        alignSelf: 'stretch'
+                    }}
+                    onRefresh={handleOnRefresh}
+                    onEndReached={handleLoadMore}
+                    ListFooterComponent={footer()}
+                /> 
             </View> 
         </GestureHandlerRootView>
     );

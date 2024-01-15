@@ -11,7 +11,7 @@ import {
           MD3LightTheme as defaultTheme, 
           useTheme} 
       from 'react-native-paper';
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
@@ -26,9 +26,12 @@ import {
 import { useAppDispatch } from './Redux/Hooks';
 import { fetchConfig } from './Features/Configuration/ConfigSlice';
 import { loadRecipePreference } from './Features/Recipe/Scripts/RecipeSlice';
-import RecipeHeader from './Features/Recipe/Components/RecipeHeader';
+import RecipeSearch from './Features/Recipe/Components/RecipeSearch';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RecipeDetails } from './Features/Recipe/Components/RecipeDetails';
+import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
+import { RootStackParamList } from './../types/App_Types';
+import RecipeMain from './Features/Recipe/Components/RecipeMain';
+
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -49,9 +52,6 @@ const theme = {
 export type AppTheme = typeof theme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
-export type ScreenNames = ["Home", "Details"];
-export type RootStackParamList = Record<ScreenNames[number], undefined>;
-export type StackNavigation = NavigationProp<RootStackParamList>;
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -69,15 +69,22 @@ function App(): JSX.Element {
   
   const RecipeTab = () => {
     return(
-      <Stack.Navigator>
-        <Stack.Screen 
+      <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen
           name='Home'
-          component={RecipeHeader}
+          component={RecipeMain}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='Search'
+          component={RecipeSearch}
           options={{ headerShown: false }}
         />
         <Stack.Screen 
           name='Details'
           component={RecipeDetails}
+          initialParams={{ id: 'testid' }}
+          options={{headerBackVisible: false}}
         />
       </Stack.Navigator>
     );

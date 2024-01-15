@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../../Redux/Store";
-import { pageInfo, recipe } from "types/App_Types";
+import { PageInfo, recipe } from "types/App_Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { searchByIngredients, searchByName } from "../Services/Queries/SuggestRecipes";
+import SuggestRecipes from "../Services/Queries/SuggestRecipes";
 
 
 export interface searchState {
@@ -12,12 +12,13 @@ export interface searchState {
     status: string,
     historyStatus: string,
     errors: string,
-    pagination: pageInfo,
+    pagination: PageInfo,
     showFullResults: boolean,
     searchBy: string,
     searchText: string,
     showListResults: boolean,
     isSearching: boolean;
+    recordPerPage: Number
 }
 
 export interface suggestionsPayload {
@@ -48,11 +49,12 @@ const initialState: searchState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    showFullResults: true,
+    showFullResults: false,
     searchBy: 'name',
     searchText: '',
     showListResults: false,
-    isSearching: false
+    isSearching: false,
+    recordPerPage: 50
 }
 
 export const saveSearchHistory = createAsyncThunk('search/saveSearchHistory', async (keyword: string, { rejectWithValue }) => {
@@ -104,6 +106,7 @@ export const clearHistory = createAsyncThunk('search/clearHistory', async () => 
 export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName', async (queries: searchQueriesName, 
     { rejectWithValue, fulfillWithValue }) => {
         const { name, searchAll } = queries;
+        const { searchByName } = SuggestRecipes();
 
         try{
             const suggestions =  await searchByName(name, searchAll).then(response => response.json());
@@ -118,6 +121,7 @@ export const suggestRecipesByName = createAsyncThunk('search/fetchRecipesByName'
 export const suggestRecipesByIngredients = createAsyncThunk('search/fetchRecipesByIngredients', async (queries: searchQueriesIngredients
     , {rejectWithValue, fulfillWithValue}) => {
         const { ingredients, searchAll } = queries;
+        const { searchByIngredients } = SuggestRecipes();
 
         try {
             const suggestions = await searchByIngredients(ingredients, searchAll).then(response => response.json());
@@ -156,6 +160,12 @@ export const searchSlice = createSlice({
         },
         setIsSearching: (state, action) => {
             state.isSearching = action.payload;
+        },
+        setRecordPerPage: (state, action) =>  { 
+            state.recordPerPage = action.payload
+        },
+        setSearchPageInfo: (state, action) =>  { 
+            state.pagination = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -261,8 +271,12 @@ export const selectSearchBy = (state: RootState) => state.search.searchBy;
 export const selectSearchText = (state: RootState) => state.search.searchText;
 export const selectShowListResults = (state: RootState) => state.search.showListResults;
 export const selectIsSearching = (state: RootState) => state.search.isSearching;
+export const selectRecordPerPage = (state: RootState) => state.search.recordPerPage;
 
-export const { clearSuggestions, setShowFullResults, clearPaging, setSearchBy, setSearchText, setShowListResults, setIsSearching } = searchSlice.actions
-export default searchSlice.reducer;
+export const { clearSuggestions, setShowFullResults, clearPaging, 
+    setSearchBy, setSearchText, setShowListResults, 
+    setIsSearching, setRecordPerPage, setSearchPageInfo } = searchSlice.actions
+
+    export default searchSlice.reducer;
 
 

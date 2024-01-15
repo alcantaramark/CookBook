@@ -1,47 +1,42 @@
-import React, { FC, ReactElement, useEffect } from 'react'
-import { StyleSheet, View, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import React, { FC, ReactElement, useEffect, useState } from 'react'
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { Avatar, Text } from 'react-native-paper';
-import { selectSearchSuggestions, suggestionsPayload, selectSearchText, 
-    selectSearchHistoryStatus, selectSearchStatus, selectSearchErrors,
-    selectShowListResults, setShowListResults, selectSearchPageInfo } from '../Scripts/SearchSlice';
+import { suggestionsPayload, selectShowFullResults, setShowFullResults, selectSearchText, setSearchPageInfo, setRecordPerPage } from '../Scripts/SearchSlice';
 import { useAppSelector, useAppDispatch } from '../../../Redux/Hooks';
 import HistoryResults from './HistoryResults';
-import { StackNavigation, useAppTheme } from '../../../App';
+import { StackNavigation, Suggestions } from '../../../../types/App_Types';
+import { useAppTheme } from '../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
-import SearchHelper from '../Scripts/Search';
 import useLoading from '../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { FlashList } from '@shopify/flash-list';
+import useSearch from '../Scripts/useSearch';
+
 
 
 interface PreviewResultsProps {}
 
 
 const PreviewResults: FC<PreviewResultsProps> = () => {
-    const searchSuggestions = useAppSelector(selectSearchSuggestions);
-    const searchHistoryStatus = useAppSelector(selectSearchHistoryStatus);
+    const showFullResults = useAppSelector(selectShowFullResults);
     const searchText = useAppSelector(selectSearchText);
-    const searchStatus = useAppSelector(selectSearchStatus);
-    const searchErrors = useAppSelector(selectSearchErrors);
-    const showListResults = useAppSelector(selectShowListResults);
-    const searchPageInfo = useAppSelector(selectSearchPageInfo);
-    
-
-    const { search } = SearchHelper();
     const { SearchLoader } = useLoading();
     const { showError } = useErrorHandler();
 
     const { navigate } = useNavigation<StackNavigation>();
     const dispatch = useAppDispatch();
-    
+
+    //RTK
+    const { data, isLoading, error, isFetching } = useSearch();
     const { colors: { primary }} = useAppTheme();    
+
 
     const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
         return (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details')}>
+            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details', { id: 'test' })}>
                 <View style={styles.searchDetails}>
                     <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
                     <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
@@ -55,52 +50,69 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     }
 
     const footerComponent = () => {
-        if (showListResults || searchSuggestions.length == 0){ 
-            return (searchStatus === 'loading') ? <UIActivityIndicator  size={30} /> : null;
+        if (isFetching){
+            return (<UIActivityIndicator  size={30} />);
         }
-        else {
-            return(
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                >
-                    <TouchableOpacity style={styles.footer} onPress={showAllResults}>
-                        <Text style={{color: primary}}>See all Results</Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
-            );
+
+        if (showFullResults){
+            return null;
         }
+        
+        return(
+            <TouchableOpacity style={styles.footer} onPress={showAllResults}>
+                <Text style={{color: primary}}>See all Results</Text>
+            </TouchableOpacity>
+        );
     }
 
     const showAllResults = () => {
-        dispatch(setShowListResults(true));
-        search(true, searchText);
+        dispatch(setShowFullResults(true));
+        if (!isLoading){
+            dispatch(setSearchPageInfo(data!.pageInfo));
+            dispatch(setRecordPerPage(10));
+        }
     }
 
     const handleLoadMore = async () => {
-        if (!showListResults)
-            return;
-        if ((searchStatus === 'succeeded' || searchStatus === 'idle') && searchPageInfo.hasNextPage) {
-            await search(true, searchText);
+        if (showFullResults){
+            if (!isFetching){
+                dispatch(setSearchPageInfo(data!.pageInfo));
+            }
         }
+    }
+    
+    const headerComponent = () => {
+        if (showFullResults || data!.edges.length > 0){
+            return null;
+        }
+
+        return(<HistoryResults />)
+    }
+
+    if (isLoading){
+        return (SearchLoader());
+    }
+    
+    if (error != undefined){
+        return (showError(error as string));
+    }
+
+    if (data!.edges.length == 0){
+        return (<HistoryResults />);
     }
 
     return(
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
-            { searchErrors !== '' && showError(searchErrors)}
-            { searchErrors === '' && searchSuggestions.length == 0 && <HistoryResults />}
-            { searchErrors === '' && searchSuggestions.length > 0 &&
-                <FlashList
-                    data={searchSuggestions}
-                    keyExtractor={(item: suggestionsPayload):string => item.node.id}
-                    renderItem={renderItem}
-                    ListFooterComponent={footerComponent}
-                    onEndReached={handleLoadMore}
-                    estimatedItemSize={200}
-                    estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-                />
-            }
-            { (searchStatus === 'loading' && searchSuggestions.length == 0) && SearchLoader() }
+            <FlashList
+                data={data!.edges as Suggestions[] }
+                keyExtractor={(item: suggestionsPayload):string => item.node.id}
+                renderItem={renderItem}
+                ListFooterComponent={footerComponent}
+                onEndReached={handleLoadMore}
+                estimatedItemSize={200}
+                estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
+            />
         </View>
     </GestureHandlerRootView>);
 }
