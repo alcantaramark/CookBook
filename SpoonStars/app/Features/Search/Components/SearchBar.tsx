@@ -1,13 +1,13 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { TextInput } from 'react-native-paper'
-import { Dimensions, NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View, unstable_batchedUpdates } from 'react-native';
+import { Dimensions, NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View } from 'react-native';
 import useDebounce from '../../Shared/Hooks/useDebounce';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { saveSearchHistory, setShowFullResults, 
 setShowListResults, setSearchText, 
-setRecordPerPage} from '../Scripts/SearchSlice';
+setRecordPerPage,
+clearPaging, selectSearchBy } from '../Scripts/SearchSlice';
 import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
-import SearchHelper from '../Scripts/useSearch';
 import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import { searchApi } from '../../Api/SearchApi';
@@ -20,6 +20,7 @@ const SearchBar: FC<SearchBarProps> = () => {
     const [searchValue, setSearchValue] = useState<string>('');
     const debouncedValue = useDebounce<string>(searchValue, 1000);
     const autocompleteField = useRef<any>(null);
+    const searchBy = useAppSelector(selectSearchBy);
     const { navigate } = useNavigation<StackNavigation>();
     
     const dispatch = useAppDispatch();
@@ -47,6 +48,7 @@ const SearchBar: FC<SearchBarProps> = () => {
         dispatch(setShowListResults(false));
         dispatch(setShowFullResults(false));
         dispatch(setRecordPerPage(50));
+        dispatch(clearPaging());
       }
       else {
         dispatch(setShowListResults(true));
@@ -71,7 +73,7 @@ const SearchBar: FC<SearchBarProps> = () => {
             <TextInput
                 theme={{ roundness: 10 }}
                 ref={autocompleteField}
-                placeholder='search recipes...'
+                placeholder={ searchBy === 'name' ? "search recipes..." : 'e.g. broccoli, carrots' }
                 value={searchValue}
                 style={ styles.searchInputField }
                 onChange={(e: NativeSyntheticEvent<TextInputChangeEventData>) => handleInputSearchChange(e)}

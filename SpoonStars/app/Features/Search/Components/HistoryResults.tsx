@@ -54,6 +54,9 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
     }
 
     const listHeader = () => {
+        if (searchHistory.length === 0){
+            return null;
+        }
         return(
             <View style={styles.headerContainer}>
                 <Text>Recent</Text>
@@ -83,7 +86,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
 
     return (
         <GestureHandlerRootView style={styles.flashList}>
-        { (searchHistoryStatus === 'succeeded' && searchHistory.length > 0) &&
+        { (searchHistoryStatus === 'succeeded') &&
             <FlashList
                 ListHeaderComponent={listHeader}
                 data={searchHistory}
@@ -92,6 +95,7 @@ const HistoryResults: FC<HistoryResultsProps> = () => {
                 estimatedItemSize={10}
                 estimatedListSize={{ height: 100, width: Dimensions.get('screen').width }}
                 numColumns={1}
+                ListFooterComponent={noResultsFounds}
             />
         }
         </GestureHandlerRootView>

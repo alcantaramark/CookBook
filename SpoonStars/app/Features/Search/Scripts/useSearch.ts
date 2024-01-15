@@ -17,7 +17,7 @@ const useSearch = () => {
         })
     }else {
         return useSuggestRecipesByIngredientsQuery({
-            ingredients: searchText === '' ? [] :  searchText.split(' '),
+            ingredients: searchText === '' ? [] :  searchText.split(','),
             recordPerPage: recordPerPage,
             endCursor: searchPageInfo.endCursor
         })

@@ -89,14 +89,6 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         return(<HistoryResults />)
     }
 
-    const noResultsFounds = () =>{
-        console.log('emtpy')
-        return(<View style={styles.noResults}>
-                <Text>No results found for "{searchText}"</Text>
-            </View>
-        );
-    }
-
     if (isLoading){
         return (SearchLoader());
     }
@@ -113,7 +105,6 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     <GestureHandlerRootView>
         <View style={styles.flashListStyle}>
             <FlashList
-                ListHeaderComponent={headerComponent}
                 data={data!.edges as Suggestions[] }
                 keyExtractor={(item: suggestionsPayload):string => item.node.id}
                 renderItem={renderItem}
@@ -121,7 +112,6 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
                 onEndReached={handleLoadMore}
                 estimatedItemSize={200}
                 estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-                ListEmptyComponent={noResultsFounds}
             />
         </View>
     </GestureHandlerRootView>);
@@ -158,11 +148,6 @@ const styles = StyleSheet.create({
     },
     searchDetails: {
         flexDirection: 'row'
-    },
-    noResults: {
-        flexDirection: 'row',
-        marginTop: 20,
-        alignSelf: 'center'
     }
 });
   

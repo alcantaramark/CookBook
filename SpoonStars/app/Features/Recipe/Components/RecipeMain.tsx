@@ -128,6 +128,8 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
     <View style={[styles.container]}>
       <GestureHandlerRootView style={{ backgroundColor: primary }}>
         <TextInput
+            theme={{roundness: 10}}
+            mode='outlined'
             placeholder='search recipes...'
             style={styles.searchInputField}
             ref={autocompleteField}
