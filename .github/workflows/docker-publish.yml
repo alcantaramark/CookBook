@@ -37,9 +37,9 @@ jobs:
       - run: echo ${{ env.APP_ENVIRONMENT }}
       
       - name: Setup Dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '7.x.x'
 
       - name: Restore Dependencies
         run: nuget restore ./Backend/SecretCode.sln
@@ -50,7 +50,7 @@ jobs:
       - name: Tests
         run: dotnet test ./Backend/SecretCode.sln --no-build --logger="console;verbosity=detailed"
 
-      #modify connection string in appsettings
+      #modify connection string in appsettings to conform with environment
       - name: Update Connection String and API Keys
         if: | 
             github.event_name != 'pull_request' &&
