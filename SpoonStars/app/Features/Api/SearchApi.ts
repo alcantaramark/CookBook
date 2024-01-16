@@ -14,8 +14,6 @@ interface SuggestRecipesByIngredientsResponse{
 }
 
 
-
-
 export const searchApi = createApi({
     baseQuery: graphqlRequestBaseQuery({
         url: Config.SUGGESTIC_URL,

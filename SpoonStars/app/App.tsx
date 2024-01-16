@@ -83,7 +83,7 @@ function App(): JSX.Element {
         <Stack.Screen 
           name='Details'
           component={RecipeDetails}
-          initialParams={{ id: 'testid' }}
+          initialParams={{ id: '' }}
           options={{headerBackVisible: false}}
         />
       </Stack.Navigator>

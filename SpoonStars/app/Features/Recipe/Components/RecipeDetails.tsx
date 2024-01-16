@@ -1,29 +1,27 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Text, Button } from 'react-native-paper';
-import { searchRecipeById, selectRecipeItem } from './../Scripts/RecipeSlice';
-import { useAppDispatch, useAppSelector } from './../../../Redux/Hooks';
 import { DetailsScreenProps } from './../../../../types/App_Types';
+import { useGetRecipeByIdQuery } from '../../Api/RecipeApi';
+import useErrorHandler from '../../Shared/Components/ErrorHandler';
 
 
 
 
 const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScreenProps) => {
+  const { data, error, isLoading } = useGetRecipeByIdQuery(route.params.id);
+  const { showError } = useErrorHandler();
   
-  const dispatch = useAppDispatch();
-  const recipeItem = useAppSelector(selectRecipeItem);
-  
-  const getRecipeDetails = async () => {
-    await dispatch(searchRecipeById(''));
-  }
-
   const handleOnPress = () => {
     navigation.pop();
+  }
+
+  if (error !== undefined){
+    showError(error as string);
   }
 
   return (
     <>
       <Button onPress={handleOnPress}>Go Back</Button>
-      <Text>{route.params.id}</Text>
     </>
   )
 }

@@ -34,9 +34,9 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
     const { colors: { primary }} = useAppTheme();    
 
 
-    const renderItem = ({item}: { item: suggestionsPayload, index?:number }): ReactElement => {
+    const renderItem = ({item}: { item: Suggestions, index?:number }): ReactElement => {
         return (
-            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details', { id: 'test' })}>
+            <TouchableOpacity style={styles.itemContainer} onPress={() => navigate('Details', { id: item.node.id })}>
                 <View style={styles.searchDetails}>
                     <Avatar.Image source={{ uri: item.node.mainImage }} size={50} style={styles.avatar}/>
                     <Text style={styles.searchText} numberOfLines={1}>{item.node.name}</Text>
@@ -81,14 +81,6 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         }
     }
     
-    const headerComponent = () => {
-        if (showFullResults || data!.edges.length > 0){
-            return null;
-        }
-
-        return(<HistoryResults />)
-    }
-
     if (isLoading){
         return (SearchLoader());
     }
@@ -106,7 +98,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
         <View style={styles.flashListStyle}>
             <FlashList
                 data={data!.edges as Suggestions[] }
-                keyExtractor={(item: suggestionsPayload):string => item.node.id}
+                keyExtractor={(item: Suggestions):string => item.node.id}
                 renderItem={renderItem}
                 ListFooterComponent={footerComponent}
                 onEndReached={handleLoadMore}
