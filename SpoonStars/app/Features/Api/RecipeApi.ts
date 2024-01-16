@@ -10,6 +10,7 @@ interface GetRecipeByIdResponse{
 }
 
 export const recipeApi = createApi({
+    reducerPath: "reducerApi",
     baseQuery: graphqlRequestBaseQuery({
         url: Config.SUGGESTIC_URL,
         prepareHeaders: (headers, { getState }) => {
