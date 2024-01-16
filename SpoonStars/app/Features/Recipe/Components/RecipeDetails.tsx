@@ -16,7 +16,11 @@ const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScree
   }
 
   if (error !== undefined){
-    showError(error as string);
+    return (<Text>{error as string}</Text>)
+  }
+
+  if (isLoading) {
+    return (<Text>Loading...</Text>)
   }
 
   return (

@@ -6,7 +6,7 @@ import { RootState } from "app/Redux/Store";
 import Config from 'react-native-config';
 
 interface GetRecipeByIdResponse{
-    recipe: Recipe
+    recipe: Recipe 
 }
 
 export const recipeApi = createApi({
@@ -14,7 +14,6 @@ export const recipeApi = createApi({
         url: Config.SUGGESTIC_URL,
         prepareHeaders: (headers, { getState }) => {
             const state = getState() as RootState
-            console.log('state config', state.apiConfig.config.suggesticAPIKey);
             headers.set('Content-Type', "application/json");
             headers.set('sg-user', state.apiConfig.config.suggesticUserId);
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
@@ -24,27 +23,26 @@ export const recipeApi = createApi({
     }),
     endpoints: (builder) => ({
       getRecipeById: builder.query<Recipe, string>({
-        serializeQueryArgs: ( { endpointName } ) => {
-            return endpointName;
-        },
-        merge: (currentCache, newItems) => {
-            // currentCache.edges.push(...newItems.edges.filter(x => !currentCache.edges.some(c => c.node.id === x.node.id)));
-            // currentCache.pageInfo = newItems.pageInfo;
-        },
-        forceRefetch: ({ currentArg, previousArg }) => {
-            return !(JSON.stringify(currentArg) === JSON.stringify(previousArg));
-        },
         query: (recipeId: string) => ({
             document: gql `query Search($id: ID!){
                 recipe(id: $id){
+                    id
                     mainImage
                     name
+                    totalTime
+                    numberOfServings
+                    ingredientLines
+                    instructions
                 }
             }`,
             variables: {
                 id: recipeId
             }
-        })
+        }),
+        transformResponse: (response: GetRecipeByIdResponse) => {
+            console.log('response', response.recipe);
+            return response.recipe
+        }
       })
     })
 });
