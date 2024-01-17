@@ -40,10 +40,7 @@ export const recipeApi = createApi({
                 id: recipeId
             }
         }),
-        transformResponse: (response: GetRecipeByIdResponse) => {
-            console.log('response', response.recipe);
-            return response.recipe
-        }
+        transformResponse: (response: GetRecipeByIdResponse) => response.recipe
       })
     })
 });

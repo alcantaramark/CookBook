@@ -14,7 +14,7 @@ const RecipeItem: FC<RecipeItemProps> = ({item}) => {
     const { navigate } = useNavigation<StackNavigation>();
 
     const handleItemPress = () => {
-        navigate('Details', {id: 'test id from main'});
+        navigate('Details', {id: item.node.id});
     }
 
     return(
