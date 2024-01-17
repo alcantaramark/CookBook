@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import { useAppDispatch } from '../../../Redux/Hooks';
@@ -29,10 +29,10 @@ const FullResults: FC<FullResultsProps> = () =>{
     //RTK Query
     const { data, isLoading, error, refetch } = useSearch();
     
-    const renderSuggestions = (({item}:any) => {
+    const renderSuggestions = (({item, i}: any) => {
         const randomBool = Math.random() < 0.5;
         return(
-            <TouchableOpacity onPress={() => navigate('Details', {id: 'test id'})}>
+            <TouchableOpacity onPress={() => navigate('Details', {id: item.node.id})}>
                 <Card style={styles.cardStyle}>
                     <Card.Cover source={{ uri: item.node.mainImage }} style={{
                         height: randomBool ? 100 : 230,

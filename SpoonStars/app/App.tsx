@@ -11,7 +11,7 @@ import {
           MD3LightTheme as defaultTheme, 
           useTheme} 
       from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, ParamListBase, RouteProp, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import type {PropsWithChildren} from 'react';
@@ -63,6 +63,11 @@ function App(): JSX.Element {
   };
 
   const dispatch = useAppDispatch();
+  
+  const shouldHideHeader = (route: RouteProp<ParamListBase, string>) => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    return routeName === 'Details';
+  };
 
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
@@ -83,8 +88,8 @@ function App(): JSX.Element {
         <Stack.Screen 
           name='Details'
           component={RecipeDetails}
-          initialParams={{ id: 'testid' }}
-          options={{headerBackVisible: false}}
+          initialParams={{ id: '' }}
+          options={{headerBackVisible: false, headerShown: false }}
         />
       </Stack.Navigator>
     );
@@ -93,13 +98,17 @@ function App(): JSX.Element {
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
-        <Tab.Navigator initialRouteName='Home' screenOptions={
-              { headerShown: true, headerStyle: {
-                backgroundColor: theme.colors.primary,
-                shadowColor: 'transparent',
-                height: StatusBar.currentHeight
-              }, headerTitle:'' }
-            }>
+        <Tab.Navigator initialRouteName='Home' 
+              screenOptions={({ route }) => ({
+                headerShown: !shouldHideHeader(route),
+                headerStyle: {
+                  backgroundColor: theme.colors.primary,
+                  shadowColor: 'transparent',
+                  height: StatusBar.currentHeight
+                  }, 
+                  headerTitle:'' 
+              })}
+            >
             <Tab.Screen name="HomeTab" 
               options={{  tabBarShowLabel: false,
                           tabBarActiveTintColor: theme.colors.primary,

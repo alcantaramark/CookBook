@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export interface recipe{
+export interface Recipe{
     id: string,
     name: string,
     mainImage: string,
@@ -23,7 +23,7 @@ export interface PageInfo{
 }
 
 interface Suggestions {
-    node: recipe,
+    node: Recipe,
     cursor: string
 }
 
