@@ -111,7 +111,7 @@ const PreviewResults: FC<PreviewResultsProps> = () => {
 
 const styles = StyleSheet.create({
     flashListStyle: {
-      marginTop: 20,
+      marginTop: 0,
       flexDirection: 'row',
       marginStart: 10,
       flexGrow: 1

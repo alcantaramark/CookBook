@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {   
           PaperProvider, 
           MD3LightTheme as defaultTheme, 
@@ -17,7 +17,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import type {PropsWithChildren} from 'react';
 import {
   StatusBar,
-  useColorScheme
+  useColorScheme,
+  View
 } from 'react-native';
 
 import {
@@ -31,6 +32,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecipeDetails from './Features/Recipe/Components/RecipeDetails';
 import { RootStackParamList } from './../types/App_Types';
 import RecipeMain from './Features/Recipe/Components/RecipeMain';
+import { selectSearchSuggestions } from './Features/Search/Scripts/SearchSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 type SectionProps = PropsWithChildren<{
@@ -57,6 +60,7 @@ function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator<RootStackParamList>();
+  
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -71,6 +75,8 @@ function App(): JSX.Element {
 
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
+
+  
   
   const RecipeTab = () => {
     return(
@@ -95,12 +101,14 @@ function App(): JSX.Element {
     );
   }
 
+  
+
   return (
     <NavigationContainer>
       <PaperProvider theme={ theme }>
         <Tab.Navigator initialRouteName='Home' 
               screenOptions={({ route }) => ({
-                headerShown: !shouldHideHeader(route),
+                headerShown: false,
                 headerStyle: {
                   backgroundColor: theme.colors.primary,
                   shadowColor: 'transparent',
@@ -119,6 +127,7 @@ function App(): JSX.Element {
         </Tab.Navigator>
       </PaperProvider>
     </NavigationContainer>
+    
   );
 }
 

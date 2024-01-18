@@ -9,7 +9,7 @@ import { GestureHandlerRootView, NativeViewGestureHandler, ScrollView } from 're
 
 
 const { width } = Dimensions.get('window');
-const IMG_HEIGHT = 300;
+const IMG_HEIGHT = 250;
 
 const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScreenProps) => {
   const { data, error, isLoading } = useGetRecipeByIdQuery(route.params.id);
@@ -44,9 +44,6 @@ const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScree
   if (isLoading) {
     return (<Text>Loading...</Text>);
   }
-
-  
-
   return (
     <View style={styles.container}>
       <GestureHandlerRootView>

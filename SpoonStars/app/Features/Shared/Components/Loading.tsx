@@ -59,7 +59,7 @@ const Loading = () => {
           width={429}
           backgroundColor='#d6d6d6'
           foregroundColor='#aaaaaa'
-          style={{ marginTop: -90 }}
+          style={{ marginTop: -110 }}
         >
           <Rect x="10" y="10" rx="5" ry="5" width="260" height="140" />
           <Rect x="280" y="10" rx="5" ry="5" width="260" height="280" />
