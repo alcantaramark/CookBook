@@ -25,7 +25,7 @@ export const searchApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
-        customErrors: (error) => error.message
+        customErrors: (error) => "error searching recipe"
     }),
     endpoints: (builder) => ({
         suggestRecipesByIngredients: builder.query<RecipeSearch, { ingredients: string[], recordPerPage: Number, endCursor: string}>({

@@ -20,7 +20,7 @@ export const recipeApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
-        customErrors: (error) => error.message  
+        customErrors: (error) => "error getting recipe details"
     }),
     endpoints: (builder) => ({
       getRecipeById: builder.query<Recipe, string>({

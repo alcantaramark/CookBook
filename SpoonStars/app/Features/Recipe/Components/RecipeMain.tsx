@@ -7,7 +7,7 @@ import { selectRecipes, recipePayload, fetchRecipes, selectRecipesStatus,
 import RecipeItem from './RecipeItem';
 import { GestureHandlerRootView, RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { UIActivityIndicator } from 'react-native-indicators';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { ErrorMain } from '../../Error/ErrorMain';
 import { FlashList } from '@shopify/flash-list';
@@ -18,6 +18,7 @@ import { useAppTheme } from './../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps ) => {
@@ -125,6 +126,8 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
   }
 
   return(
+    <>
+    <SafeAreaView style={[{ backgroundColor: primary }]}/>
     <View style={[styles.container]}>
       <GestureHandlerRootView style={{ backgroundColor: primary }}>
         <TextInput
@@ -174,8 +177,8 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
                   </View>
                   </GestureHandlerRootView>
         }
-      
     </View>
+    </>
   );
 }
 
@@ -188,11 +191,13 @@ const styles = StyleSheet.create({
     margin: 10  
   },
   scroll: {
-    marginTop: 0,
-    marginBottom: 0,
+    
   },
   container: {
-    
+    top: StatusBar.currentHeight! - 35
+  },
+  header: {
+    height: StatusBar.currentHeight
   },
   searchInput: {
     flexDirection: 'row'

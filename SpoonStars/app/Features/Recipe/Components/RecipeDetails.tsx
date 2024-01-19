@@ -5,15 +5,17 @@ import { useGetRecipeByIdQuery } from '../../Api/RecipeApi';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { GestureHandlerRootView, NativeViewGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import useLoading from '../../Shared/Components/Loading';
 
 
 
 const { width } = Dimensions.get('window');
-const IMG_HEIGHT = 300;
+const IMG_HEIGHT = 250;
 
 const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScreenProps) => {
   const { data, error, isLoading } = useGetRecipeByIdQuery(route.params.id);
   const { showError } = useErrorHandler();
+  const { RecipeDetailsLoader } = useLoading();
   
   const displayIngredients = () => {
     
@@ -38,15 +40,12 @@ const RecipeDetails: FC<DetailsScreenProps> = ({route, navigation}: DetailsScree
   }
 
   if (error !== undefined){
-    return (<Text>{error as string}</Text>)
+    return (showError(error as string))
   }
 
   if (isLoading) {
-    return (<Text>Loading...</Text>);
+    return (RecipeDetailsLoader());
   }
-
-  
-
   return (
     <View style={styles.container}>
       <GestureHandlerRootView>
