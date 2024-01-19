@@ -7,6 +7,17 @@ import { Circle, Rect } from 'react-native-svg';
 
 const Loading = () => {
   
+  const RecipeDetailsLoader = () => {
+    return(
+      <ContentLoader viewBox="0 0 500 280" height={500} width={600} backgroundColor='#d6d6d6' foregroundColor='#aaaaaa'>
+        <Rect x="13" y="13" rx="10" ry="10" width="300" height="180" />
+        <Rect x="16" y="200" rx="0" ry="0" width="292" height="20" />
+        <Rect x="14" y="225" rx="0" ry="0" width="239" height="20" />
+        <Rect x="14" y="252" rx="0" ry="0" width="274" height="20" />
+    </ContentLoader>
+    );
+  }
+
   const RecipeLoader = () => {
     return (
       <ContentLoader
@@ -87,7 +98,7 @@ const Loading = () => {
     );
   }
 
-  return {RecipeLoader, SearchLoader, MasonryLoader};
+  return {RecipeLoader, SearchLoader, MasonryLoader, RecipeDetailsLoader};
 }
 
 export default Loading;
