@@ -42,7 +42,7 @@ const RecipeSearch: FC<SearchScreenProps> = ({route, navigation} : SearchScreenP
         />
       </View> 
       <View style={styles.resultsView}>
-      { showListResults ? <PreviewResults /> : <FullResults />}
+        { showListResults ? <PreviewResults /> : <FullResults />}
       </View>
     </>
 )};

@@ -18,7 +18,7 @@ import type {PropsWithChildren} from 'react';
 import {
   StatusBar,
   useColorScheme,
-  View
+  Text
 } from 'react-native';
 
 import {
@@ -95,13 +95,11 @@ function App(): JSX.Element {
           name='Details'
           component={RecipeDetails}
           initialParams={{ id: '' }}
-          options={{headerBackVisible: false, headerShown: false }}
+          options={{headerShown: true, headerTitle:'', headerBackVisible: false }}
         />
       </Stack.Navigator>
     );
   }
-
-  
 
   return (
     <NavigationContainer>
@@ -112,9 +110,8 @@ function App(): JSX.Element {
                 headerStyle: {
                   backgroundColor: theme.colors.primary,
                   shadowColor: 'transparent',
-                  height: StatusBar.currentHeight
-                  }, 
-                  headerTitle:'' 
+                  height: StatusBar.currentHeight,
+                  },
               })}
             >
             <Tab.Screen name="HomeTab" 
