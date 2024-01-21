@@ -34,7 +34,7 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
                 translateY: interpolate(
                     scrollOffset.value,
                     [-IMG_HEIGHT, 0, IMG_HEIGHT],
-                    [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+                    [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * .75]
                 )
                 },
                 {
@@ -51,11 +51,15 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
             };
         });
 
+    
+
     const setupHeader = () => {
         navigation.setOptions({
             headerLeft: () => <MaterialCommunityIcons name='arrow-left-circle'  size={30} 
                 onPress={() => navigation.pop() } style={{ opacity: .5 }}/>,
-            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]} />,
+            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]}>
+                <Animated.Image  source={{ uri: data!.mainImage }} style={{ height: 100, width: width, }} blurRadius={5} />
+            </Animated.View>,
         })
     }
     const displayIngredients = () => {
