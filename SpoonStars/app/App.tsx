@@ -17,8 +17,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import type {PropsWithChildren} from 'react';
 import {
   StatusBar,
+  Text,
   useColorScheme,
-  Text
+  StyleSheet
 } from 'react-native';
 
 import {
@@ -34,6 +35,7 @@ import { RootStackParamList } from './../types/App_Types';
 import RecipeMain from './Features/Recipe/Components/RecipeMain';
 import { selectSearchSuggestions } from './Features/Search/Scripts/SearchSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 
 type SectionProps = PropsWithChildren<{
@@ -68,10 +70,12 @@ function App(): JSX.Element {
 
   const dispatch = useAppDispatch();
   
-  const shouldHideHeader = (route: RouteProp<ParamListBase, string>) => {
-    const routeName = getFocusedRouteNameFromRoute(route);
-    return routeName === 'Details';
-  };
+  
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+        opacity: interpolate(0, [0, 250 / 1.5], [0, 1])
+    }
+});
 
   dispatch(fetchConfig());
   dispatch(loadRecipePreference());
@@ -95,7 +99,12 @@ function App(): JSX.Element {
           name='Details'
           component={RecipeDetails}
           initialParams={{ id: '' }}
-          options={{headerShown: true, headerTitle:'', headerBackVisible: false }}
+          options={{
+            headerTitle:'', 
+            headerBackVisible: false,
+            headerTransparent: true,
+            // headerBackground: () => <Animated.View style={[styles.header, headerAnimatedStyle]} />
+          }}
         />
       </Stack.Navigator>
     );
@@ -127,5 +136,13 @@ function App(): JSX.Element {
     
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#fff',
+    height: 100,
+    borderWidth: StyleSheet.hairlineWidth
+}
+});
 
 export default App;

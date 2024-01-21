@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC, useEffect} from 'react'
 import { Text } from 'react-native-paper'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
@@ -22,11 +22,12 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
 
     const setupHeader = () => {
         navigation.setOptions({
-            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]} />, 
+            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]} />,
             headerLeft: () => <Text>Back</Text>,
             headerTransparent: true
         })
     }
+
 
     const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -54,7 +55,7 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
     
     const headerAnimatedStyle = useAnimatedStyle(() => {
         return {
-            opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1])
+            opacity: interpolate(scrollOffset.value, [0, 300 / 1.5], [0, 1])
         }
     });
 
@@ -74,7 +75,10 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
     )
     }
 
-  setupHeader();
+  useEffect(() => {
+    setupHeader();
+  }, [])
+  
   return (
     <View>
     <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
@@ -83,7 +87,8 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
             style={[styles.image, imageAnimatedStyle]}
         />
         <View style={styles.recipeDetails}>
-            <View style={styles.recipePreparationTime}>
+            <Text>Parallax Scroll</Text>
+            {/* <View style={styles.recipePreparationTime}>
                 <Text>Preparation Time: {data!.totalTime}</Text>
             </View>
             <View style={styles.recipeIngredients}>
@@ -93,7 +98,7 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
             <View style={styles.recipeDirections}>
                 <Text>Cooking Instructions</Text>
                 { displayInstructions() }
-            </View>
+            </View> */}
         </View>
     </Animated.ScrollView>
     </View>
@@ -109,7 +114,8 @@ const styles = StyleSheet.create({
      height: IMG_HEIGHT
     },
     recipeDetails:{
-     
+     height: 1000,
+     width: width,
     },
     recipeIngredients:{
    
@@ -122,7 +128,8 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: '#fff',
-        height: 100
+        height: 100,
+        borderWidth: StyleSheet.hairlineWidth
     }
    })
 
