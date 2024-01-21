@@ -4,7 +4,8 @@ import { View, StyleSheet, Dimensions } from 'react-native'
 import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
 import { Recipe, RootStackParamList } from 'types/App_Types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';;
 
 export interface ReciepeViewProps {
     data: Recipe,
@@ -20,45 +21,43 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollOffset = useScrollViewOffset(scrollRef);
 
-    const setupHeader = () => {
-        navigation.setOptions({
-            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]} />,
-            headerLeft: () => <Text>Back</Text>,
-            headerTransparent: true
-        })
-    }
-
-
-    const imageAnimatedStyle = useAnimatedStyle(() => {
-    return {
-        transform: [
-            {
-            translateY: interpolate(
-                0,
-                [-IMG_HEIGHT, 0, IMG_HEIGHT],
-                [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
-            )
-            },
-            {
-                scale: interpolate(0, 
-                    [
-                        -IMG_HEIGHT, 
-                        scrollOffset.value, 
-                        IMG_HEIGHT
-                    ],
-                     [2, 1, 1]
-                )
-            }
-        ]
-        };
-    });
-    
     const headerAnimatedStyle = useAnimatedStyle(() => {
         return {
-            opacity: interpolate(scrollOffset.value, [0, 300 / 1.5], [0, 1])
+            opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
         }
     });
 
+    const imageAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                translateY: interpolate(
+                    scrollOffset.value,
+                    [-IMG_HEIGHT, 0, IMG_HEIGHT],
+                    [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+                )
+                },
+                {
+                    scale: interpolate(scrollOffset.value, 
+                        [
+                            -IMG_HEIGHT, 
+                            0, 
+                            IMG_HEIGHT
+                        ],
+                         [2, 1, 1]
+                    )
+                }
+            ]
+            };
+        });
+
+    const setupHeader = () => {
+        navigation.setOptions({
+            headerLeft: () => <MaterialCommunityIcons name='arrow-left-circle'  size={30} 
+                onPress={() => navigation.pop() } style={{ opacity: .5 }}/>,
+            headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]} />,
+        })
+    }
     const displayIngredients = () => {
         return(
           data!.ingredientLines.map((ingredient: string) => {
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
      height: IMG_HEIGHT
     },
     recipeDetails:{
-     height: 1000,
+     height: 2000,
      width: width,
     },
     recipeIngredients:{

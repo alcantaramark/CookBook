@@ -102,8 +102,7 @@ function App(): JSX.Element {
           options={{
             headerTitle:'', 
             headerBackVisible: false,
-            headerTransparent: true,
-            // headerBackground: () => <Animated.View style={[styles.header, headerAnimatedStyle]} />
+            headerTransparent: true, contentStyle: { flex: 1 }
           }}
         />
       </Stack.Navigator>
