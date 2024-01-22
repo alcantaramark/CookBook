@@ -1,11 +1,12 @@
 import React, {FC, useEffect} from 'react'
-import { Text } from 'react-native-paper'
+import { Card, Text } from 'react-native-paper'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
 import { Recipe, RootStackParamList } from 'types/App_Types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';;
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
+;
 
 export interface ReciepeViewProps {
     data: Recipe,
@@ -56,7 +57,7 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
     const setupHeader = () => {
         navigation.setOptions({
             headerLeft: () => <MaterialCommunityIcons name='arrow-left-circle'  size={30} 
-                onPress={() => navigation.pop() } style={{ opacity: .5 }}/>,
+                onPress={() => navigation.pop() } style={{ opacity: .5 }} color={'white'}/>,
             headerBackground: () => <Animated.View  style={[styles.header, headerAnimatedStyle]}>
                 <Animated.Image  source={{ uri: data!.mainImage }} style={{ height: 100, width: width, }} blurRadius={5} />
             </Animated.View>,
@@ -90,18 +91,20 @@ const RecipeView:FC<ReciepeViewProps> = ({data, navigation}) => {
             style={[styles.image, imageAnimatedStyle]}
         />
         <View style={styles.recipeDetails}>
-            <Text>Parallax Scroll</Text>
-            {/* <View style={styles.recipePreparationTime}>
-                <Text>Preparation Time: {data!.totalTime}</Text>
-            </View>
-            <View style={styles.recipeIngredients}>
-                <Text>Ingredients</Text>
-                { displayIngredients() }
-            </View>
-            <View style={styles.recipeDirections}>
-                <Text>Cooking Instructions</Text>
-                { displayInstructions() }
-            </View> */}
+            <Card>
+                <Card.Title title={data!.name} titleVariant='titleLarge'/>
+                <Card.Content>
+                    <Text variant='titleSmall'>Preparation Time: {data.totalTime}</Text>
+                    <Text variant='titleSmall'>Number of Servings: {data.numberOfServings}</Text>
+                    <View style={{marginTop: 10}}>
+                        <Text variant='bodySmall'>{data.ingredientLines.join('\n')}</Text>
+                        <Text variant='titleMedium'>Ingredients</Text>
+                        <Text variant='bodySmall'>{data.ingredientLines.join('\n')}</Text>
+                        <Text variant='titleMedium'>Instructions</Text>
+                        <Text variant='bodySmall'>{data.instructions.join('\n')}</Text>
+                    </View>
+                </Card.Content>
+            </Card>
         </View>
     </Animated.ScrollView>
     </View>
@@ -117,8 +120,9 @@ const styles = StyleSheet.create({
      height: IMG_HEIGHT
     },
     recipeDetails:{
-     height: 2000,
+     height: 1000,
      width: width,
+     top: 10
     },
     recipeIngredients:{
    
