@@ -1,8 +1,12 @@
 # Recipe Search Mobile App
 
-https://github.com/alcantaramark/CookBook/assets/45088718/0161a3bf-ee3c-4e78-802c-a9b92d69a2a6
-
 Welcome to the Recipe Search mobile app! This app allows you to search for recipes by name or ingredients, featuring a feed of popular recipes and options to filter by preferences like appetizers and breakfast.
+
+
+
+https://github.com/alcantaramark/CookBook/assets/45088718/8305072e-1030-42b4-ac8f-ffd33aa044d4
+
+
 
 ## Tech Stack
 
