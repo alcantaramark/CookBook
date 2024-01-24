@@ -86,8 +86,47 @@ export const recipeApi = createApi({
             }
         }),
         transformResponse: (response: GetRecipesByTagResponse) => response.recipesByTag
+      }),
+      getPopularRecipes: builder.query<RecipeSearch, {recordPerPage: Number, endCursor: string}>({
+        serializeQueryArgs: ( { endpointName } ) => {
+            return endpointName;
+        },
+        merge: (currentCache, newItems) => {
+            currentCache.edges.push(...newItems.edges.filter(x => !currentCache.edges.some(c => c.node.id === x.node.id)));
+            currentCache.pageInfo = newItems.pageInfo;
+        },
+        forceRefetch: ({ currentArg, previousArg }) => {
+            return !(JSON.stringify(currentArg) === JSON.stringify(previousArg));
+        },
+        query: ({recordPerPage, endCursor}) => ({
+            document: gql `query Search($recordPerPage: Int = 20, endCursor: String = ""){
+                popularRecipes(after: $endCursor
+                first: $recordPerPage){
+                    edges{
+                        node{
+                            id
+                            name
+                            mainImage
+                            totalTime
+                        }
+                        cursor
+                    }
+                    pageInfo{
+                        startCursor
+                        endCursor
+                        hasPreviousPage
+                        hasNextPage
+                    }
+                },
+            }`,
+            variables: {
+                recordPerPage,
+                endCursor
+            }
+        }),
+        transformResponse: (response: GetRecipesByTagResponse) => response.recipesByTag
       })
     })
 });
 
-export const { useGetRecipeByIdQuery } = recipeApi;
+export const { useGetRecipeByIdQuery, useGetPopularRecipesQuery, useGetRecipesByTagQuery } = recipeApi;
