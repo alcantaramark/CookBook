@@ -12,7 +12,8 @@ export interface recipesState {
     tags: recipeTag[],
     preferenceStatus: string,
     pagination: PageInfo,
-    errors: string
+    errors: string,
+    recordPerPage: Number
 };
 
 export interface recipePayload {
@@ -40,7 +41,8 @@ const initialState: recipesState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    errors:''
+    errors:'',
+    recordPerPage: 20
 };
 
 export const searchRecipeById = createAsyncThunk('recipe/searchRecipeById', async(id: string, { rejectWithValue, fulfillWithValue }) => {
@@ -115,6 +117,9 @@ export const RecipeSlice = createSlice({
                 return item;
             })
             state.tags = nextState;
+        },
+        setRecordPerPage: (state, action) => {
+            state.recordPerPage = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -174,5 +179,6 @@ export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const selectRecipeItem = (state: RootState) => state.recipe.recipeItem;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
-export const { clearRecipes, updateRecipePreference } = RecipeSlice.actions;
+export const selectRecordPerPage = (state: RootState) => state.recipe.recordPerPage;
+export const { clearRecipes, updateRecipePreference, setRecordPerPage } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
