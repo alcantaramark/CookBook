@@ -13,6 +13,10 @@ interface GetRecipesByTagResponse{
     recipesByTag: RecipeSearch
 }
 
+interface GetPopularRecipesResponse{
+    popularRecipes: RecipeSearch
+}
+
 export const recipeApi = createApi({
     reducerPath: "reducerApi",
     baseQuery: graphqlRequestBaseQuery({
@@ -124,7 +128,7 @@ export const recipeApi = createApi({
                 endCursor
             }
         }),
-        transformResponse: (response: GetRecipesByTagResponse) => response.recipesByTag
+        transformResponse: (response: GetPopularRecipesResponse) => response.popularRecipes
       })
     })
 });

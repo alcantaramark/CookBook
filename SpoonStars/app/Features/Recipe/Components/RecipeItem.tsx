@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import { recipePayload } from '../Scripts/RecipeSlice';
 import { Card } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
-import { StackNavigation } from './../../../../types/App_Types';
+import { StackNavigation, Suggestions } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 interface RecipeItemProps { 
-    item: recipePayload
+    item: Suggestions
 };
 
 const RecipeItem: FC<RecipeItemProps> = ({item}) => {
