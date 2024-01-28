@@ -13,12 +13,15 @@ import { ErrorMain } from '../../Error/ErrorMain';
 import { FlashList } from '@shopify/flash-list';
 import { selectConfigError } from '../../Configuration/ConfigSlice';
 import loading from '../../Shared/Components/Loading';
-import { HomeScreenProps } from './../../../../types/App_Types';
+import { HomeScreenProps, Suggestions } from './../../../../types/App_Types';
 import { useAppTheme } from './../../../App';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useFeed from '../Scripts/useFeed';
+import RecipeFeed from './RecipeFeed';
+import { recipeApi } from '../../Api/RecipeApi';
 
 
 const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps ) => {
@@ -33,29 +36,28 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
   const { navigate } = useNavigation<StackNavigation>();
   const autocompleteField = useRef<any>(null);
   
-  const renderItem = ({item}:{
-    item: recipePayload;
-    index?: number;
-  }): ReactElement => {
-    return (
-      <RecipeItem item={item}  />
-    );
-  };
-  
   const configState = useAppSelector(selectConfig);
   const configStatusState = useAppSelector(selectConfigStatus);
   const recipeStatusState = useAppSelector(selectRecipesStatus);
   const recipePageInfo = useAppSelector(selectRecipesPageInfo);
   const recipeStateErrors = useAppSelector(selectRecipeErrors);
   const configStateErrors: string = useAppSelector(selectConfigError);
-  
   const dispatch = useAppDispatch();
-  
-  useEffect(() => {
-    if (configStatusState === 'succeeded'){
-      dispatch(fetchRecipes());
-    }
-  }, [configState])
+
+  const renderItem = ({item}:{
+    item: Suggestions;
+    index?: number;
+  }): ReactElement => {
+    return (
+      <RecipeItem item={item}  />
+    );
+  };
+
+  // useEffect(() => {
+  //   if (configStatusState === 'succeeded'){
+  //     dispatch(fetchRecipes());
+  //   }
+  // }, [configState])
   
   useEffect(() => {
   }, [recipesState])
@@ -73,11 +75,11 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
     }
   }, [preferenceStatus]);
 
-  const footer = () => {
-    if (recipeStatusState !== 'loading') 
-      return null;
-    return (<UIActivityIndicator size={30} />)
-  }
+  // const footer = () => {
+  //   if (recipeStatusState !== 'loading') 
+  //     return null;
+  //   return (<UIActivityIndicator size={30} />)
+  // }
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -112,17 +114,24 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
       }
       return item;
     });
-
+    dispatch(recipeApi.util.resetApiState());
     dispatch(clearRecipes());
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
-    dispatch(fetchRecipes());
   };
 
   const handleSearchOnFocus = () => {
     autocompleteField.current.blur();
     navigate('Search');
+  }
+
+  // if (configStatusState !== 'succeeded' ||  preferenceStatus !== 'succeeded') {
+  //       return (<></>);
+  // }
+
+  if (configStateErrors !== '') {
+    return (<ErrorMain message={configStateErrors} />);
   }
 
   return(
@@ -147,36 +156,10 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
               showsHorizontalScrollIndicator={false} 
               style={[styles.scroll, { backgroundColor: primary }]}
         >
-          { createPreferenceOptions() }
+        { createPreferenceOptions() }
         </ScrollView>
       </GestureHandlerRootView>
-        {
-          (recipeStatusState === 'loading'  || configStatusState === 'loading') && recipesState.length == 0 
-              ? RecipeLoader() : configStateErrors !== '' ? <ErrorMain message={configStateErrors}/> :
-              recipeStateErrors !== '' ? <ErrorMain message={recipeStateErrors}/> :
-              <GestureHandlerRootView>
-                  <View style={styles.flashListStyle}>
-                      <FlashList
-                            ref={flashList}
-                            keyExtractor = {(item: recipePayload): string => item.node.id}
-                            numColumns = {1}
-                            data= { recipesState }
-                            renderItem={renderItem}
-                            horizontal={false}
-                            onEndReached={loadMore}
-                            ListFooterComponent={footer}
-                            estimatedItemSize={200}
-                            estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-                            refreshControl={
-                              <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
-                              style={{backgroundColor: 'transparent'}}
-                              title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
-                              />
-                            }
-                      />
-                  </View>
-                  </GestureHandlerRootView>
-        }
+      { configStatusState === 'succeeded' && <RecipeFeed /> }
     </View>
     </>
   );

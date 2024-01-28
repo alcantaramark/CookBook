@@ -50,7 +50,7 @@ const FullResults: FC<FullResultsProps> = () =>{
         if (isLoading){
             return (<UIActivityIndicator size={30} />);
         }
-    }   
+    }
 
     const handleLoadMore = async () => {
         if (!isLoading){

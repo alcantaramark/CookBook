@@ -3,20 +3,21 @@ import SearchRecipes from "../Services/Queries/SearchRecipes";
 import { RootState } from "../../../Redux/Store";
 import recipePreference from '../Data/RecipePreference.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { recipe, recipeTag, PageInfo } from '../../../../types/App_Types';
+import { Recipe, recipeTag, PageInfo } from '../../../../types/App_Types';
 
 export interface recipesState {
     recipes: recipePayload[],
-    recipeItem: recipe,
+    recipeItem: Recipe,
     status: string,
     tags: recipeTag[],
     preferenceStatus: string,
     pagination: PageInfo,
-    errors: string
+    errors: string,
+    recordPerPage: Number
 };
 
 export interface recipePayload {
-    node: recipe,
+    node: Recipe,
     cursor: string
 };
 
@@ -40,7 +41,8 @@ const initialState: recipesState = {
         hasNextPage: false,
         hasPreviousPage: false
     },
-    errors:''
+    errors:'',
+    recordPerPage: 20
 };
 
 export const searchRecipeById = createAsyncThunk('recipe/searchRecipeById', async(id: string, { rejectWithValue, fulfillWithValue }) => {
@@ -115,6 +117,12 @@ export const RecipeSlice = createSlice({
                 return item;
             })
             state.tags = nextState;
+        },
+        setRecordPerPage: (state, action) => {
+            state.recordPerPage = action.payload;
+        },
+        setRecipePageInfo: (state, action) =>  { 
+            state.pagination = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -174,5 +182,6 @@ export const selectRecipePreferencesStatus = (state: RootState) => state.recipe.
 export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const selectRecipeItem = (state: RootState) => state.recipe.recipeItem;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
-export const { clearRecipes, updateRecipePreference } = RecipeSlice.actions;
+export const selectRecordPerPage = (state: RootState) => state.recipe.recordPerPage;
+export const { clearRecipes, updateRecipePreference, setRecordPerPage, setRecipePageInfo } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
