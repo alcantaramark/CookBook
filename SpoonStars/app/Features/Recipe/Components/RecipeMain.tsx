@@ -20,6 +20,7 @@ import { StackNavigation } from './../../../../types/App_Types';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useFeed from '../Scripts/useFeed';
+import RecipeFeed from './RecipeFeed';
 
 
 const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps ) => {
@@ -41,18 +42,6 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
   const recipeStateErrors = useAppSelector(selectRecipeErrors);
   const configStateErrors: string = useAppSelector(selectConfigError);
   const dispatch = useAppDispatch();
-
-
-  if (configStatusState !== 'succeeded' ||  preferenceStatus !== 'succeeded' 
-      || recipeStatusState !== 'succeeded') {
-        return (RecipeLoader());
-  }
-
-  if (configStateErrors !== '') {
-    return (<ErrorMain message={configStateErrors} />);
-  }
-
-  const { data, isLoading, error, refetch } = useFeed();
 
   const renderItem = ({item}:{
     item: Suggestions;
@@ -129,12 +118,20 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
-    dispatch(fetchRecipes());
+    //dispatch(fetchRecipes());
   };
 
   const handleSearchOnFocus = () => {
     autocompleteField.current.blur();
     navigate('Search');
+  }
+
+  if (configStatusState !== 'succeeded' ||  preferenceStatus !== 'succeeded') {
+        return (<></>);
+  }
+
+  if (configStateErrors !== '') {
+    return (<ErrorMain message={configStateErrors} />);
   }
 
   return(
@@ -162,28 +159,7 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
           { createPreferenceOptions() }
         </ScrollView>
       </GestureHandlerRootView>
-      <GestureHandlerRootView>
-        <View style={styles.flashListStyle}>
-            <FlashList
-              ref={flashList}
-              keyExtractor = {(item: Suggestions): string => item.node.id}
-              numColumns = {1}
-              data= { data!.edges as Suggestions[]}
-              renderItem={renderItem}
-              horizontal={false}
-              onEndReached={loadMore}
-              // ListFooterComponent={footer}
-              estimatedItemSize={200}
-              estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
-                style={{backgroundColor: 'transparent'}}
-                title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
-                />
-              }
-            />
-        </View>
-        </GestureHandlerRootView>
+      <RecipeFeed />
     </View>
     </>
   );

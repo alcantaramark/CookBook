@@ -28,7 +28,7 @@ export const recipeApi = createApi({
             headers.set('Authorization', `Token ${state.apiConfig.config.suggesticAPIKey}`);
             return headers;
         },
-        customErrors: (error) => "error getting recipe details"
+        customErrors: (error) => error.message
     }),
     endpoints: (builder) => ({
       getRecipeById: builder.query<Recipe, string>({
@@ -62,7 +62,7 @@ export const recipeApi = createApi({
             return !(JSON.stringify(currentArg) === JSON.stringify(previousArg));
         },
         query: ({tag, recordPerPage, endCursor}) => ({
-            document: gql `query Search($tag: String = "", $recordPerPage: Int = 20, endCursor: String = ""){
+            document: gql `query Search($tag: String = "", $recordPerPage: Int = 20, $endCursor: String = ""){
                 recipesByTag(tag: $tag
                 after: $endCursor
                 first: $recordPerPage){
@@ -103,7 +103,7 @@ export const recipeApi = createApi({
             return !(JSON.stringify(currentArg) === JSON.stringify(previousArg));
         },
         query: ({recordPerPage, endCursor}) => ({
-            document: gql `query Search($recordPerPage: Int = 20, endCursor: String = ""){
+            document: gql `query Search($recordPerPage: Int = 20, $endCursor: String = ""){
                 popularRecipes(after: $endCursor
                 first: $recordPerPage){
                     edges{
