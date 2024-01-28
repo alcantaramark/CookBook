@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useFeed from '../Scripts/useFeed';
 import RecipeFeed from './RecipeFeed';
+import { recipeApi } from '../../Api/RecipeApi';
 
 
 const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps ) => {
@@ -113,12 +114,11 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
       }
       return item;
     });
-
+    dispatch(recipeApi.util.resetApiState());
     dispatch(clearRecipes());
     setTagStyles(nextStyles);
     dispatch(updateRecipePreference(index));
     dispatch(saveRecipePreference());
-    //dispatch(fetchRecipes());
   };
 
   const handleSearchOnFocus = () => {
@@ -126,9 +126,9 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
     navigate('Search');
   }
 
-  if (configStatusState !== 'succeeded' ||  preferenceStatus !== 'succeeded') {
-        return (<></>);
-  }
+  // if (configStatusState !== 'succeeded' ||  preferenceStatus !== 'succeeded') {
+  //       return (<></>);
+  // }
 
   if (configStateErrors !== '') {
     return (<ErrorMain message={configStateErrors} />);
@@ -156,10 +156,10 @@ const RecipeMain: FC<HomeScreenProps> = ( {navigation, route}: HomeScreenProps )
               showsHorizontalScrollIndicator={false} 
               style={[styles.scroll, { backgroundColor: primary }]}
         >
-          { createPreferenceOptions() }
+        { createPreferenceOptions() }
         </ScrollView>
       </GestureHandlerRootView>
-      <RecipeFeed />
+      { configStatusState === 'succeeded' && <RecipeFeed /> }
     </View>
     </>
   );

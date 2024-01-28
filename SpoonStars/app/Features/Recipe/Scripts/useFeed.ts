@@ -7,7 +7,7 @@ const useFeed = () => {
     const recordPerPage = useAppSelector(selectRecordPerPage);
     const recipesPageInfo = useAppSelector(selectRecipesPageInfo);
     const preferred = recipeTags.find(tag => tag.preferred == true);
-
+    
     if (preferred === undefined){
         return useGetPopularRecipesQuery({
             recordPerPage: recordPerPage,

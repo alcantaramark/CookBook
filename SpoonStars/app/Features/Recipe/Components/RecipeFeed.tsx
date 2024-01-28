@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { FC, ReactElement, useState } from 'react';
+import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Suggestions } from './../../../../types/App_Types';
@@ -7,6 +7,10 @@ import RecipeItem from './RecipeItem';
 import useFeed from '../Scripts/useFeed';
 import loading from './../../Shared/Components/Loading';
 import useErrorHandler from '../../Shared/Components/ErrorHandler';
+import { UIActivityIndicator } from 'react-native-indicators';
+import { useAppDispatch } from '../../../Redux/Hooks';
+import { setRecordPerPage, setRecipePageInfo } from '../Scripts/RecipeSlice';
+import { recipeApi } from '../../Api/RecipeApi';
 
 interface RecipeFeedProps{
 
@@ -16,6 +20,8 @@ const RecipeFeed: FC<RecipeFeedProps> = () => {
     const { data, isLoading, error, refetch } = useFeed();
     const { RecipeLoader } = loading();
     const { showError } = useErrorHandler();
+    const dispatch = useAppDispatch();
+    const [refreshing, setRefreshing] = useState(false);
     
 
     const renderItem = ({item}:{
@@ -35,6 +41,26 @@ const RecipeFeed: FC<RecipeFeedProps> = () => {
         return (showError(error as string));
     }
 
+    const footer = () =>{
+      if (isLoading){
+          return (<UIActivityIndicator size={30} />);
+      }
+    }
+
+    const handleLoadMore = async () => {
+      if (!isLoading){
+          dispatch(setRecordPerPage(10));
+          dispatch(setRecipePageInfo(data!.pageInfo));
+      }
+    }
+
+    const handleOnRefresh = () => {
+      setRefreshing(true);
+      dispatch(recipeApi.util.resetApiState());
+      refetch();
+      setRefreshing(false);
+  }
+
     return(
         <GestureHandlerRootView>
             <View style={styles.flashlistStyle}>
@@ -44,16 +70,11 @@ const RecipeFeed: FC<RecipeFeedProps> = () => {
               data= { data!.edges as Suggestions[]}
               renderItem={renderItem}
               horizontal={false}
-              //onEndReached={loadMore}
-              // ListFooterComponent={footer}
+              ListFooterComponent={footer}
               estimatedItemSize={200}
               estimatedListSize={{ height: 200, width: Dimensions.get('screen').width }}
-            //   refreshControl={
-            //     <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} 
-            //     style={{backgroundColor: 'transparent'}}
-            //     title='Fetching Recipes...' titleColor={'black'} tintColor={"black"}
-            //     />
-            //   }
+              onEndReached={handleLoadMore}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleOnRefresh} />}
             />
             </View>
         </GestureHandlerRootView>

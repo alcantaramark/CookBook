@@ -120,6 +120,9 @@ export const RecipeSlice = createSlice({
         },
         setRecordPerPage: (state, action) => {
             state.recordPerPage = action.payload;
+        },
+        setRecipePageInfo: (state, action) =>  { 
+            state.pagination = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -180,5 +183,5 @@ export const selectRecipeTags = (state: RootState) => state.recipe.tags;
 export const selectRecipeItem = (state: RootState) => state.recipe.recipeItem;
 export const selectRecipeErrors = (state: RootState) => state.recipe.errors;
 export const selectRecordPerPage = (state: RootState) => state.recipe.recordPerPage;
-export const { clearRecipes, updateRecipePreference, setRecordPerPage } = RecipeSlice.actions;
+export const { clearRecipes, updateRecipePreference, setRecordPerPage, setRecipePageInfo } = RecipeSlice.actions;
 export default RecipeSlice.reducer;
