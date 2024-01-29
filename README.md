@@ -4,7 +4,7 @@ Welcome to the Recipe Search mobile app! This app allows you to search for recip
 
 
 
-https://github.com/alcantaramark/CookBook/assets/45088718/8305072e-1030-42b4-ac8f-ffd33aa044d4
+
 
 
 
