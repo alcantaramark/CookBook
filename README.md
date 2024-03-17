@@ -6,7 +6,7 @@ Welcome to the Recipe Search mobile app! This app allows you to search for recip
 https://github.com/alcantaramark/CookBook/assets/45088718/acd9c7a5-4cfa-44b1-adc2-0379b1d9d106
 
 
-## Tech Stack
+## Technology Stack
 
 - **Front End:** React Native
 - **State Management:** Redux
